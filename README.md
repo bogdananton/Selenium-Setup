@@ -31,15 +31,16 @@ wget http://www.phing.info/get/phing-latest.phar -O; mv phing-latest.phar phing;
 ```
 
 Run `phing` to do an environment check and start downloading and unpacking.
-After phing finished, run 'java -jar selenium-server-standalone-2.47.0.jar' in a different terminal to start the server, then run `php phpunit.phar` in the current terminal.
+
+After phing has finished, run 'java -jar selenium-server-standalone-2.47.0.jar' in a different terminal to start the server, then run `php phpunit.phar` in the current terminal.
 
 
 ### Manual install (without phing):
 
-Download [Composer phar](https://getcomposer.org/composer.phar)
-Download [PHPUnit phar](https://phar.phpunit.de/phpunit.phar)
-Download [Selenium Standalone Server jar file](http://selenium-release.storage.googleapis.com/2.47/selenium-server-standalone-2.47.0.jar)
-Download [Chromedriver](http://chromedriver.storage.googleapis.com/index.html?path=2.18/) and unzip/place the binary in your environment PATH. (c:\Windows or /usr/bin and chmod +x it)
-Run 'php composer.phar install' to init facebook/webdriver
-Run 'java -jar selenium-server-standalone-2.47.0.jar' in a new terminal.
-Run 'php phpunit.phar' to start the sample test.
+* Download [Composer phar](https://getcomposer.org/composer.phar)
+* Download [PHPUnit phar](https://phar.phpunit.de/phpunit.phar)
+* Download [Selenium Standalone Server jar file](http://selenium-release.storage.googleapis.com/2.47/selenium-server-standalone-2.47.0.jar)
+* Download [Chromedriver](http://chromedriver.storage.googleapis.com/index.html?path=2.18/) and unzip/place the binary in your environment PATH. (c:\Windows or /usr/bin and chmod +x it)
+* Run 'php composer.phar install' to init facebook/webdriver
+* Run 'java -jar selenium-server-standalone-2.47.0.jar' in a new terminal.
+* Run 'php phpunit.phar' to start the sample test.
