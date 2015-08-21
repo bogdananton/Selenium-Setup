@@ -1,0 +1,7 @@
+{
+  "name": "bogdananton/phpunit-selenium-env",
+  "require": {
+    "php": "^5.3",
+    "facebook/webdriver": "1.0.*"
+  }
+}
