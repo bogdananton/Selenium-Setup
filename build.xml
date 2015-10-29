@@ -11,6 +11,9 @@
         <!-- Scan PHP version -->
         <php level="debug" expression="version_compare(PHP_VERSION, '5.3') >= 0" returnProperty="phpversioncheck" />
 
+        <!-- Detect if we can use the latest phpunit version -->
+        <php level="debug" expression="version_compare(PHP_VERSION, '5.6') >= 0" returnProperty="latestphpunit" />
+
         <!-- Scan PHP cURL -->
         <php level="debug" expression="function_exists('curl_version')" returnProperty="cURLEnabled" />
         <php level="debug" expression="curl_version()['version']" returnProperty="cURLVersion" />
@@ -104,43 +107,71 @@
             <then>
                 <echo>[x] PHPUnit found</echo>
             </then>
+            <elseif>
+                <equals arg1="${latestphpunit}" arg2="true" />
+                <then>
+                    <exec command="curl https://phar.phpunit.de/phpunit.phar -O" />
+                    <echo>[x] Downloaded PHPUnit to 'phpunit.phar' file</echo>
+                </then>
+            </elseif>
             <else>
-                <exec command="curl https://phar.phpunit.de/phpunit.phar -O" />
-                <echo>[x] Downloaded PHPUnit to 'phpunit.phar' file</echo>
+                <exec command="curl https://phar.phpunit.de/phpunit-old.phar -O" />
+                <exec command="mv phpunit-old.phar phpunit.phar" />
+                <echo>[x] Downloaded PHPUnit (old stable version) to 'phpunit.phar' file</echo>
             </else>
         </if>
 
         <property name="selenium.IS_FILE_EXISTS" value="false" />
-        <exec command="if [ -f 'selenium-server-standalone-2.47.0.jar' ]; then echo 'true'; else echo 'false'; fi;" outputProperty="selenium.IS_FILE_EXISTS" />
+        <exec command="if [ -f 'selenium-server-standalone-2.48.0.jar' ]; then echo 'true'; else echo 'false'; fi;" outputProperty="selenium.IS_FILE_EXISTS" />
         <if>
             <equals arg1="${selenium.IS_FILE_EXISTS}" arg2="true" />
             <then>
                 <echo>[x] Selenium Standalone Server found</echo>
             </then>
             <else>
-                <exec command="curl http://selenium-release.storage.googleapis.com/2.47/selenium-server-standalone-2.47.0.jar -O" />
-                <echo>[x] Selenium Standalone Server downloaded to 'selenium-server-standalone-2.47.0.jar' file</echo>
+                <exec command="curl http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.0.jar -O" />
+                <echo>[x] Selenium Standalone Server downloaded to 'selenium-server-standalone-2.48.0.jar' file</echo>
             </else>
         </if>
-
+        <property name="chromedriver.IS_FILE_EXISTS" value="false" />
+        <exec command="if [ -f 'chromedriver' ]; then echo 'true'; else echo 'false'; fi;" outputProperty="chromedriver.IS_FILE_EXISTS" />
         <if>
-            <os family="Unix"/>
+            <equals arg1="${chromedriver.IS_FILE_EXISTS}" arg2="true" />
             <then>
-                <exec command="curl http://chromedriver.storage.googleapis.com/2.18/chromedriver_linux64.zip -O" />
-                <unzip file="chromedriver_linux64.zip" todir="./" />
-                <delete file="chromedriver_linux64.zip" verbose="false" />
-                <exec command="chmod +x chromedriver" />
-                <echo>[x] Downloaded chromedriver to current path. Move to /usr/bin</echo>
+                <echo>[x] Chromedriver found</echo>
             </then>
+            
+            <elseif>
+                <os family="mac"/>
+                <then>
+                    <exec command="curl http://chromedriver.storage.googleapis.com/2.20/chromedriver_mac32.zip -O"/>
+                    <unzip file="chromedriver_mac32.zip" todir="./" />
+                    <delete file="chromedriver_mac32.zip" verbose="false" />
+                    <exec command="chmod +x chromedriver" />
+                    <echo>[x] Downloaded chromedriver to current path. Move to /usr/bin</echo>
+                </then>
+            </elseif>
+            
+            <elseif>
+                <os family="unix"/>
+                <then>
+                    <exec command="curl http://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip -O" />
+                    <unzip file="chromedriver_linux64.zip" todir="./" />
+                    <delete file="chromedriver_linux64.zip" verbose="false" />
+                    <exec command="chmod +x chromedriver" />
+                    <echo>[x] Downloaded chromedriver to current path. Move to /usr/bin</echo>
+                </then>
+            </elseif>
+            
             <else>
-                <exec command="curl http://chromedriver.storage.googleapis.com/2.18/chromedriver_win32.zip -O" />
+                <exec command="curl http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip -O" />
                 <unzip file="chromedriver_win32.zip" todir="./" />
                 <delete file="chromedriver_win32.zip" verbose="false" />
                 <echo>[x] Downloaded chromedriver to current path. Move to c:/Windows or somewhere in the PATH.</echo>
             </else>
         </if>
 
-        <echo>Run 'java -jar selenium-server-standalone-2.47.0.jar' in a different terminal to start the server, then run `php phpunit.phar` in this terminal.</echo>
+        <echo>Run 'java -jar selenium-server-standalone-2.48.0.jar' in a different terminal to start the server, then run `php phpunit.phar` in this terminal.</echo>
         <!--<exec passthru="true" escape="true" checkreturn="true" command="java -jar selenium-server-standalone-2.47.0.jar"></exec>-->
     </target>
 </project>
