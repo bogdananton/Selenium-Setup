@@ -2,6 +2,9 @@
 
 <project name="Check environment" default="main">
     <target name="main">
+        <property name="selenium.VERSION" value="2.47" override="true" />
+        <echo>${selenium.VERSION}</echo>
+
         <!-- Scan Java version-->
         <exec level="debug" command="java -version" outputProperty="javaVersionParagraph" />
         <php level="debug" expression="substr('${javaVersionParagraph}', 14, 5)" returnProperty="javaVersion" />
@@ -122,15 +125,15 @@
         </if>
 
         <property name="selenium.IS_FILE_EXISTS" value="false" />
-        <exec command="if [ -f 'selenium-server-standalone-2.48.0.jar' ]; then echo 'true'; else echo 'false'; fi;" outputProperty="selenium.IS_FILE_EXISTS" />
+        <exec command="if [ -f 'selenium-server-standalone-${selenium.VERSION}.0.jar' ]; then echo 'true'; else echo 'false'; fi;" outputProperty="selenium.IS_FILE_EXISTS" />
         <if>
             <equals arg1="${selenium.IS_FILE_EXISTS}" arg2="true" />
             <then>
                 <echo>[x] Selenium Standalone Server found</echo>
             </then>
             <else>
-                <exec command="curl http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.0.jar -O" />
-                <echo>[x] Selenium Standalone Server downloaded to 'selenium-server-standalone-2.48.0.jar' file</echo>
+                <exec command="curl http://selenium-release.storage.googleapis.com/${selenium.VERSION}/selenium-server-standalone-${selenium.VERSION}.0.jar -O" passthru="true" />
+                <echo>[x] Selenium Standalone Server downloaded to 'selenium-server-standalone-${selenium.VERSION}.0.jar' file</echo>
             </else>
         </if>
         <property name="chromedriver.IS_FILE_EXISTS" value="false" />
@@ -171,7 +174,13 @@
             </else>
         </if>
 
-        <echo>Run 'java -jar selenium-server-standalone-2.48.0.jar' in a different terminal to start the server, then run `php phpunit.phar` in this terminal.</echo>
-        <!--<exec passthru="true" escape="true" checkreturn="true" command="java -jar selenium-server-standalone-2.47.0.jar"></exec>-->
+        <echo />
+        <echo>Will start the Selenium server in this tab.</echo>
+        <echo>Run `php phpunit.phar` in a new terminal.</echo>
+        <echo />
+        <echo>To start the Selenium server manually, run `java -jar selenium-server-standalone-${selenium.VERSION}.0.jar`.</echo>
+        <echo />
+
+        <exec command="java -jar selenium-server-standalone-${selenium.VERSION}.0.jar" passthru="true" escape="true" checkreturn="true" />
     </target>
 </project>

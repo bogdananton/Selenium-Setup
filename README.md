@@ -44,3 +44,7 @@ After phing has finished, run 'java -jar selenium-server-standalone-2.47.0.jar' 
 * Run 'php composer.phar install' to init facebook/webdriver
 * Run 'java -jar selenium-server-standalone-2.47.0.jar' in a new terminal.
 * Run 'php phpunit.phar' to start the sample test.
+
+### Overrides
+
+To install a different Selenium version, run `phing -Dselenium.VERSION=x.xx`. Default version: '2.47'.
