@@ -273,6 +273,6 @@
         <echo>Testing Selenium Server by running `java -jar selenium-server.jar`.</echo>
         <echo>You can kill this process whenever you want.</echo>
 
-        <exec spawn="true" command="java -jar ${build.path}/selenium-server.jar &amp;" passthru="true" escape="true" checkreturn="true" />
+        <exec command="java -jar ${build.path}/selenium-server.jar > /dev/null &amp;" passthru="true" escape="true" checkreturn="true" />
     </target>
 </project>
