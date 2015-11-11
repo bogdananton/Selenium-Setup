@@ -18,7 +18,7 @@
         </echo>
         
         <!-- Create the binaries main folder -->
-        <property name="build.path" value="${application.startdir}\build" />
+        <property name="build.path" value="${application.startdir}/build" />
         <mkdir dir="${build.path}" />
         <echo>[x] "build" folder is ${build.path}</echo>
         
