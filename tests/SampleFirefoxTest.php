@@ -20,7 +20,10 @@ class SampleFirefoxTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCustomWindowSize()
     {
-        $capabilities = [WebDriverCapabilityType::BROWSER_NAME => 'firefox'];
+        $capabilities = array(
+            WebDriverCapabilityType::BROWSER_NAME => 'firefox'
+        );
+
         $this->webDriver = RemoteWebDriver::create('http://localhost:4444/wd/hub', $capabilities);
 
         $this->webDriver->manage()->window()->setSize(new WebDriverDimension(640, 900));
@@ -56,7 +59,6 @@ class SampleFirefoxTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $this->webDriver->close();
         $this->webDriver->quit();
     }
 }

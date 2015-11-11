@@ -12,7 +12,10 @@ class SampleChromeTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $capabilities = array(WebDriverCapabilityType::BROWSER_NAME => 'chrome');
+        $capabilities = array(
+            WebDriverCapabilityType::BROWSER_NAME => 'chrome'
+        );
+
         $this->webDriver = RemoteWebDriver::create('http://localhost:4444/wd/hub', $capabilities);
     }
 
@@ -43,7 +46,6 @@ class SampleChromeTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $this->webDriver->close();
         $this->webDriver->quit();
     }
 }
