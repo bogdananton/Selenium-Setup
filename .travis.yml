@@ -1,0 +1,21 @@
+language: php
+php:
+  - "5.3"
+
+before_script:
+  - sudo apt-get install phantomjs
+  - composer install --dev --no-interaction
+  - wget http://www.phing.info/get/phing-latest.phar -o phing
+  - chmod +x phing
+  - phing # download / check requirements
+  - "export DISPLAY=:99.0" # @see http://docs.travis-ci.com/user/gui-and-headless-browsers/
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+  - rackup  # start a Web server
+  - sleep 3 # give Web server some time to bind to sockets, etc
+
+script:
+  - phpunit -v -c phpunit.xml
+
+notifications:
+  email: false
