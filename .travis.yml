@@ -7,7 +7,7 @@ before_script:
   - composer install --dev --no-interaction
   - wget http://www.phing.info/get/phing-latest.phar -O phing
   - chmod +x phing
-  - ./phing > /dev/null # download / check requirements
+  - nohup ./phing &# download / check requirements
   - "export DISPLAY=:99.0" # @see http://docs.travis-ci.com/user/gui-and-headless-browsers/
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
