@@ -1,0 +1,20 @@
+os:
+  - linux
+  - osx
+
+language: php
+php:
+  - "5.4"
+
+branches:
+  only:
+    - master
+
+before_script:
+ - wget http://www.phing.info/get/phing-latest.phar
+ 
+script:
+  - php phing-latest.phar
+
+notifications:
+  email: false
