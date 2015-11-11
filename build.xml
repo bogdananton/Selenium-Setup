@@ -18,7 +18,7 @@
         </echo>
         
         <!-- Create the binaries main folder -->
-        <property name="build.path" value="${application.startdir}\build" />
+        <property name="build.path" value="${application.startdir}/build" />
         <mkdir dir="${build.path}" />
         <echo>[x] "build" folder is ${build.path}</echo>
         
@@ -215,9 +215,9 @@
             </and>
             <then>
                 <exec command="curl ${chromerdriver.mac.URL} -o ${build.path}/chromedriver.zip"/>
-                <unzip file="chromedriver.zip" todir="./" />
-                <delete file="chromedriver.zip" verbose="false" />
-                <exec command="chmod +x chromedriver" />
+                <unzip file="${build.path}/chromedriver.zip" todir="./" />
+                <delete file="${build.path}/chromedriver.zip" verbose="false" />
+                <exec command="chmod +x ${build.path}/chromedriver" />
                 <echo>[x] Downloaded Chrome Driver for Mac to current path. Might want to move it to /usr/bin.</echo>
             </then>
         </if>
@@ -228,9 +228,9 @@
             </and>
             <then>
                 <exec command="curl ${chromerdriver.linux.URL} -o ${build.path}/chromedriver.zip" />
-                <unzip file="chromedriver.zip" todir="./" />
-                <delete file="chromedriver.zip" verbose="false" />
-                <exec command="chmod +x chromedriver" />
+                <unzip file="${build.path}/chromedriver.zip" todir="./" />
+                <delete file="${build.path}/chromedriver.zip" verbose="false" />
+                <exec command="chmod +x ${build.path}/chromedriver" />
                 <echo>[x] Downloaded Chrome Driver for Unix to current path. Might want to move ut to /usr/bin.</echo>
             </then>
         </if>
