@@ -1,10 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Check environment" default="main">
-    <target name="main">
-        <property name="selenium.VERSION" value="2.47" override="true" />
-        <echo>${selenium.VERSION}</echo>
+<project name="phpunit-selenium-env" default="envSetup">
+    <resolvepath propertyName="project.path" file="." />
+    <target name="envSetup">
 
+        <!-- Boilerplate -->
+        <echo>
+          ____            ___
+         /\  _`\         /\_ \                  __
+         \ \,\L\_\     __\//\ \      __    ___ /\_\  __  __    ___ ___
+          \/_\__ \   /'__`\\ \ \   /'__`\/' _ `\/\ \/\ \/\ \ /' __` __`\
+            /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \
+            \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
+            \/_____/\/____/\/____/\/____/\/_/\/_/\/_/\/___/  \/_/\/_/\/_/
+            PHPUnit Environment with Facebook's WebDriver
+            by Bogdan Anton and contributors.
+        </echo>
+        
+        <!-- Create the binaries main folder -->
+        <property name="build.path" value="${application.startdir}\build" />
+        <mkdir dir="${build.path}" />
+        <echo>[x] "build" folder is ${build.path}</echo>
+        
+        <!-- 
+        Define all working versions.
+        Change these values when needed.
+        -->
+        <property name="composer.VERSION" value="latest" />
+        <property name="composer.URL" value="https://getcomposer.org/composer.phar" />
+        <property name="composer.EXISTS" value="false"/>
+        <available property="composer.EXISTS" file="${build.path}/composer.phar" type="file" />
+        <available property="composer.vendor.EXISTS" file="vendor" type="dir" />
+        
+        <property name="selenium.VERSION" value="2.48.2" />
+        <property name="selenium.URL" value="http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.2.jar" />
+        <property name="selenium.EXISTS" value="false"/>
+        <available property="selenium.EXISTS" file="${build.path}/selenium-server.jar" type="file" />
+        
+        <property name="phpunit.old.VERSION" value="4.8.9" />
+        <property name="phpunit.old.URL" value="https://phar.phpunit.de/phpunit-4.8.9.phar" />
+        <property name="phpunit.old.EXISTS" value="false"/>
+        <available property="phpunit.old.EXISTS" file="${build.path}/phpunit-old.phar" type="file" />
+        
+        <property name="phpunit.new.VERSION" value="5.0.8" />
+        <property name="phpunit.new.URL" value="https://phar.phpunit.de/phpunit-5.0.8.phar" />
+        <property name="phpunit.new.EXISTS" value="false"/>
+        <available property="phpunit.new.EXISTS" file="${build.path}/phpunit-new.phar" type="file" />
+        
+        <property name="chromedriver.mac.VERSION" value="2.20" />
+        <property name="chromerdriver.mac.URL" value="http://chromedriver.storage.googleapis.com/2.20/chromedriver_mac32.zip" />
+        <property name="chromerdriver.mac.EXISTS" value="false"/>
+        <available property="chromerdriver.mac.EXISTS" file="${build.path}/chromedriver" type="file" />
+
+        <property name="chromedriver.linux.VERSION" value="2.20" />
+        <property name="chromerdriver.linux.URL" value="http://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip" />
+        <property name="chromerdriver.linux.EXISTS" value="false"/>
+        <available property="chromerdriver.linux.EXISTS" file="${build.path}/chromedriver" type="file" />
+
+        <property name="chromedriver.windows.VERSION" value="2.20" />
+        <property name="chromerdriver.windows.URL" value="http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip" />
+        <property name="chromerdriver.windows.EXISTS" value="false"/>
+        <available property="chromerdriver.windows.EXISTS" file="${build.path}/chromedriver.exe" type="file" />
+        
+        <property name="iedriver.VERSION" value="2.48" />
+        <property name="iedriver.URL" value="http://selenium-release.storage.googleapis.com/2.48/IEDriverServer_Win32_2.48.0.zip" />
+        <property name="iedriver.EXISTS" value="false"/>
+        <available property="iedriver.EXISTS" file="${build.path}/IEDriverServer.exe" type="file" />
+
+        <!-- 
+        Determine current machine binaries versions and status.
+        -->
         <!-- Scan Java version-->
         <exec level="debug" command="java -version" outputProperty="javaVersionParagraph" />
         <php level="debug" expression="substr('${javaVersionParagraph}', 14, 5)" returnProperty="javaVersion" />
@@ -12,10 +77,10 @@
         <php level="debug" expression="version_compare('${javaVersion}', '0.1') >= 0" returnProperty="javaInstalled" />
 
         <!-- Scan PHP version -->
-        <php level="debug" expression="version_compare(PHP_VERSION, '5.3') >= 0" returnProperty="phpversioncheck" />
+        <php level="debug" expression="version_compare(PHP_VERSION, '5.3') >= 0" returnProperty="phpVersionCheck" />
 
         <!-- Detect if we can use the latest phpunit version -->
-        <php level="debug" expression="version_compare(PHP_VERSION, '5.6') >= 0" returnProperty="latestphpunit" />
+        <php level="debug" expression="version_compare(PHP_VERSION, '5.6') >= 0" returnProperty="canUseLatestPHPUnit" />
 
         <!-- Scan PHP cURL -->
         <php level="debug" expression="function_exists('curl_version')" returnProperty="cURLEnabled" />
@@ -46,7 +111,7 @@
         </if>
 
         <if>
-            <equals arg1="${phpversioncheck}" arg2="true" />
+            <equals arg1="${phpVersionCheck}" arg2="true" />
             <then>
                 <echo>[x] PHP version ${php.version}</echo>
             </then>
@@ -78,109 +143,136 @@
             </else>
         </if>
 
-        <property name="composer.IS_FILE_EXISTS" value="false" />
-        <exec command="if [ -f 'composer.phar' ]; then echo 'true'; else echo 'false'; fi;" outputProperty="composer.IS_FILE_EXISTS" />
+        <!-- Composer -->
         <if>
-            <equals arg1="${composer.IS_FILE_EXISTS}" arg2="true" />
+            <equals arg1="${composer.EXISTS}" arg2="true" />
             <then>
-                <echo>[x] Composer found</echo>
+                <echo>[x] Composer found.</echo>
             </then>
             <else>
-                <exec command="curl https://getcomposer.org/composer.phar -O" />
-                <echo>[x] Composer downloaded to 'composer.phar' file</echo>
+                <exec command="curl ${composer.URL} -o ${build.path}/composer.phar" />
+                <echo>[x] Composer downloaded.</echo>
+            </else>
+        </if>
+        <if>
+            <equals arg1="${composer.vendor.EXISTS}" arg2="true" />
+            <then>
+                <echo>[x] "vendor" folder found.</echo>
+                <composer command="update" composer="${build.path}/composer.phar" />
+                <echo>[x] "vendor" folder updated.</echo>
+            </then>
+            <else>
+                <composer command="install" composer="${build.path}/composer.phar" />
+                <echo>[x] "vendor" folder created.</echo>
             </else>
         </if>
 
-        <property name="composer.vendor.IS_DIR_EXISTS" value="false" />
-        <exec command="if [ -d 'vendor' ]; then echo 'true'; else echo 'false'; fi;" outputProperty="composer.vendor.IS_DIR_EXISTS" />
+        <!-- PHPUnit -->
         <if>
-            <equals arg1="${composer.vendor.IS_DIR_EXISTS}" arg2="true" />
+            <equals arg1="${phpunit.old.EXISTS}" arg2="true" />
             <then>
-                <echo>[x] "vendor" folder found</echo>
+                <echo>[x] PHPUnit found.</echo>
+            </then>
+        </if>
+        <if>
+            <and>
+                <equals arg1="${canUseLatestPHPUnit}" arg2="true" />
+                <isfalse value="${phpunit.new.EXISTS}" />
+            </and>
+            <then>
+                <exec command="curl ${phpunit.new.URL} -o ${build.path}/phpunit.phar" />
+                <echo>[x] Downloaded PHPUnit.</echo>
+            </then>
+        </if>
+        <if>
+            <and>
+                <equals arg1="${canUseLatestPHPUnit}" arg2="false" />
+                <isfalse value="${phpunit.old.EXISTS}" />
+            </and>
+            <then>
+                <exec command="curl ${phpunit.old.URL} -o ${build.path}/phpunit-old.phar" />
+                <echo>[x] Downloaded PHPUnit (old).</echo>
+            </then>
+        </if>
+        
+        <!-- Selenium Server -->
+        <if>
+            <equals arg1="${selenium.EXISTS}" arg2="true" />
+            <then>
+                <echo>[x] Selenium Standalone Server found.</echo>
             </then>
             <else>
-                <composer command="install" />
+                <exec command="curl ${selenium.URL} -o ${build.path}/selenium-server.jar" />
+                <echo>[x] Selenium Standalone Server downloaded.</echo>
             </else>
         </if>
-
-        <property name="phpunit.IS_FILE_EXISTS" value="false" />
-        <exec command="if [ -f 'phpunit.phar' ]; then echo 'true'; else echo 'false'; fi;" outputProperty="phpunit.IS_FILE_EXISTS" />
+        
+        <!-- Chrome WebDriver -->
         <if>
-            <equals arg1="${phpunit.IS_FILE_EXISTS}" arg2="true" />
+            <and>
+                <os family="mac" />
+                <isfalse value="${chromerdriver.mac.EXISTS}" />
+            </and>
             <then>
-                <echo>[x] PHPUnit found</echo>
+                <exec command="curl ${chromerdriver.mac.URL} -o ${build.path}/chromedriver.zip"/>
+                <unzip file="chromedriver.zip" todir="./" />
+                <delete file="chromedriver.zip" verbose="false" />
+                <exec command="chmod +x chromedriver" />
+                <echo>[x] Downloaded Chrome Driver for Mac to current path. Might want to move it to /usr/bin.</echo>
             </then>
-            <elseif>
-                <equals arg1="${latestphpunit}" arg2="true" />
-                <then>
-                    <exec command="curl https://phar.phpunit.de/phpunit.phar -O" />
-                    <echo>[x] Downloaded PHPUnit to 'phpunit.phar' file</echo>
-                </then>
-            </elseif>
-            <else>
-                <exec command="curl https://phar.phpunit.de/phpunit-old.phar -O" />
-                <exec command="mv phpunit-old.phar phpunit.phar" />
-                <echo>[x] Downloaded PHPUnit (old stable version) to 'phpunit.phar' file</echo>
-            </else>
         </if>
-
-        <property name="selenium.IS_FILE_EXISTS" value="false" />
-        <exec command="if [ -f 'selenium-server-standalone-${selenium.VERSION}.0.jar' ]; then echo 'true'; else echo 'false'; fi;" outputProperty="selenium.IS_FILE_EXISTS" />
         <if>
-            <equals arg1="${selenium.IS_FILE_EXISTS}" arg2="true" />
+            <and>
+                <os family="unix" />
+                <isfalse value="${chromerdriver.linux.EXISTS}" />
+            </and>
             <then>
-                <echo>[x] Selenium Standalone Server found</echo>
+                <exec command="curl ${chromerdriver.linux.URL} -o ${build.path}/chromedriver.zip" />
+                <unzip file="chromedriver.zip" todir="./" />
+                <delete file="chromedriver.zip" verbose="false" />
+                <exec command="chmod +x chromedriver" />
+                <echo>[x] Downloaded Chrome Driver for Unix to current path. Might want to move ut to /usr/bin.</echo>
             </then>
-            <else>
-                <exec command="curl http://selenium-release.storage.googleapis.com/${selenium.VERSION}/selenium-server-standalone-${selenium.VERSION}.0.jar -O" passthru="true" />
-                <echo>[x] Selenium Standalone Server downloaded to 'selenium-server-standalone-${selenium.VERSION}.0.jar' file</echo>
-            </else>
         </if>
-        <property name="chromedriver.IS_FILE_EXISTS" value="false" />
-        <exec command="if [ -f 'chromedriver' ]; then echo 'true'; else echo 'false'; fi;" outputProperty="chromedriver.IS_FILE_EXISTS" />
         <if>
-            <equals arg1="${chromedriver.IS_FILE_EXISTS}" arg2="true" />
+            <and>
+                <os family="windows" />
+                <isfalse value="${chromerdriver.windows.EXISTS}" />
+            </and>
             <then>
-                <echo>[x] Chromedriver found</echo>
+                <exec command="curl ${chromerdriver.windows.URL} -o ${build.path}/chromedriver.zip" />
+                <unzip file="${build.path}/chromedriver.zip" todir="${build.path}" />
+                <delete file="${build.path}/chromedriver.zip" verbose="true" />
+                <echo>[x] Downloaded Chrome Driver for Windows to current path. Might want to include it in the PATH.</echo>
             </then>
-            
-            <elseif>
-                <os family="mac"/>
-                <then>
-                    <exec command="curl http://chromedriver.storage.googleapis.com/2.20/chromedriver_mac32.zip -O"/>
-                    <unzip file="chromedriver_mac32.zip" todir="./" />
-                    <delete file="chromedriver_mac32.zip" verbose="false" />
-                    <exec command="chmod +x chromedriver" />
-                    <echo>[x] Downloaded chromedriver to current path. Move to /usr/bin</echo>
-                </then>
-            </elseif>
-            
-            <elseif>
-                <os family="unix"/>
-                <then>
-                    <exec command="curl http://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip -O" />
-                    <unzip file="chromedriver_linux64.zip" todir="./" />
-                    <delete file="chromedriver_linux64.zip" verbose="false" />
-                    <exec command="chmod +x chromedriver" />
-                    <echo>[x] Downloaded chromedriver to current path. Move to /usr/bin</echo>
-                </then>
-            </elseif>
-            
-            <else>
-                <exec command="curl http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip -O" />
-                <unzip file="chromedriver_win32.zip" todir="./" />
-                <delete file="chromedriver_win32.zip" verbose="false" />
-                <echo>[x] Downloaded chromedriver to current path. Move to c:/Windows or somewhere in the PATH.</echo>
-            </else>
         </if>
 
-        <echo />
-        <echo>Will start the Selenium server in this tab.</echo>
-        <echo>Run `php phpunit.phar` in a new terminal.</echo>
-        <echo />
-        <echo>To start the Selenium server manually, run `java -jar selenium-server-standalone-${selenium.VERSION}.0.jar`.</echo>
-        <echo />
+        <!-- IE WebDriver (only for Windows) -->
+        <if>
+            <and>
+                <os family="windows"/>
+                <istrue value="${iedriver.EXISTS}" />
+            </and>
+            <then>
+                <echo>[x] IEDriver found.</echo>
+            </then>
+        </if>
+        <if>
+            <and>
+                <os family="windows"/>
+                <isfalse value="${iedriver.EXISTS}" />
+            </and>
+            <then>
+                <exec command="curl ${iedriver.URL} -o ${build.path}/iedriver.zip" />
+                <unzip file="${build.path}/iedriver.zip" todir="${build.path}" />
+                <delete file="${build.path}/iedriver.zip" verbose="false" />
+                <echo>[x] Downloaded IE Driver for Windows to current path. Might want to include it in the PATH.</echo>
+            </then>
+        </if>
 
-        <exec command="java -jar selenium-server-standalone-${selenium.VERSION}.0.jar" passthru="true" escape="true" checkreturn="true" />
+        <echo>Testing Selenium Server by running `java -jar selenium-server.jar`.</echo>
+        <echo>You can kill this process whenever you want.</echo>
+
+        <exec command="java -jar ${build.path}/selenium-server.jar" passthru="true" escape="true" checkreturn="true" />
     </target>
 </project>
