@@ -13,10 +13,10 @@ class SamplePhantomJSTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $capabilities = array(
+        $capabilities = [
             WebDriverCapabilityType::BROWSER_NAME => 'phantomjs',
             'phantomjs.page.settings.userAgent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:25.0) Gecko/20100101 Firefox/25.0',
-        );
+        ];
 
         $this->webDriver = RemoteWebDriver::create('http://localhost:4444/wd/hub', $capabilities);
 

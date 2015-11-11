@@ -5,7 +5,6 @@ use Facebook\WebDriver\Firefox\FirefoxDriver;
 use Facebook\WebDriver\Firefox\FirefoxProfile;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\Remote\WebDriverCapabilityType;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
@@ -20,9 +19,9 @@ class SampleFirefoxTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCustomWindowSize()
     {
-        $capabilities = array(
+        $capabilities = [
             WebDriverCapabilityType::BROWSER_NAME => 'firefox'
-        );
+        ];
 
         $this->webDriver = RemoteWebDriver::create('http://localhost:4444/wd/hub', $capabilities);
 
