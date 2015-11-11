@@ -5,7 +5,7 @@ php:
 before_script:
   - sudo apt-get install phantomjs
   - composer install --dev --no-interaction
-  - wget http://www.phing.info/get/phing-latest.phar -o phing
+  - wget http://www.phing.info/get/phing-latest.phar -O phing
   - chmod +x phing
   - phing # download / check requirements
   - "export DISPLAY=:99.0" # @see http://docs.travis-ci.com/user/gui-and-headless-browsers/
@@ -15,7 +15,7 @@ before_script:
   - sleep 3 # give Web server some time to bind to sockets, etc
 
 script:
-  - phpunit -v -c phpunit.xml
+  - phpunit -v -c phpunit.xml tests/SamplePhantomJSTest.php
 
 notifications:
   email: false
