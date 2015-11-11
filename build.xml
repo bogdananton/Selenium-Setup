@@ -20,6 +20,22 @@
         <!-- Create the binaries main folder -->
         <property name="build.path" value="${application.startdir}/build" />
         <mkdir dir="${build.path}" />
+        <if>
+            <or>
+                <os family="mac" />
+                <os family="unix" />
+            </or>
+            <then>
+                <exec command="PATH=${build.path}:$PATH" escape="false"/>
+            </then>
+        </if>
+        <if>
+            <os family="windows" />
+            <then>
+                <exec command="set PATH=%PATH%;${build.path}" escape="false"/>
+            </then>
+        </if>
+
         <echo>[x] "build" folder is ${build.path}</echo>
         
         <!-- 
@@ -273,6 +289,10 @@
         <echo>Testing Selenium Server by running `java -jar selenium-server.jar`.</echo>
         <echo>You can kill this process whenever you want.</echo>
 
-        <exec command="java -jar ${build.path}/selenium-server.jar" passthru="true" escape="true" checkreturn="true" />
+        <exec command="java -jar ${build.path}/selenium-server.jar" passthru="true" escape="false" checkreturn="true" />
+<!--
+        <exec command="sleep 5"/>
+        <exec command="php ${build.path}/phpunit.phar" passthru="true" escape="false" checkreturn="true" />
+-->
     </target>
 </project>
