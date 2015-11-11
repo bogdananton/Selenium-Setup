@@ -12,6 +12,11 @@ before_script:
  
 script:
   - php phing-latest.phar
+  
+after_script:
+  - ls -al
+  - cd build
+  - ls -al
 
 notifications:
   email: false
