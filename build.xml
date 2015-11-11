@@ -150,7 +150,7 @@
                 <echo>[x] Composer found.</echo>
             </then>
             <else>
-                <exec command="curl ${composer.URL} -o ${build.path}/composer.phar" />
+                <exec command="curl ${composer.URL} -o ${build.path}/composer.phar" level="debug" passthru="true" escape="true" checkreturn="true" />
                 <echo>[x] Composer downloaded.</echo>
             </else>
         </if>
