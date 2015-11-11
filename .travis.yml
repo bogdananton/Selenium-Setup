@@ -1,3 +1,5 @@
+sudo: required
+
 language: php
 php:
   - "5.4"
@@ -7,8 +9,9 @@ branches:
     - master
 
 before_script:
- - wget http://www.phing.info/get/phing-latest.phar
- - chmod a+x phing-latest.phar
+  - curl -V
+  - wget http://www.phing.info/get/phing-latest.phar
+  - chmod a+x phing-latest.phar
  
 script:
   - php phing-latest.phar
