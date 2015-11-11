@@ -45,6 +45,8 @@ class SamplePhantomJSTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $this->webDriver->quit();
+        if ($this->webDriver instanceof RemoteWebDriver) {
+            $this->webDriver->quit();
+        }
     }
 }
