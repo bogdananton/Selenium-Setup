@@ -9,8 +9,9 @@ before_script:
   - chmod +x phing
   - nohup ./phing &# download / check requirements
   - "export DISPLAY=:99.0" # @see http://docs.travis-ci.com/user/gui-and-headless-browsers/
+  - sh -e /etc/init.d/xvfb start - nohup bash -c
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
-  - sleep 3 # give xvfb some time to start
+  - sleep 10 # give xvfb some time to start
 
 script:
   - phpunit -v -c phpunit.xml tests/SamplePhantomJSTest.php
