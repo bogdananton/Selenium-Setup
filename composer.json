@@ -2,7 +2,7 @@
   "name": "bogdananton/phpunit-selenium-env",
   "license": "MIT",
   "require": {
-    "php": "^5.3",
+    "php": "^5.4",
     "facebook/webdriver": "1.0.*"
   }
 }
