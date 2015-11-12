@@ -1,3 +1,6 @@
 .idea/
 *.phar
 vendor/
+/build/logs
+/build
+/composer.lock
