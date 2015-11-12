@@ -20,8 +20,8 @@
         <!-- General options (override this in your extending scripts) -->
         <property name="selenium.server.host" value="localhost" />
         <property name="selenium.server.port" value="8321" />
-        <property name="proxy.host" value="proxy.avangate.local" />
-        <property name="proxy.port" value="8080" />
+        <property name="proxy.host" value="" /> <!-- proxy.avangate.local -->
+        <property name="proxy.port" value="" /> <!-- 8080 -->
         
         <!-- Create the binaries main folder -->
         <property name="build.path" value="${application.startdir}/build" />
