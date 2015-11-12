@@ -24,7 +24,7 @@ timeout /T 5
 REM cls
 
 echo Starting tests ...
-php build/phpunit.phar -c phpunit.xml
+php build/phpunit.phar -c phpunit.xml --testsuite "windows"
 
 echo Stopping previous processes ...
 taskkill /F /IM java.exe

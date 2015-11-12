@@ -1,3 +1,5 @@
+sudo: false
+
 language: php
 php:
   - "5.4"
@@ -7,17 +9,16 @@ branches:
     - master
 
 before_script:
-  - sudo apt-get install phantomjs xvfb
-  - composer install --dev --no-interaction
-  - wget http://www.phing.info/get/phing-latest.phar -O phing
-  - chmod +x phing
-  - nohup ./phing &# download / check requirements
-  - export DISPLAY=:99.0 # @see http://docs.travis-ci.com/user/gui-and-headless-browsers/
-  - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
-  - sleep 10 # give xvfb some time to start
-
+  - wget http://www.phing.info/get/phing-latest.phar
+  - chmod +x phing-latest.phar
+ 
 script:
-  - phpunit -v -c phpunit.xml tests/SamplePhantomJSTest.php
+  - php phing-latest.phar
+  
+after_script:
+  - ls -al
+  - cd build
+  - ls -al
 
 notifications:
   email: false
