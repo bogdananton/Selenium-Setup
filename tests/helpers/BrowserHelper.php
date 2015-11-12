@@ -4,7 +4,7 @@ namespace tests\helpers;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\WebDriverCapabilityType;
 
-class BrowserTestCase extends \PHPUnit_Framework_TestCase
+class BrowserHelper extends \PHPUnit_Framework_TestCase
 {
     protected $browserName;
     protected $seleniumServerHost;
@@ -25,19 +25,23 @@ class BrowserTestCase extends \PHPUnit_Framework_TestCase
 
         $this->webDriver = RemoteWebDriver::create('http://' . $this->getSeleniumServerHost() . ':' . $this->getSeleniumServerPort() . '/wd/hub', $capabilities);
 
+
         // Delete all cookies to avoid cart products and scenarios conflicts.
         $this->webDriver->manage()->deleteAllCookies();
     }
     
     public function setUp()
     {
+        $this->markTestSkipped('This is a dummy.');
         // Default setup. Override this.
-        $this->envSetup('localhost', 81, 'chrome');
+        $this->envSetup(getenv('seleniumServerHost'), getenv('seleniumServerPort'), 'chrome');
     }
 
     public function tearDown()
     {
-        $this->webDriver->quit();
+        if ($this->webDriver instanceof RemoteWebDriver) {
+            $this->webDriver->quit();
+        }
     }
 
     /**
@@ -50,7 +54,7 @@ class BrowserTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @param mixed $browserName
-     * @return BrowserTestCase
+     * @return BrowserHelper
      */
     protected function setBrowserName($browserName)
     {
@@ -69,7 +73,7 @@ class BrowserTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @param mixed $seleniumServerHost
-     * @return BrowserTestCase
+     * @return BrowserHelper
      */
     protected function setSeleniumServerHost($seleniumServerHost)
     {
@@ -88,7 +92,7 @@ class BrowserTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @param mixed $seleniumServerPort
-     * @return BrowserTestCase
+     * @return BrowserHelper
      */
     protected function setSeleniumServerPort($seleniumServerPort)
     {

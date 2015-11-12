@@ -20,6 +20,6 @@
     <!-- @todo: sync with build.xml -->
     <php>
         <env name="seleniumServerHost" value="localhost" />
-        <env name="seleniumServerPort" value="81" />
+        <env name="seleniumServerPort" value="8321" />
     </php>
 </phpunit>

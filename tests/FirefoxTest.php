@@ -2,9 +2,9 @@
 namespace tests;
 
 use Facebook\WebDriver\WebDriverBy;
-use tests\helpers\BrowserTestCase;
+use tests\helpers\BrowserHelper;
 
-class FirefoxTest extends BrowserTestCase
+class FirefoxTest extends BrowserHelper
 {
     public function setUp()
     {
