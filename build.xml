@@ -56,18 +56,18 @@
         <property name="phpunit.new.EXISTS" value="false"/>
         <available property="phpunit.new.EXISTS" file="${build.path}/phpunit.phar" type="file" />
         
-        <property name="chromedriver.mac.VERSION" value="2.20" />
-        <property name="chromerdriver.mac.URL" value="http://chromedriver.storage.googleapis.com/2.20/chromedriver_mac32.zip" />
+        <property name="chromedriver.mac.VERSION" value="2.10" />
+        <property name="chromerdriver.mac.URL" value="http://chromedriver.storage.googleapis.com/2.10/chromedriver_mac32.zip" />
         <property name="chromerdriver.mac.EXISTS" value="false"/>
         <available property="chromerdriver.mac.EXISTS" file="${build.path}/chromedriver" type="file" />
 
-        <property name="chromedriver.linux.VERSION" value="2.20" />
-        <property name="chromerdriver.linux.URL" value="http://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip" />
+        <property name="chromedriver.linux.VERSION" value="2.10" />
+        <property name="chromerdriver.linux.URL" value="http://chromedriver.storage.googleapis.com/2.10/chromedriver_linux64.zip" />
         <property name="chromerdriver.linux.EXISTS" value="false"/>
         <available property="chromerdriver.linux.EXISTS" file="${build.path}/chromedriver" type="file" />
 
-        <property name="chromedriver.windows.VERSION" value="2.20" />
-        <property name="chromerdriver.windows.URL" value="http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip" />
+        <property name="chromedriver.windows.VERSION" value="2.10" />
+        <property name="chromerdriver.windows.URL" value="http://chromedriver.storage.googleapis.com/2.10/chromedriver_win32.zip" />
         <property name="chromerdriver.windows.EXISTS" value="false"/>
         <available property="chromerdriver.windows.EXISTS" file="${build.path}/chromedriver.exe" type="file" />
         
