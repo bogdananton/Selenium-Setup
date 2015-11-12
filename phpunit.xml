@@ -1,11 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
     bootstrap="vendor/autoload.php">
 
     <testsuites>
         <testsuite name="all">
             <directory suffix="Test.php">tests/</directory>
         </testsuite>
+        <testsuite name="unix">
+            <file>tests/ChromeTest.php</file>
+            <file>tests/FirefoxTest.php</file>
+        </testsuite>
+        <testsuite name="windows">
+            <file>tests/ChromeTest.php</file>
+            <file>tests/FirefoxTest.php</file>
+            <file>tests/IETest.php</file>
+        </testsuite>
     </testsuites>
+
+    <!-- @todo: sync with build.xml -->
+    <php>
+        <env name="seleniumServerHost" value="localhost" />
+        <env name="seleniumServerPort" value="8321" />
+    </php>
 </phpunit>

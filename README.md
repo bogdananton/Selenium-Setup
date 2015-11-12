@@ -64,4 +64,4 @@ Example of `build.xml` in **your** project:
 
 ### Screenshot in Windows (git bash)
 
-![](https://raw.githubusercontent.com/bogdananton/phpunit-selenium-env/master/screenshot-windows.png)
+![](https://raw.githubusercontent.com/bogdananton/phpunit-selenium-env/master/screenshot-windows.gif)
