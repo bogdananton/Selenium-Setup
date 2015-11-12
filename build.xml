@@ -17,24 +17,17 @@
             by Bogdan Anton and contributors.
         </echo>
         
+        <!-- General options (override this in your extending scripts) -->
+        <property name="selenium.server.host" value="localhost" />
+        <property name="selenium.server.port" value="81" />
+        <property name="proxy.host" value="" />
+        <property name="proxy.port" value="" />
+        
         <!-- Create the binaries main folder -->
         <property name="build.path" value="${application.startdir}/build" />
+        <property name="logs.path" value="${build.path}/logs" />
         <mkdir dir="${build.path}" />
-        <if>
-            <or>
-                <os family="mac" />
-                <os family="unix" />
-            </or>
-            <then>
-                <exec command="PATH=${build.path}:$PATH" escape="false"/>
-            </then>
-        </if>
-        <if>
-            <os family="windows" />
-            <then>
-                <exec command="set PATH=%PATH%;${build.path}" escape="false"/>
-            </then>
-        </if>
+        <mkdir dir="${logs.path}" />
 
         <echo>[x] "build" folder is ${build.path}</echo>
         
@@ -56,12 +49,12 @@
         <property name="phpunit.old.VERSION" value="4.8.9" />
         <property name="phpunit.old.URL" value="https://phar.phpunit.de/phpunit-4.8.9.phar" />
         <property name="phpunit.old.EXISTS" value="false"/>
-        <available property="phpunit.old.EXISTS" file="${build.path}/phpunit-old.phar" type="file" />
+        <available property="phpunit.old.EXISTS" file="${build.path}/phpunit.phar" type="file" />
         
         <property name="phpunit.new.VERSION" value="5.0.8" />
         <property name="phpunit.new.URL" value="https://phar.phpunit.de/phpunit-5.0.8.phar" />
         <property name="phpunit.new.EXISTS" value="false"/>
-        <available property="phpunit.new.EXISTS" file="${build.path}/phpunit-new.phar" type="file" />
+        <available property="phpunit.new.EXISTS" file="${build.path}/phpunit.phar" type="file" />
         
         <property name="chromedriver.mac.VERSION" value="2.20" />
         <property name="chromerdriver.mac.URL" value="http://chromedriver.storage.googleapis.com/2.20/chromedriver_mac32.zip" />
@@ -206,7 +199,7 @@
                 <isfalse value="${phpunit.old.EXISTS}" />
             </and>
             <then>
-                <exec command="curl ${phpunit.old.URL} -o ${build.path}/phpunit-old.phar" />
+                <exec command="curl ${phpunit.old.URL} -o ${build.path}/phpunit.phar" />
                 <echo>[x] Downloaded PHPUnit (old).</echo>
             </then>
         </if>
@@ -286,13 +279,27 @@
             </then>
         </if>
 
-        <echo>Testing Selenium Server by running `java -jar selenium-server.jar`.</echo>
-        <echo>You can kill this process whenever you want.</echo>
+        <echo>+------------------------------------+</echo>
+        <echo>Testing Selenium Server on your system</echo>
+        <echo>${host.os} ${host.os.release}</echo>
+        <echo>${host.os.version}</echo>
+        <echo>+------------------------------------+</echo>
 
-        <exec command="java -jar ${build.path}/selenium-server.jar > /dev/null &amp;" passthru="true" escape="true" checkreturn="true" />
-        <!--
-                <exec command="sleep 5"/>
-                <exec command="php ${build.path}/phpunit.phar" passthru="true" escape="false" checkreturn="true" />
-        -->
+        <if>
+            <os family="windows" />
+            <then>
+                <exec command="test_windows.bat ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
+            </then>
+        </if>
+        
+        <if>
+            <or>
+                <os family="mac" />
+                <os family="unix" />
+            </or>
+            <then>
+                <exec command="test_unix.sh" passthru="true" />
+            </then>
+        </if>
     </target>
 </project>
