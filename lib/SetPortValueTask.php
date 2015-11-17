@@ -1,4 +1,8 @@
 <?php
+// For the moment, I cannot get the autoloader to work.
+// @see https://github.com/phingofficial/phing/blob/master/bin/phing.php#L11
+require_once dirname(__FILE__)  . DIRECTORY_SEPARATOR . 'SeleniumPortNode.php';
+
 class SetPortValueTask extends \Task
 {
     public function main()

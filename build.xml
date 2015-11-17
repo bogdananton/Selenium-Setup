@@ -66,8 +66,9 @@
         <property name="chromerdriver.linux.EXISTS" value="false"/>
         <available property="chromerdriver.linux.EXISTS" file="${build.path}/chromedriver" type="file" />
 
-        <property name="chromedriver.windows.VERSION" value="2.15" />
-        <property name="chromerdriver.windows.URL" value="http://chromedriver.storage.googleapis.com/2.15/chromedriver_win32.zip" />
+        <!-- @todo: check 'google-chrome product-version' on unix, and choose the appropriate driver version. -->
+        <property name="chromedriver.windows.VERSION" value="2.20" />
+        <property name="chromerdriver.windows.URL" value="http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip" />
         <property name="chromerdriver.windows.EXISTS" value="false"/>
         <available property="chromerdriver.windows.EXISTS" file="${build.path}/chromedriver.exe" type="file" />
         
@@ -94,6 +95,9 @@
         <!-- Scan PHP cURL -->
         <php level="debug" expression="function_exists('curl_version')" returnProperty="cURLEnabled" />
         <php level="debug" expression="curl_version()['version']" returnProperty="cURLVersion" />
+
+        <echo>Checking command line curl version ...</echo>
+        <exec command="curl -V" returnProperty="checkCmdCurl" checkreturn="true" level="debug" passthru="true" />
 
         <!-- Scan PHP OpenSSL extension -->
         <php level="debug" expression="extension_loaded('openssl')" returnProperty="openSSLEnabled" />
