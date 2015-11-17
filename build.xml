@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="phpunit-selenium-env" default="envSetup">
-    <resolvepath propertyName="project.path" file="." />
-    <target name="envSetup">
-
-        <!-- Boilerplate -->
+<project name="phpunit-selenium-env" default="runAllTargets">
+    <property name="path.to.env" value="${application.startdir}" />
+    
+    <target name="runAllTargets" depends="boilerplateEnv,setupEnv,setEnvPort,startEnv">
+    </target>
+    
+    <target name="boilerplateEnv">
         <echo>
-          ____            ___
-         /\  _`\         /\_ \                  __
-         \ \,\L\_\     __\//\ \      __    ___ /\_\  __  __    ___ ___
-          \/_\__ \   /'__`\\ \ \   /'__`\/' _ `\/\ \/\ \/\ \ /' __` __`\
-            /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \
-            \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
+         ____            ___                                             
+        /\  _`\         /\_ \                  __                        
+        \ \,\L\_\     __\//\ \      __    ___ /\_\  __  __    ___ ___    
+         \/_\__ \   /'__`\\ \ \   /'__`\/' _ `\/\ \/\ \/\ \ /' __` __`\  
+           /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \ 
+           \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
             \/_____/\/____/\/____/\/____/\/_/\/_/\/_/\/___/  \/_/\/_/\/_/
             PHPUnit Environment with Facebook's WebDriver
             by Bogdan Anton and contributors.
         </echo>
+    </target>
+    
+    <target name="setupEnv" depends="boilerplateEnv">
+        <echo>Current path: ${path.to.env}</echo>
         
         <!-- General options (override this in your extending scripts) -->
+        <property name="selenium.mode" value="self-test" />
         <property name="selenium.server.host" value="localhost" />
         <property name="selenium.server.port" value="8321" />
         <property name="proxy.host" value="" /> <!-- proxy.avangate.local -->
@@ -284,10 +291,14 @@
                 <echo>[x] Downloaded IE Driver for Windows to current path. Might want to include it in the PATH.</echo>
             </then>
         </if>
+    </target>
 
-        <!-- add "-Dselenium.server.port={port}" in the php phing-latest.phar command to override the default port -->
+    <!-- add "-Dselenium.server.port={port}" in the php phing-latest.phar command to override the default port -->
+    <target name="setEnvPort">
         <setSeleniumServerPortValue/>
-
+    </target>
+    
+    <target name="startEnv">
         <echo>+------------------------------------+</echo>
         <echo>Testing Selenium Server on your system</echo>
         <echo>${host.os} ${host.os.release}</echo>
@@ -297,7 +308,7 @@
         <if>
             <os family="windows" />
             <then>
-                <exec command="test_windows.bat ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
+                <exec command="${path.to.env}/start_selenium.bat ${selenium.mode} ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
             </then>
         </if>
 
@@ -307,22 +318,15 @@
                 <os family="unix" />
             </or>
             <then>
-                <exec command="chmod +x test_unix.sh" />
-                <exec command="./test_unix.sh ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
+                <exec command="chmod +x start_selenium.sh" />
+                <exec command="${path.to.env}/start_selenium.sh ${selenium.mode} ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
             </then>
         </if>
     </target>
-
-    <target name="setPort">
-
-        <!-- Autoloader for Tasks -->
-        <setSeleniumServerPortValue/>
-    </target>
-
-
-
+    
     <taskdef
             name="setSeleniumServerPortValue"
             classname="lib.SetPortValueTask"
+            classpath="${path.to.env}"
             description="Update port constant to the one given in the selenium.server.port property" />
 </project>

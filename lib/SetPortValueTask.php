@@ -29,7 +29,7 @@ class SetPortValueTask extends \Task
 
     public static function getPhunitFilename()
     {
-        return 'phpunit.xml';
+        return dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'phpunit.xml';
     }
 
     protected function getSeleniumPortNode()
