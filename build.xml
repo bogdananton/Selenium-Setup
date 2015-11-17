@@ -56,18 +56,18 @@
         <property name="phpunit.new.EXISTS" value="false"/>
         <available property="phpunit.new.EXISTS" file="${build.path}/phpunit.phar" type="file" />
         
-        <property name="chromedriver.mac.VERSION" value="2.10" />
-        <property name="chromerdriver.mac.URL" value="http://chromedriver.storage.googleapis.com/2.10/chromedriver_mac32.zip" />
+        <property name="chromedriver.mac.VERSION" value="2.15" />
+        <property name="chromerdriver.mac.URL" value="http://chromedriver.storage.googleapis.com/2.15/chromedriver_mac32.zip" />
         <property name="chromerdriver.mac.EXISTS" value="false"/>
         <available property="chromerdriver.mac.EXISTS" file="${build.path}/chromedriver" type="file" />
 
-        <property name="chromedriver.linux.VERSION" value="2.10" />
-        <property name="chromerdriver.linux.URL" value="http://chromedriver.storage.googleapis.com/2.10/chromedriver_linux64.zip" />
+        <property name="chromedriver.linux.VERSION" value="2.15" />
+        <property name="chromerdriver.linux.URL" value="http://chromedriver.storage.googleapis.com/2.15/chromedriver_linux64.zip" />
         <property name="chromerdriver.linux.EXISTS" value="false"/>
         <available property="chromerdriver.linux.EXISTS" file="${build.path}/chromedriver" type="file" />
 
-        <property name="chromedriver.windows.VERSION" value="2.10" />
-        <property name="chromerdriver.windows.URL" value="http://chromedriver.storage.googleapis.com/2.10/chromedriver_win32.zip" />
+        <property name="chromedriver.windows.VERSION" value="2.15" />
+        <property name="chromerdriver.windows.URL" value="http://chromedriver.storage.googleapis.com/2.15/chromedriver_win32.zip" />
         <property name="chromerdriver.windows.EXISTS" value="false"/>
         <available property="chromerdriver.windows.EXISTS" file="${build.path}/chromedriver.exe" type="file" />
         
@@ -175,6 +175,8 @@
                 <echo>[x] "vendor" folder created.</echo>
             </else>
         </if>
+
+
 
         <!-- PHPUnit -->
         <if>
@@ -308,105 +310,15 @@
     </target>
 
     <target name="setPort">
+
+        <!-- Autoloader for Tasks -->
         <setSeleniumServerPortValue/>
     </target>
 
-    <adhoc-task name="setSeleniumServerPortValue" description="Update port constant to the one given in the selenium.server.port property">
-        <![CDATA[
-                class SeleniumPortNode
-                {
-                    protected $snapshot;
 
-                    protected $identifier;
 
-                    public function __construct($raw)
-                    {
-                        $this->snapshot = (array)$raw;
-                    }
-
-                    public function getName()
-                    {
-                        foreach ($this->snapshot['@attributes'] as $key => $attribute) {
-                            if ($key === 'name') {
-                                return $attribute;
-                            }
-                        }
-                    }
-
-                    public function getValue()
-                    {
-                        foreach ($this->snapshot['@attributes'] as $key => $attribute) {
-                            if ($key === 'value') {
-                                return $attribute;
-                            }
-                        }
-                    }
-
-                    public function setValue($value)
-                    {
-                        $file = SetPortValueTask::getPhunitFilename();
-                        $settings = simplexml_load_file($file);
-
-                        foreach ($settings->php->children() as $item) {
-                            $itemName = (string)$item->attributes()->{'name'};
-
-                            if ($itemName === $this->getName()) {
-                                $item->attributes()->{'value'} = $value;
-                                file_put_contents(SetPortValueTask::getPhunitFilename(), $settings->saveXML());
-                            }
-                        }
-
-                        return $this;
-                    }
-
-                    public static function buildSeleniumServerPortFromPhpunitFile()
-                    {
-                        $settings = simplexml_load_file(SetPortValueTask::getPhunitFilename());
-
-                        foreach ($settings->php->children() as $item) {
-                            $element = new self($item);
-
-                            if ($element->getName() === 'seleniumServerPort') {
-                                return $element;
-                            }
-                        }
-                    }
-                }
-
-                class SetPortValueTask extends Task
-                {
-                    public function main()
-                    {
-                        $newValue = $this->project->getProperty('selenium.server.port');
-                        $oldValue = $this->getSeleniumPortNode()->getValue();
-
-                        switch (true) {
-                            case (int)$newValue === 0:
-                                $this->log('Invalid new value: ' . $newValue . ', seen as [' . var_export($newValue, 2) . '].');
-                                break;
-
-                            case ($oldValue == $newValue):
-                                $this->log('No update was needed.');
-                                break;
-
-                            default:
-                                $this->getSeleniumPortNode()->setValue($newValue);
-                                $this->log('Current Selenium host proxy is ' . $oldValue);
-                                $this->log('Updated ' . self::getPhunitFilename() . ', new value is ' . $newValue);
-                                break;
-                        }
-                    }
-
-                    public static function getPhunitFilename()
-                    {
-                        return 'phpunit.xml';
-                    }
-
-                    protected function getSeleniumPortNode()
-                    {
-                        return SeleniumPortNode::buildSeleniumServerPortFromPhpunitFile();
-                    }
-                }
-            ]]>
-    </adhoc-task>
+    <taskdef
+            name="setSeleniumServerPortValue"
+            classname="lib.SetPortValueTask"
+            description="Update port constant to the one given in the selenium.server.port property" />
 </project>
