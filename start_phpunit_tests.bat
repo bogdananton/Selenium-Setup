@@ -1,5 +1,5 @@
 echo Starting tests ...
-php build/phpunit.phar -c phpunit.xml --testsuite "windows"
+php build/phpunit.phar -c %~dp0phpunit.xml --testsuite "windows"
 
 echo Stopping previous processes ...
 taskkill /F /IM java.exe

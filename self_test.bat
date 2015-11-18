@@ -7,5 +7,5 @@ REM %2 selenium.server.port
 REM %3 proxyHost
 REM %4 proxyPort
 
-call start_selenium.bat %1 %2 %3 %4
-call start_phpunit_tests.bat
+call %~dp0start_selenium.bat %1 %2 %3 %4
+call %~dp0start_phpunit_tests.bat
