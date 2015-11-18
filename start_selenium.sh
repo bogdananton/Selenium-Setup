@@ -25,9 +25,5 @@ sleep 5
 
 if [ "$1" -eq "self-test" ]
     then
-        echo "Starting tests ..."
-        php build/phpunit.phar -c phpunit.xml --testsuite "unix"
-        
-        echo "Stopping previous processes ..."
-        pgrep -f 'selenium-server.jar' | xargs kill
+
 fi
