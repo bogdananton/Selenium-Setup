@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="phpunit-selenium-env" default="envSetup">
-    <resolvepath propertyName="project.path" file="." />
-    <target name="envSetup">
-
-        <!-- Boilerplate -->
+<project name="phpunit-selenium-env" default="runAllTargets">
+    <property name="path.to.env" value="${application.startdir}" />
+    
+    <!-- General options (override this in your extending scripts) -->
+    <property name="selenium.server.host" value="localhost" />
+    <property name="selenium.server.port" value="8321" />
+    <property name="proxy.host" value="" /> <!-- proxy.avangate.local -->
+    <property name="proxy.port" value="" /> <!-- 8080 -->
+    
+    <target name="runAllTargets" depends="boilerplateEnv,setupEnv,setSeleniumPort,selfTest">
+    </target>
+    
+    <target name="boilerplateEnv">
         <echo>
-          ____            ___
-         /\  _`\         /\_ \                  __
-         \ \,\L\_\     __\//\ \      __    ___ /\_\  __  __    ___ ___
-          \/_\__ \   /'__`\\ \ \   /'__`\/' _ `\/\ \/\ \/\ \ /' __` __`\
-            /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \
-            \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
+         ____            ___                                             
+        /\  _`\         /\_ \                  __                        
+        \ \,\L\_\     __\//\ \      __    ___ /\_\  __  __    ___ ___    
+         \/_\__ \   /'__`\\ \ \   /'__`\/' _ `\/\ \/\ \/\ \ /' __` __`\  
+           /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \ 
+           \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
             \/_____/\/____/\/____/\/____/\/_/\/_/\/_/\/___/  \/_/\/_/\/_/
             PHPUnit Environment with Facebook's WebDriver
             by Bogdan Anton and contributors.
         </echo>
-        
-        <!-- General options (override this in your extending scripts) -->
-        <property name="selenium.server.host" value="localhost" />
-        <property name="selenium.server.port" value="8321" />
-        <property name="proxy.host" value="" /> <!-- proxy.avangate.local -->
-        <property name="proxy.port" value="" /> <!-- 8080 -->
+    </target>
+    
+    <target name="setupEnv" depends="boilerplateEnv">
+        <echo>Current path: ${path.to.env}</echo>
 
         <!-- Create the binaries main folder -->
         <property name="build.path" value="${application.startdir}/build" />
@@ -56,18 +62,19 @@
         <property name="phpunit.new.EXISTS" value="false"/>
         <available property="phpunit.new.EXISTS" file="${build.path}/phpunit.phar" type="file" />
         
-        <property name="chromedriver.mac.VERSION" value="2.10" />
-        <property name="chromerdriver.mac.URL" value="http://chromedriver.storage.googleapis.com/2.10/chromedriver_mac32.zip" />
+        <property name="chromedriver.mac.VERSION" value="2.15" />
+        <property name="chromerdriver.mac.URL" value="http://chromedriver.storage.googleapis.com/2.15/chromedriver_mac32.zip" />
         <property name="chromerdriver.mac.EXISTS" value="false"/>
         <available property="chromerdriver.mac.EXISTS" file="${build.path}/chromedriver" type="file" />
 
-        <property name="chromedriver.linux.VERSION" value="2.10" />
-        <property name="chromerdriver.linux.URL" value="http://chromedriver.storage.googleapis.com/2.10/chromedriver_linux64.zip" />
+        <property name="chromedriver.linux.VERSION" value="2.15" />
+        <property name="chromerdriver.linux.URL" value="http://chromedriver.storage.googleapis.com/2.15/chromedriver_linux64.zip" />
         <property name="chromerdriver.linux.EXISTS" value="false"/>
         <available property="chromerdriver.linux.EXISTS" file="${build.path}/chromedriver" type="file" />
 
-        <property name="chromedriver.windows.VERSION" value="2.10" />
-        <property name="chromerdriver.windows.URL" value="http://chromedriver.storage.googleapis.com/2.10/chromedriver_win32.zip" />
+        <!-- @todo: check 'google-chrome product-version' on unix, and choose the appropriate driver version. -->
+        <property name="chromedriver.windows.VERSION" value="2.20" />
+        <property name="chromerdriver.windows.URL" value="http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip" />
         <property name="chromerdriver.windows.EXISTS" value="false"/>
         <available property="chromerdriver.windows.EXISTS" file="${build.path}/chromedriver.exe" type="file" />
         
@@ -94,6 +101,9 @@
         <!-- Scan PHP cURL -->
         <php level="debug" expression="function_exists('curl_version')" returnProperty="cURLEnabled" />
         <php level="debug" expression="curl_version()['version']" returnProperty="cURLVersion" />
+
+        <echo>Checking command line curl version ...</echo>
+        <exec command="curl -V" returnProperty="checkCmdCurl" checkreturn="true" level="debug" passthru="true" />
 
         <!-- Scan PHP OpenSSL extension -->
         <php level="debug" expression="extension_loaded('openssl')" returnProperty="openSSLEnabled" />
@@ -176,6 +186,8 @@
             </else>
         </if>
 
+
+
         <!-- PHPUnit -->
         <if>
             <equals arg1="${phpunit.old.EXISTS}" arg2="true" />
@@ -189,6 +201,7 @@
                 <isfalse value="${phpunit.new.EXISTS}" />
             </and>
             <then>
+                <echo>Downloading PHPUnit ...</echo>
                 <exec command="curl ${phpunit.new.URL} -o ${build.path}/phpunit.phar" />
                 <echo>[x] Downloaded PHPUnit.</echo>
             </then>
@@ -199,6 +212,7 @@
                 <isfalse value="${phpunit.old.EXISTS}" />
             </and>
             <then>
+                <echo>Downloading PHPUnit (old) ...</echo>
                 <exec command="curl ${phpunit.old.URL} -o ${build.path}/phpunit.phar" />
                 <echo>[x] Downloaded PHPUnit (old).</echo>
             </then>
@@ -211,6 +225,7 @@
                 <echo>[x] Selenium Standalone Server found.</echo>
             </then>
             <else>
+                <echo>Downloading Selenium Standalone Server ...</echo>
                 <exec command="curl ${selenium.URL} -o ${build.path}/selenium-server.jar" />
                 <echo>[x] Selenium Standalone Server downloaded.</echo>
             </else>
@@ -223,11 +238,12 @@
                 <isfalse value="${chromerdriver.mac.EXISTS}" />
             </and>
             <then>
+                <echo>Downloading Chrome Driver (Mac) ...</echo>
                 <exec command="curl ${chromerdriver.mac.URL} -o ${build.path}/chromedriver.zip"/>
                 <unzip file="${build.path}/chromedriver.zip" todir="${build.path}/" />
                 <delete file="${build.path}/chromedriver.zip" verbose="false" />
                 <exec command="chmod +x ${build.path}/chromedriver" />
-                <echo>[x] Downloaded Chrome Driver for Mac to current path. Might want to move it to /usr/bin.</echo>
+                <echo>[x] Downloaded Chrome Driver (Mac).</echo>
             </then>
         </if>
         <if>
@@ -236,11 +252,12 @@
                 <isfalse value="${chromerdriver.linux.EXISTS}" />
             </and>
             <then>
+                <echo>Downloading Chrome Driver (Unix) ...</echo>
                 <exec command="curl ${chromerdriver.linux.URL} -o ${build.path}/chromedriver.zip" />
                 <unzip file="${build.path}/chromedriver.zip" todir="${build.path}" />
                 <delete file="${build.path}/chromedriver.zip" verbose="false" />
                 <exec command="chmod +x ${build.path}/chromedriver" />
-                <echo>[x] Downloaded Chrome Driver for Unix to current path. Might want to move ut to /usr/bin.</echo>
+                <echo>[x] Downloaded Chrome Driver (Unix).</echo>
             </then>
         </if>
         <if>
@@ -249,10 +266,11 @@
                 <isfalse value="${chromerdriver.windows.EXISTS}" />
             </and>
             <then>
+                <echo>Downloading Chrome Driver (Windows) ...</echo>
                 <exec command="curl ${chromerdriver.windows.URL} -o ${build.path}/chromedriver.zip" />
                 <unzip file="${build.path}/chromedriver.zip" todir="${build.path}" />
                 <delete file="${build.path}/chromedriver.zip" verbose="true" />
-                <echo>[x] Downloaded Chrome Driver for Windows to current path. Might want to include it in the PATH.</echo>
+                <echo>[x] Downloaded Chrome Driver (Windows).</echo>
             </then>
         </if>
 
@@ -272,26 +290,25 @@
                 <isfalse value="${iedriver.EXISTS}" />
             </and>
             <then>
+                <echo>Downloaded IE Driver (Windows) ...</echo>
                 <exec command="curl ${iedriver.URL} -o ${build.path}/iedriver.zip" />
                 <unzip file="${build.path}/iedriver.zip" todir="${build.path}" />
                 <delete file="${build.path}/iedriver.zip" verbose="false" />
-                <echo>[x] Downloaded IE Driver for Windows to current path. Might want to include it in the PATH.</echo>
+                <echo>[x] Downloaded IE Driver (Windows).</echo>
             </then>
         </if>
+    </target>
 
-        <!-- add "-Dselenium.server.port={port}" in the php phing-latest.phar command to override the default port -->
+    <!-- add "-Dselenium.server.port={port}" in the php phing-latest.phar command to override the default port -->
+    <target name="setSeleniumPort">
         <setSeleniumServerPortValue/>
-
-        <echo>+------------------------------------+</echo>
-        <echo>Testing Selenium Server on your system</echo>
-        <echo>${host.os} ${host.os.release}</echo>
-        <echo>${host.os.version}</echo>
-        <echo>+------------------------------------+</echo>
-
+    </target>
+    
+    <target name="startSelenium">
         <if>
             <os family="windows" />
             <then>
-                <exec command="test_windows.bat ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
+                <exec command="${path.to.env}/start_selenium.bat ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
             </then>
         </if>
 
@@ -301,112 +318,41 @@
                 <os family="unix" />
             </or>
             <then>
-                <exec command="chmod +x test_unix.sh" />
-                <exec command="./test_unix.sh ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
+                <exec command="chmod +x ${path.to.env}/start_selenium.sh" />
+                <exec command="${path.to.env}/start_selenium.sh ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
             </then>
         </if>
     </target>
+    
+    <target name="selfTest">
+        <echo>+------------------------------------+</echo>
+        <echo>Testing Selenium Server on your system</echo>
+        <echo>${host.os} ${host.os.release}</echo>
+        <echo>${host.os.version}</echo>
+        <echo>+------------------------------------+</echo>
 
-    <target name="setPort">
-        <setSeleniumServerPortValue/>
+        <if>
+            <os family="windows" />
+            <then>
+                <exec command="${path.to.env}/self_test.bat ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
+            </then>
+        </if>
+
+        <if>
+            <or>
+                <os family="mac" />
+                <os family="unix" />
+            </or>
+            <then>
+                <exec command="chmod +x ${path.to.env}/self_test.sh" />
+                <exec command="${path.to.env}/self_test.sh ${selenium.server.host} ${selenium.server.port} ${proxy.host} ${proxy.port}" passthru="true" />
+            </then>
+        </if>
     </target>
-
-    <adhoc-task name="setSeleniumServerPortValue" description="Update port constant to the one given in the selenium.server.port property">
-        <![CDATA[
-                class SeleniumPortNode
-                {
-                    protected $snapshot;
-
-                    protected $identifier;
-
-                    public function __construct($raw)
-                    {
-                        $this->snapshot = (array)$raw;
-                    }
-
-                    public function getName()
-                    {
-                        foreach ($this->snapshot['@attributes'] as $key => $attribute) {
-                            if ($key === 'name') {
-                                return $attribute;
-                            }
-                        }
-                    }
-
-                    public function getValue()
-                    {
-                        foreach ($this->snapshot['@attributes'] as $key => $attribute) {
-                            if ($key === 'value') {
-                                return $attribute;
-                            }
-                        }
-                    }
-
-                    public function setValue($value)
-                    {
-                        $file = SetPortValueTask::getPhunitFilename();
-                        $settings = simplexml_load_file($file);
-
-                        foreach ($settings->php->children() as $item) {
-                            $itemName = (string)$item->attributes()->{'name'};
-
-                            if ($itemName === $this->getName()) {
-                                $item->attributes()->{'value'} = $value;
-                                file_put_contents(SetPortValueTask::getPhunitFilename(), $settings->saveXML());
-                            }
-                        }
-
-                        return $this;
-                    }
-
-                    public static function buildSeleniumServerPortFromPhpunitFile()
-                    {
-                        $settings = simplexml_load_file(SetPortValueTask::getPhunitFilename());
-
-                        foreach ($settings->php->children() as $item) {
-                            $element = new self($item);
-
-                            if ($element->getName() === 'seleniumServerPort') {
-                                return $element;
-                            }
-                        }
-                    }
-                }
-
-                class SetPortValueTask extends Task
-                {
-                    public function main()
-                    {
-                        $newValue = $this->project->getProperty('selenium.server.port');
-                        $oldValue = $this->getSeleniumPortNode()->getValue();
-
-                        switch (true) {
-                            case (int)$newValue === 0:
-                                $this->log('Invalid new value: ' . $newValue . ', seen as [' . var_export($newValue, 2) . '].');
-                                break;
-
-                            case ($oldValue == $newValue):
-                                $this->log('No update was needed.');
-                                break;
-
-                            default:
-                                $this->getSeleniumPortNode()->setValue($newValue);
-                                $this->log('Current Selenium host proxy is ' . $oldValue);
-                                $this->log('Updated ' . self::getPhunitFilename() . ', new value is ' . $newValue);
-                                break;
-                        }
-                    }
-
-                    public static function getPhunitFilename()
-                    {
-                        return 'phpunit.xml';
-                    }
-
-                    protected function getSeleniumPortNode()
-                    {
-                        return SeleniumPortNode::buildSeleniumServerPortFromPhpunitFile();
-                    }
-                }
-            ]]>
-    </adhoc-task>
+    
+    <taskdef
+            name="setSeleniumServerPortValue"
+            classname="lib.SetPortValueTask"
+            classpath="${path.to.env}"
+            description="Update port constant to the one given in the selenium.server.port property" />
 </project>

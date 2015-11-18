@@ -1,9 +1,15 @@
+#!/usr/bin/env bash
+
+# $1 selenium.server.host
+# $2 selenium.server.port
+# $3 proxyHost
+# $4 proxyPort
 
 if [ -n "$3" ]
-  then
-	echo "Specific proxy given, invalidate system proxies ..."
-	export http_proxy=
-	export https_proxy=
+    then
+        echo "Specific proxy given, invalidate system proxies ..."
+        export http_proxy=""
+        export https_proxy=""
 fi
 
 echo "Include $PWD build in the global PATH ..."
@@ -16,8 +22,7 @@ java -jar build/selenium-server.jar -port $2 -Dhttp.proxyHost="$3" -Dhttp.proxyP
 echo "Wait ..."
 sleep 5
 
-#echo "Starting tests ..."
-php build/phpunit.phar -c phpunit.xml --testsuite "unix"
-
-echo "Stopping previous processes ..."
-pgrep -f 'selenium-server.jar' | xargs kill
+# if [ "$1" -eq "self-test" ]
+#    then
+#
+# fi

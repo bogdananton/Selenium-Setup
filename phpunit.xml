@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php">
+<phpunit bootstrap="tests/bootstrap.php">
 
     <testsuites>
         <testsuite name="all">
@@ -19,6 +19,6 @@
     <!-- @todo: sync with build.xml -->
     <php>
         <env name="seleniumServerHost" value="localhost"/>
-        <env name="seleniumServerPort" value="14"/>
+        <env name="seleniumServerPort" value="8321"/>
     </php>
 </phpunit>
