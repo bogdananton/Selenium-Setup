@@ -63,6 +63,8 @@ Example of `build.xml` in **your** project:
     
     <target name="mySetupEnv">
         <!-- Your custom setup of variables. -->
+        <property name="selenium.server.host" value="localhost" />
+        <property name="selenium.server.port" value="8321" />
         <property name="proxy.host" value="proxy.avangate.local" override="true"/>
         <property name="proxy.port" value="8080" override="true"/>
         <!-- Run targets: runAllTargets, setupEnv, setSeleniumPort, selfTest -->
@@ -70,6 +72,8 @@ Example of `build.xml` in **your** project:
     </target>
 </project>
 ```
+
+You can use [PHPUnit Selenium Env Example](https://github.com/serbanghita/phpunit-selenium-env-example) repository.
 
 ## Screenshot in Windows (git bash)
 
