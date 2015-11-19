@@ -52,12 +52,17 @@ Example of `build.xml` in **your** project:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="avangate-integration-tests" default="avangateSetup" basedir="." description="Setup Avangate Integration Tests">
-    <resolvepath propertyName="project.path" file="." />
-    <import file="vendor/bogdananton/phpunit-selenium-env/build.xml"/>
-    <target name="avangateSetup">
-        <phingcall target="envSetup" />
-        <mkdir dir="${build.path}/logs" />
+<project name="phpunit-selenium-env-example" default="mySetupEnv" description="Example of setup">
+    <php expression="include('vendor/autoload.php')"/>
+    <property name="path.to.env" value="${application.startdir}/vendor/bogdananton/phpunit-selenium-env" override="true"/>
+    <import file="${path.to.env}/build.xml"/>
+    
+    <target name="mySetupEnv">
+        <!-- Your custom setup of variables. -->
+        <property name="proxy.host" value="proxy.avangate.local" override="true"/>
+        <property name="proxy.port" value="8080" override="true"/>
+        <!-- Run targets: runAllTargets, setupEnv, setSeleniumPort, selfTest -->
+        <phingcall target="runAllTargets" inheritAll="true"/>
     </target>
 </project>
 ```
