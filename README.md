@@ -78,3 +78,7 @@ You can use [PHPUnit Selenium Env Example](https://github.com/serbanghita/phpuni
 ## Screenshot in Windows (git bash)
 
 ![](https://raw.githubusercontent.com/bogdananton/phpunit-selenium-env/master/screenshot-windows.gif)
+
+## Screenshot in Linux (guake bash)
+
+![](https://raw.githubusercontent.com/bogdananton/phpunit-selenium-env/master/screenshot-linux.png)
