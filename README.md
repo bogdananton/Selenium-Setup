@@ -8,7 +8,7 @@
     /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \
     \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
     \/_____/\/____/\/____/\/____/\/_/\/_/\/_/\/___/  \/_/\/_/\/_/
-    PHPUnit Environment with Facebook's WebDriver
+    Selenium Environment using Facebook's WebDriver
 ```
 
 ## System Requirements:
@@ -18,20 +18,7 @@
 * Browser: Chrome, Firefox, IE (only on Windows)
 
 These components should be installed on your system using your software manager.
-
-*On Windows*
-
-You need to have `php`, `java`, `curl` commands available in your command prompt or registered in your PATH.
-
-## Install
-
-1. Go to project root
-1. Download [phing-latest.phar](http://www.phing.info/get/phing-latest.phar)
-1. *Optional* add `phing-latest.phar` to your path
-    1. `wget http://www.phing.info/get/phing-latest.phar -O; mv phing-latest.phar phing; chmod +x phing`
-1. Run phing: `php phing-latest.phar`
-1. After phing has finished, the last command `java -jar selenium-server.jar` will start the Selenium Server.
-1. In a different terminal to start the server, then run `php phpunit.phar` in the current terminal to run the current tests.
+*On Windows* you need to have `php`, `java`, `curl` commands available in your command prompt or registered in your PATH.
 
 ## Environment components:
 
@@ -44,6 +31,13 @@ You need to have `php`, `java`, `curl` commands available in your command prompt
    * [FirefoxDriver](https://code.google.com/p/selenium/wiki/FirefoxDriver)
    * [IEDriver](https://code.google.com/p/selenium/wiki/InternetExplorerDriver)
 * You need to have Chrome, Firefox or IE installed.
+
+## Install & self-test
+
+1. Go to project root
+1. Download [phing-latest.phar](http://www.phing.info/get/phing-latest.phar)
+   1. *On Linux* `wget http://www.phing.info/get/phing-latest.phar -O; mv phing-latest.phar phing; chmod +x phing`
+1. Run `php phing-latest.phar`
 
 ## Use in your testing project
 
