@@ -16,13 +16,10 @@ echo "Include $PWD build in the global PATH ..."
 echo "Note: this is needed for the web drivers be found by Selenium."
 export PATH=$PATH:$PWD/build
 
+echo "Starting the display server ..."
+export DISPLAY=:99.0
+/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
+
 echo "Starting Selenium standalone server ..."
-java -jar build/selenium-server.jar -port $2 -Dhttp.proxyHost="$3" -Dhttp.proxyPort="$4" -Dwebdriver.chrome.driver="./build/chromedriver" -log build/logs/selenium.log > /dev/null &
-
-echo "Wait ..."
-sleep 5
-
-# if [ "$1" -eq "self-test" ]
-#    then
-#
-# fi
+java -jar build/selenium-server.jar -port $2 -Dhttp.proxyHost="$3" -Dhttp.proxyPort="$4" -Dwebdriver.chrome.driver="./build/chromedriver" -log build/logs/selenium.log &
+until $(echo | nc localhost $2); do sleep 1; echo Waiting for Selenium Server to start ...; done;
