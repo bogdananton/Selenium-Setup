@@ -1,0 +1,8 @@
+{
+  "name": "MyTestServer",
+  "hostname": "localhost",
+  "port": 4444,
+  "proxyHost": "",
+  "proxyPort": "",
+  "logPath": "build/log/selenium.log"
+}

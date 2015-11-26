@@ -1,14 +1,28 @@
 {
   "name": "bogdananton/phpunit-selenium-env",
   "license": "MIT",
+  "keywords": ["selenium", "selenium setup", "webdriver"],
+  "authors": [
+    {
+      "name": "Bogdan Anton",
+      "email": "contact@bogdananton.ro",
+      "role": "Developer"
+    },
+    {
+      "name": "Serban Ghita",
+      "email": "serbanghita@gmail.com",
+      "role": "Developer"
+    }
+  ],
   "require": {
     "php": "^5.4",
-    "facebook/webdriver": "1.0.*"
+    "facebook/webdriver": "1.0.*",
+    "symfony/console": "^2.7"
   },
   "autoload": {
-    "classmap": ["lib/"],
     "psr-4": {
-      "tests\\": "tests/"
+      "SeleniumSetup\\": "lib/",
+      "SeleniumSetupTests\\": "tests/"
     }
   }
 }
