@@ -7,6 +7,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 interface FrontControllerInterface
 {
     public function __construct(InputInterface $input, OutputInterface $output);
-    public function startServer();
-    public function stopServer();
+    public function start();
+    public function stop();
 }

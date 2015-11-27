@@ -4,5 +4,48 @@
   "port": 4444,
   "proxyHost": "",
   "proxyPort": "",
-  "logPath": "build/log/selenium.log"
+  "buildPath": "build/",
+  "logsPath": "build/log/",
+  "binaries": {
+    "composer": {
+      "version": "latest",
+      "downloadUrl": "https://getcomposer.org/composer.phar",
+      "binName": "composer.phar"
+    },
+    "selenium": {
+      "version": "2.48.2",
+      "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.2.jar",
+      "binName": "selenium-server.jar"
+    },
+    "phpunit.old": {
+      "version": "4.8.9",
+      "downloadUrl": "https://phar.phpunit.de/phpunit-4.8.9.phar",
+      "binName": "phpunit.phar"
+    },
+    "phpunit.new": {
+      "version": "5.0.8",
+      "downloadUrl": "https://phar.phpunit.de/phpunit-5.0.8.phar",
+      "binName": "phpunit.phar"
+    },
+    "chromedriver.win": {
+      "version": "2.20",
+      "downloadUrl": "http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip",
+      "binName": "chromedriver.exe"
+    },
+    "chromedriver.linux": {
+      "version": "2.15",
+      "downloadUrl": "http://chromedriver.storage.googleapis.com/2.15/chromedriver_linux64.zip",
+      "binName": "chromedriver"
+    },
+    "chromedriver.mac": {
+      "version": "2.15",
+      "downloadUrl": "http://chromedriver.storage.googleapis.com/2.15/chromedriver_mac32.zip",
+      "binName": "chromedriver"
+    },
+    "iedriver": {
+      "version": "2.48",
+      "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/IEDriverServer_Win32_2.48.0.zip",
+      "binName": "IEDriverServer.exe"
+    }
+  }
 }

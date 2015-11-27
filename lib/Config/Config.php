@@ -1,13 +1,37 @@
 <?php
 namespace SeleniumSetup\Config;
 
-class Config implements SeleniumServer
+class Config implements ConfigInterface
 {
     protected $hostname;
     protected $port;
     protected $proxyHost;
     protected $proxyPort;
-    protected $logPath;
+    protected $buildPath;
+    protected $logsPath;
+    protected $binaries = [];
+
+    /**
+     * @param array $config
+     */
+    public function __construct(array $config = [])
+    {
+        return $this->mapFromArray($config);
+    }
+
+    protected function mapFromArray(array $config = [])
+    {
+        if (empty($config)) {
+            return false;
+        }
+
+        foreach ($config as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->{$key} = $value;
+            }
+        }
+        return true;
+    }
 
     /**
      * @return string
@@ -84,19 +108,57 @@ class Config implements SeleniumServer
     /**
      * @return string
      */
-    public function getLogPath()
+    public function getBuildPath()
     {
-        return $this->logPath;
+        return $this->buildPath;
     }
 
     /**
-     * @param string $logPath
+     * @param string $buildPath
      * @return Config
      */
-    public function setLogPath($logPath)
+    public function setBuildPath($buildPath)
     {
-        $this->logPath = $logPath;
+        $this->buildPath = $buildPath;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogsPath()
+    {
+        return $this->logsPath;
+    }
+
+    /**
+     * @param string $logsPath
+     * @return Config
+     */
+    public function setLogsPath($logsPath)
+    {
+        $this->logsPath = $logsPath;
+        return $this;
+    }
+
+    public function setBinaries(array $binaries)
+    {
+        $this->binaries = $binaries;
+    }
+
+    public function getBinaries()
+    {
+        return $this->binaries;
+    }
+
+    public function setBinary($binaryName, array $binaryInfo)
+    {
+        $this->binaries[$binaryName] = $binaryInfo;
+    }
+
+    public function getBinary($binaryName)
+    {
+        return isset($this->binaries[$binaryName]) ? $this->binaries[$binaryName] : null;
     }
 
 
