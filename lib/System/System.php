@@ -1,5 +1,7 @@
 <?php
 namespace SeleniumSetup\System;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 /**
  * Class System
@@ -133,11 +135,12 @@ class System implements SystemInterface
 
     /**
      * @param $cmd
-     * @param bool|true $verbose
+     * @param bool|false $verbose
      * @return string
      */
-    public function execCommand($cmd, $verbose = true)
+    public function execCommand($cmd, $verbose = false)
     {
+        /*
         if ($verbose) {
             echo "\n" . '-----------' . "\n";
             echo $cmd;
@@ -151,5 +154,32 @@ class System implements SystemInterface
         //    flush();
         //}
         return implode("\n", $output);
+        */
+
+        $process = new Process($cmd);
+        $process->start();
+
+        $output = null;
+
+        $process->wait(function ($type, $buffer) use (&$output, $verbose) {
+            //if (Process::ERR === $type) {
+            //    echo 'ERR > '.$buffer;
+            //} else {
+            //    echo 'OUT > '.$buffer;
+            //}
+            $output .= $buffer;
+            if ($verbose) {
+                echo $buffer;
+            }
+        });
+
+        // executes after the command finishes
+        //if (!$process->isSuccessful()) {
+        //    throw new ProcessFailedException($process);
+        //}
+
+        //    echo $process->getOutput();
+
+        return $output;
     }
 }
