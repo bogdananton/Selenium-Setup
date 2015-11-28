@@ -98,7 +98,7 @@ class StartServerService implements StartServerServiceInterface
             $binary = Binary::createFromObject($binaryDetails);
             if (!$this->system->isFile($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName())) {
                 $this->output->writeln(sprintf(
-                        'Downloading %s %s ...', $binary->getLabel(), $binary->getVersion()
+                    'Downloading %s %s ...', $binary->getLabel(), $binary->getVersion()
                 ));
                 $this->system->download(
                     $binary->getDownloadUrl(),
@@ -118,6 +118,7 @@ class StartServerService implements StartServerServiceInterface
             $this->output->writeln('Everything good, let\'s roll ...');
             $this->prepareEnv();
             $this->downloadDrivers();
+            $this->runSeleniumServer();
             return true;
         } else {
             $this->output->writeln('Missing required components. Please review your setup.');
@@ -125,4 +126,54 @@ class StartServerService implements StartServerServiceInterface
         }
     }
 
+    protected function runSeleniumServer()
+    {
+        $this->stopSeleniumServer(); // assure that there is no Selenium Server instance running on the same host/port
+
+        switch ($this->env->getOsName()) {
+            case 'windows':
+                $commandString = sprintf(
+                    '%s/win/start_selenium.bat %s %s %s %s &',
+                    $this->config->getCommandsPath(),
+                    $this->config->getHostname(),
+                    $this->config->getPort(),
+                    $this->config->getProxyHost(),
+                    $this->config->getProxyPort()
+                );
+                break;
+
+            case 'linux':
+                $commandString = sprintf(
+                    '%s/linux/start_selenium.sh %s %s %s %s &',
+                    $this->config->getCommandsPath(),
+                    $this->config->getHostname(),
+                    $this->config->getPort(),
+                    $this->config->getProxyHost(),
+                    $this->config->getProxyPort()
+                );
+                break;
+
+            default:
+                $this->output->writeln('Start the Selenium Server manually...');
+                return false;
+                break;
+        }
+
+        $this->output->writeln(sprintf(
+            'Selenium Server starting... You can run your tests: seleniumServerHost=%s seleniumServerPort=%s phpunit',
+            $this->config->getHostname(),
+            $this->config->getPort()
+        ));
+        $this->output->writeln('Debug Selenium Server session:');
+
+        $this->system->execCommand($commandString, true);
+        $this->stopSeleniumServer(); // clean after the user interrupts / stops the process
+
+        return true;
+    }
+
+    protected function stopSeleniumServer()
+    {
+        // @todo search for the process and terminate it
+    }
 }

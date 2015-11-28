@@ -160,6 +160,8 @@ class System implements SystemInterface
 
         $process = new Process($cmd);
         $process->start();
+        $process->setIdleTimeout(0);
+        $process->setTimeout(0);
 
         $output = null;
 

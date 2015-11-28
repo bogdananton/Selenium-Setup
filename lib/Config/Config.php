@@ -8,6 +8,7 @@ class Config implements ConfigInterface
     protected $proxyHost;
     protected $proxyPort;
     protected $buildPath;
+    protected $commandsPath;
     protected $logsPath;
     protected $binaries = [];
 
@@ -27,7 +28,7 @@ class Config implements ConfigInterface
 
         foreach ($config as $key => $value) {
             if (property_exists($this, $key)) {
-                $this->{$key} = $value;
+                $this->{$key} = ($key === 'binaries') ? (array)$value : $value;
             }
         }
         return true;
@@ -111,6 +112,24 @@ class Config implements ConfigInterface
     public function getBuildPath()
     {
         return $this->buildPath;
+    }
+
+    /**
+     * @param string $commandsPath
+     * @return Config
+     */
+    public function setCommandsPath($commandsPath)
+    {
+        $this->commandsPath = $commandsPath;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCommandsPath()
+    {
+        return $this->commandsPath;
     }
 
     /**
