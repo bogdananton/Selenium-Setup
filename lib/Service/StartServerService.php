@@ -128,48 +128,58 @@ class StartServerService implements StartServerServiceInterface
 
     protected function runSeleniumServer()
     {
-        $this->stopSeleniumServer(); // assure that there is no Selenium Server instance running on the same host/port
+        $commandString = $this->getSeleniumServerCommand();
 
+        if ($commandString === '') {
+            return false;
+        }
+
+        // make sure that there is no Selenium Server instance running on the same host/port
+        $this->stopSeleniumServer();
+
+        $this->output->writeln('==> Selenium Server starting... ');
+
+        $this->output->writeln(sprintf(
+            'Start tests: seleniumServerHost=%s seleniumServerPort=%s phpunit',
+            $this->config->getHostname(),
+            $this->config->getPort()
+        ));
+
+        $this->output->writeln('==> Debug Selenium Server session:');
+        $this->system->execCommand($commandString, true);
+
+        // clean after the user stops the process
+        $this->stopSeleniumServer();
+
+        return true;
+    }
+
+    protected function getSeleniumServerCommand()
+    {
         switch ($this->env->getOsName()) {
             case 'windows':
-                $commandString = sprintf(
-                    '%s/win/start_selenium.bat %s %s %s %s &',
-                    $this->config->getCommandsPath(),
-                    $this->config->getHostname(),
-                    $this->config->getPort(),
-                    $this->config->getProxyHost(),
-                    $this->config->getProxyPort()
-                );
+                $commandStringRoot = 'win/start_selenium.bat';
                 break;
 
             case 'linux':
-                $commandString = sprintf(
-                    '%s/linux/start_selenium.sh %s %s %s %s &',
-                    $this->config->getCommandsPath(),
-                    $this->config->getHostname(),
-                    $this->config->getPort(),
-                    $this->config->getProxyHost(),
-                    $this->config->getProxyPort()
-                );
+                $commandStringRoot = 'linux/start_selenium.sh';
                 break;
 
             default:
                 $this->output->writeln('Start the Selenium Server manually...');
-                return false;
+                return '';
                 break;
         }
 
-        $this->output->writeln(sprintf(
-            'Selenium Server starting... You can run your tests: seleniumServerHost=%s seleniumServerPort=%s phpunit',
+        return sprintf(
+            '%s/%s %s %s %s %s &',
+            $this->config->getCommandsPath(),
+            $commandStringRoot,
             $this->config->getHostname(),
-            $this->config->getPort()
-        ));
-        $this->output->writeln('Debug Selenium Server session:');
-
-        $this->system->execCommand($commandString, true);
-        $this->stopSeleniumServer(); // clean after the user interrupts / stops the process
-
-        return true;
+            $this->config->getPort(),
+            $this->config->getProxyHost(),
+            $this->config->getProxyPort()
+        );
     }
 
     protected function stopSeleniumServer()
