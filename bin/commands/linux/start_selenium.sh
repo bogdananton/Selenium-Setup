@@ -17,14 +17,6 @@ echo "Include $PWD build in the global PATH ..."
 echo "Note: this is needed for the web drivers be found by Selenium."
 export PATH=$PATH:$PWD/build
 
-# if [ -z "$DISPLAY" ]
-#     then
-#         echo "Starting the display server ..."
-#         export DISPLAY=:99.0
-#         sh -e /etc/init.d/xvfb start # @fixme adapt to different linux distributions calls
-#         sleep 3 # give xvfb some time to start
-# fi
-
 # terminate possible already-running Selenium Server instance
 $DIR/stop_selenium.sh
 
