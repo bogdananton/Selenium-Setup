@@ -146,7 +146,7 @@ class StartServerService implements StartServerServiceInterface
         ));
 
         // will run asynchronously with no console output
-        $this->system->execCommand($commandString);
+        $this->system->execCommand($commandString, true);
 
         return true;
     }
@@ -169,7 +169,7 @@ class StartServerService implements StartServerServiceInterface
         }
 
         return sprintf(
-            '%s%s %s %s %s %s >/dev/null 2>/dev/null &',
+            '%s%s %s %s %s %s &',
             $this->config->getCommandsPath(),
             $commandStringRoot,
             $this->config->getHostname(),
