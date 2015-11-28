@@ -3,13 +3,16 @@ php:
   - "5.4"
 
 before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 3 # give xvfb some time to start
   - mkdir build && mkdir build/logs && touch build/logs/selenium.log
   - composer install
  
 script:
-  - php bin/selenium-setup.php start
-  - chmod +x bin/commands/linux/start_phpunit_tests.sh
-  - seleniumServerHost=localhost seleniumServerPort=4444 ./bin/commands/linux/start_phpunit_tests.sh
+php bin/selenium-setup.php start
+chmod +x bin/commands/linux/start_phpunit_tests.sh
+seleniumServerHost=localhost seleniumServerPort=4444 ./bin/commands/linux/start_phpunit_tests.sh
 
 after_script:
   - ls -al
