@@ -11,12 +11,18 @@ do
     checkCommand=`ps aux | grep selenium-server.jar | grep 4444 | grep java | wc -l`
 done
 
-if [ -z "$testsuite" ]
+if [ "$testsuite" == "" ]
     then
         testsuite="unix"
 fi
 
 echo "Starting tests ..."
-php build/phpunit.phar -c $DIR/../../../phpunit.xml --testsuite "$testsuite"
+RUN_TESTS=`php build/phpunit.phar -c $DIR/../../../phpunit.xml --testsuite $testsuite`
 
 $DIR/stop_selenium.sh
+
+# exit with error code
+if [[ $RUN_TESTS = *"FAILURES"* ]]
+then
+    exit 2
+fi
