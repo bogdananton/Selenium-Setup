@@ -18,6 +18,7 @@ fi
 
 echo "Starting tests ..."
 RUN_TESTS=`php build/phpunit.phar -c $DIR/../../../phpunit.xml --testsuite $testsuite`
+echo $RUN_TESTS
 
 $DIR/stop_selenium.sh
 
