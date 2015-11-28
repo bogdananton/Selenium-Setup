@@ -6,17 +6,10 @@ before_script:
   - mkdir build && mkdir build/logs && touch build/logs/selenium.log
   - composer install
   - chmod +x bin/commands/linux/start_phpunit_tests.sh
-  - nohup php bin/selenium-setup.php start &
+  - php bin/selenium-setup.php start
  
 script:
-  - |
-      param="$(ps aux | grep selenium-server.jar | grep java | xargs)"
-      while ! [ ${#param} -gt 0 ];
-      do
-          sleep 1
-          echo "Waiting for Selenium to start..."
-      done
-      ./bin/commands/linux/start_phpunit_tests.sh
+  - ./bin/commands/linux/start_phpunit_tests.sh
 
 after_script:
   - ls -al

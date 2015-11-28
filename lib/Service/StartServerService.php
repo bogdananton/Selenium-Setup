@@ -145,11 +145,8 @@ class StartServerService implements StartServerServiceInterface
             $this->config->getPort()
         ));
 
-        $this->output->writeln('==> Debug Selenium Server session:');
-        $this->system->execCommand($commandString, true);
-
-        // clean after the user stops the process
-        $this->stopSeleniumServer();
+        // will run asynchronously with no console output
+        $this->system->execCommand($commandString);
 
         return true;
     }
@@ -172,7 +169,7 @@ class StartServerService implements StartServerServiceInterface
         }
 
         return sprintf(
-            '%s/%s %s %s %s %s &',
+            '%s%s %s %s %s %s >/dev/null 2>/dev/null &',
             $this->config->getCommandsPath(),
             $commandStringRoot,
             $this->config->getHostname(),

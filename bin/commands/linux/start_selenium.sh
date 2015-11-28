@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # $1 selenium.server.host
 # $2 selenium.server.port
@@ -22,6 +23,8 @@ if [ -z "$DISPLAY" ]
         export DISPLAY=:99.0
         /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
 fi
+
+$DIR/stop_selenium.sh
 
 echo "Starting Selenium standalone server ..."
 java -jar build/selenium-server.jar -port "$2" -Dhttp.proxyHost="$3" -Dhttp.proxyPort="$4" -Dwebdriver.chrome.driver="./build/chromedriver" -log build/logs/selenium.log &

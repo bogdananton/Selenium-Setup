@@ -9,3 +9,4 @@ REM %4 proxyPort
 
 call %~dp0start_selenium.bat %1 %2 %3 %4
 call %~dp0start_phpunit_tests.bat
+call %~dp0stop_selenium.bat

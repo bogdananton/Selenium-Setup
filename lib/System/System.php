@@ -148,9 +148,9 @@ class System implements SystemInterface
             echo $cmd;
             echo "\n" . '-----------' . "\n";
         }
-        
+
         exec($cmd, $output, $return);
-        
+
         //if ($verbose) {
         //    echo implode("\n", $output);
         //    flush();
