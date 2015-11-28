@@ -5,7 +5,7 @@ REM %2 selenium.server.port
 REM %3 proxyHost
 REM %4 proxyPort
 
-# make sure that Selenium is running
+# terminate possible already-running Selenium Server instance
 call %~dp0stop_selenium.bat
 
 IF NOT "%3" == "" (

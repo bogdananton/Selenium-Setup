@@ -5,11 +5,11 @@ php:
 before_script:
   - mkdir build && mkdir build/logs && touch build/logs/selenium.log
   - composer install
-  - chmod +x bin/commands/linux/start_phpunit_tests.sh
-  - php bin/selenium-setup.php start
  
 script:
-  - ./bin/commands/linux/start_phpunit_tests.sh
+  - php bin/selenium-setup.php start
+  - chmod +x bin/commands/linux/start_phpunit_tests.sh
+  - seleniumServerPort=4444 ./bin/commands/linux/start_phpunit_tests.sh
 
 after_script:
   - ls -al
