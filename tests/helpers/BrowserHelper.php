@@ -1,5 +1,5 @@
 <?php
-namespace tests\helpers;
+namespace SeleniumSetupTests\helpers;
 
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\WebDriverCapabilityType;

@@ -1,8 +1,9 @@
 <?php
-namespace tests;
+namespace SeleniumSetupTests;
 
 use Facebook\WebDriver\WebDriverBy;
-use tests\helpers\BrowserHelper;
+use SeleniumSetupTests\helpers\BrowserHelper;
+
 class IETest extends BrowserHelper
 {
     public function setUp()
