@@ -1,5 +1,6 @@
 <?php
 namespace SeleniumSetup\Config;
+use SeleniumSetup\Binary\Binary;
 
 /**
  * Interface SeleniumServerConfigInterface
@@ -20,8 +21,16 @@ interface ConfigInterface
     public function getBuildPath();
     public function setLogsPath($logPath);
     public function getLogsPath();
+
+    /**
+     * @param Binary[] $binaries
+     * @return ConfigInterface
+     */
     public function setBinaries(array $binaries);
+    /**
+     * @return Binary[]
+     */
     public function getBinaries();
-    public function setBinary($binaryName, array $binaryInfo);
+    public function setBinary($binaryName, Binary $binaryInfo);
     public function getBinary($binaryName);
 }

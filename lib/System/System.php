@@ -1,6 +1,7 @@
 <?php
 namespace SeleniumSetup\System;
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
+use GuzzleHttp\Event\ProgressEvent;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -188,10 +189,31 @@ class System implements SystemInterface
     // @todo put try catch http://stackoverflow.com/questions/16939794/copy-remote-file-using-guzzle
     public function download($from, $to)
     {
+
         $client = new Client();
-        $response = $client->get($from)
-            ->setResponseBody($to)
-            ->send();
+        $client->setDefaultOption('verify', dirname(__FILE__) . '/../../bin/cacert.pem');
+        $request = $client->createRequest('GET', $from, ['save_to'=> $to]);
+
+        $computeRemainingSize = function(ProgressEvent $e) {
+            if ($e->downloaded <= 0) {
+                return 0;
+            }
+            $remainingSize = $e->downloadSize - $e->downloaded;
+            if ($remainingSize > 0) {
+                return round($e->downloaded / $e->downloadSize, 2) * 100;
+            } else {
+                return 100;
+            }
+        };
+
+        $request->getEmitter()->on('progress', function (ProgressEvent $e) use ($computeRemainingSize) {
+            echo sprintf(
+                "Downloaded %s%%\r", $computeRemainingSize($e)
+            );
+        });
+
+        $client->send($request);
+
         return true;
     }
 }

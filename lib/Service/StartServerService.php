@@ -94,8 +94,7 @@ class StartServerService implements StartServerServiceInterface
     // @todo here
     public function downloadDrivers()
     {
-        foreach ($this->config->getBinaries() as $binaryDetails) {
-            $binary = Binary::createFromObject($binaryDetails);
+        foreach ($this->config->getBinaries() as $binary) {
             if (!$this->system->isFile($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName())) {
                 $this->output->writeln(sprintf(
                         'Downloading %s %s ...', $binary->getLabel(), $binary->getVersion()

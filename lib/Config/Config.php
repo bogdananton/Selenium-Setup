@@ -1,6 +1,8 @@
 <?php
 namespace SeleniumSetup\Config;
 
+use SeleniumSetup\Binary\Binary;
+
 class Config implements ConfigInterface
 {
     protected $hostname;
@@ -11,26 +13,17 @@ class Config implements ConfigInterface
     protected $logsPath;
     protected $binaries = [];
 
-    /**
-     * @param array $config
-     */
-    public function __construct(array $config = [])
+    public function toArray()
     {
-        return $this->mapFromArray($config);
+        return get_object_vars($this);
     }
 
-    protected function mapFromArray(array $config = [])
+    /**
+     * @return array
+     */
+    public static function getAllProperties()
     {
-        if (empty($config)) {
-            return false;
-        }
-
-        foreach ($config as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->{$key} = $value;
-            }
-        }
-        return true;
+        return array_keys(get_object_vars(new self));
     }
 
     /**
@@ -151,9 +144,9 @@ class Config implements ConfigInterface
         return $this->binaries;
     }
 
-    public function setBinary($binaryName, array $binaryInfo)
+    public function setBinary($binaryId, Binary $binaryInfo)
     {
-        $this->binaries[$binaryName] = $binaryInfo;
+        $this->binaries[$binaryId] = $binaryInfo;
     }
 
     public function getBinary($binaryName)
