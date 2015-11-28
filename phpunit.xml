@@ -9,6 +9,9 @@
             <file>tests/ChromeTest.php</file>
             <file>tests/FirefoxTest.php</file>
         </testsuite>
+        <testsuite name="headless">
+            <file>tests/PhantomJSTest.php</file>
+        </testsuite>
         <testsuite name="windows">
             <file>tests/ChromeTest.php</file>
             <file>tests/FirefoxTest.php</file>

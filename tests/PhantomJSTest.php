@@ -4,14 +4,14 @@ namespace SeleniumSetupTests;
 use Facebook\WebDriver\WebDriverBy;
 use SeleniumSetupTests\helpers\BrowserHelper;
 
-class FirefoxTest extends BrowserHelper
+class PhantomJSTest extends BrowserHelper
 {
     public function setUp()
     {
         $this->envSetup(
             getenv('seleniumServerHost'),
             getenv('seleniumServerPort'),
-            'firefox'
+            'phantomjs'
         );
     }
 

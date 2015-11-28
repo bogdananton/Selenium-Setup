@@ -17,6 +17,8 @@ interface ConfigInterface
     public function getProxyHost();
     public function setProxyPort($proxyPort);
     public function getProxyPort();
+    public function setCommandsPath($commandPath);
+    public function getCommandsPath();
     public function setBuildPath($buildPath);
     public function getBuildPath();
     public function setLogsPath($logPath);

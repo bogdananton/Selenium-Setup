@@ -5,6 +5,9 @@ REM %2 selenium.server.port
 REM %3 proxyHost
 REM %4 proxyPort
 
+# terminate possible already-running Selenium Server instance
+call %~dp0stop_selenium.bat
+
 IF NOT "%3" == "" (
     echo Specific proxy given, invalidate system proxies ...
     SET HTTP_PROXY=

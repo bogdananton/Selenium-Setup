@@ -149,9 +149,9 @@ class System implements SystemInterface
             echo $cmd;
             echo "\n" . '-----------' . "\n";
         }
-        
+
         exec($cmd, $output, $return);
-        
+
         //if ($verbose) {
         //    echo implode("\n", $output);
         //    flush();
@@ -161,6 +161,8 @@ class System implements SystemInterface
 
         $process = new Process($cmd);
         $process->start();
+        $process->setIdleTimeout(0);
+        $process->setTimeout(0);
 
         $output = null;
 

@@ -97,7 +97,7 @@ class StartServerService implements StartServerServiceInterface
         foreach ($this->config->getBinaries() as $binary) {
             if (!$this->system->isFile($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName())) {
                 $this->output->writeln(sprintf(
-                        'Downloading %s %s ...', $binary->getLabel(), $binary->getVersion()
+                    'Downloading %s %s ...', $binary->getLabel(), $binary->getVersion()
                 ));
                 $this->system->download(
                     $binary->getDownloadUrl(),
@@ -117,6 +117,7 @@ class StartServerService implements StartServerServiceInterface
             $this->output->writeln('Everything good, let\'s roll ...');
             $this->prepareEnv();
             $this->downloadDrivers();
+            $this->runSeleniumServer();
             return true;
         } else {
             $this->output->writeln('Missing required components. Please review your setup.');
@@ -124,4 +125,61 @@ class StartServerService implements StartServerServiceInterface
         }
     }
 
+    protected function runSeleniumServer()
+    {
+        $commandString = $this->getSeleniumServerCommand();
+
+        if ($commandString === '') {
+            return false;
+        }
+
+        // make sure that there is no Selenium Server instance running on the same host/port
+        $this->stopSeleniumServer();
+
+        $this->output->writeln('==> Selenium Server starting... ');
+
+        $this->output->writeln(sprintf(
+            'Start tests: seleniumServerHost=%s seleniumServerPort=%s phpunit',
+            $this->config->getHostname(),
+            $this->config->getPort()
+        ));
+
+        // will run asynchronously with no console output
+        $this->system->execCommand($commandString, true);
+
+        return true;
+    }
+
+    protected function getSeleniumServerCommand()
+    {
+        switch ($this->env->getOsName()) {
+            case 'windows':
+                $commandStringRoot = 'win/start_selenium.bat';
+                break;
+
+            case 'linux':
+                $commandStringRoot = 'linux/start_selenium.sh';
+                break;
+
+            default:
+                $this->output->writeln('Start the Selenium Server manually...');
+                return '';
+                break;
+        }
+
+        return sprintf(
+            '%s%s %s %s %s %s &',
+            $this->config->getCommandsPath(),
+            $commandStringRoot,
+            $this->config->getHostname(),
+            $this->config->getPort(),
+            $this->config->getProxyHost(),
+            $this->config->getProxyPort()
+        );
+    }
+
+    protected function stopSeleniumServer()
+    {
+        // @todo search for the process and terminate it
+    }
 }

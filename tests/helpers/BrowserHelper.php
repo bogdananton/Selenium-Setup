@@ -1,5 +1,5 @@
 <?php
-namespace tests\helpers;
+namespace SeleniumSetupTests\helpers;
 
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\WebDriverCapabilityType;
@@ -21,6 +21,7 @@ class BrowserHelper extends \PHPUnit_Framework_TestCase
         
         $capabilities = [
             WebDriverCapabilityType::BROWSER_NAME => $this->getBrowserName(),
+            'phantomjs.page.settings.userAgent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:25.0) Gecko/20100101 Firefox/25.0',
         ];
 
         $this->webDriver = RemoteWebDriver::create('http://' . $this->getSeleniumServerHost() . ':' . $this->getSeleniumServerPort() . '/wd/hub', $capabilities);
