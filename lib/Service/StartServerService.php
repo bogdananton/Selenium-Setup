@@ -1,7 +1,9 @@
 <?php
 namespace SeleniumSetup\Service;
 
+use SeleniumSetup\Binary\Binary;
 use SeleniumSetup\Config\ConfigInterface;
+use SeleniumSetup\Environment\Environment;
 use SeleniumSetup\System\System;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,6 +14,7 @@ class StartServerService implements StartServerServiceInterface
     protected $input;
     protected $output;
     protected $system;
+    protected $env;
 
     public function __construct(
         ConfigInterface $config,
@@ -23,25 +26,26 @@ class StartServerService implements StartServerServiceInterface
         $this->input = $input;
         $this->output = $output;
         $this->system = new System();
+        $this->env = new Environment();
     }
 
-    // @todo Move to protected methods.
+    // @todo Move to public methods into SeleniumSetup\Environment.
     public function detectEnv()
     {
+        // Pre-requisites.
         $canInstall = true;
         $writeln = [];
 
-        $javaVersionParagraph = $this->system->execCommand('java -version');
-        preg_match('/version "([0-9._]+)"/', $javaVersionParagraph, $javaVersionMatches);
-        $javaVersion = isset($javaVersionMatches[1]) ? $javaVersionMatches[1] : null;
+        // Start checking.
+
+        $javaVersion = $this->env->getJavaVersion();
 
         if (empty($javaVersion)) {
             $writeln[] = '[ ] Java is not installed.';
             $canInstall = false;
         } else {
             $writeln[] = '[x] Java is installed.';
-            $javaVersionCheck = version_compare($javaVersion, '1.6') >= 0;
-            if (!$javaVersionCheck) {
+            if ($this->env->isJavaVersionDeprecated($javaVersion)) {
                 $writeln[] = '[ ] Your Java version needs to be >= 1.6';
                 $canInstall = false;
             } else {
@@ -49,34 +53,25 @@ class StartServerService implements StartServerServiceInterface
             }
         }
 
-
-        $phpVersionCheck = version_compare(PHP_VERSION, '5.3') >= 0;
-        if (!$phpVersionCheck) {
-            $writeln[] = '[ ] Your PHP version '. PHP_VERSION .' should be >= 5.3';
+        if ($this->env->isPHPVersionDeprecated()) {
+            $writeln[] = '[ ] Your PHP version '. $this->env->getPHPVersion() .' should be >= 5.3';
             $canInstall = false;
         } else {
-            $writeln[] = '[x] Your PHP version is '. PHP_VERSION;
+            $writeln[] = '[x] Your PHP version is '. $this->env->getPHPVersion();
         }
 
-        $canUseLatestPHPUnit = version_compare(PHP_VERSION, '5.6') >= 0;
-
-        $curlExtIsEnabled = function_exists('curl_version');
-        if (!$curlExtIsEnabled) {
+        if (!$this->env->hasPHPCurlExtInstalled()) {
             $writeln[] = '[ ] cURL extension for PHP is missing.';
             $canInstall = false;
         } else {
-            $curlVersion = curl_version()['version'];
-            $writeln[] = '[x] cURL '. $curlVersion .' extension is installed.';
+            $writeln[] = '[x] cURL '. $this->env->getPHPCurlExtVersion() .' extension is installed.';
         }
 
-        $curlEnvCheck = $this->system->execCommand('curl -V');
-
-        $sslExtCheck = extension_loaded('openssl');
-        if (!$sslExtCheck) {
+        if (!$this->env->hasPHPOpenSSLExtInstalled()) {
             $writeln[] = '[ ] OpenSSL extension for PHP is missing.';
             $canInstall = false;
         } else {
-            $writeln[] = '[x] '. OPENSSL_VERSION_TEXT .' extension is installed.';
+            $writeln[] = '[x] '. $this->env->getPHPOpenSSLExtVersion() .' extension is installed.';
         }
 
         $this->output->writeln($writeln);
@@ -99,7 +94,22 @@ class StartServerService implements StartServerServiceInterface
     // @todo here
     public function downloadDrivers()
     {
-        var_dump($this->config);
+        foreach ($this->config->getBinaries() as $binaryDetails) {
+            $binary = Binary::createFromObject($binaryDetails);
+            if (!$this->system->isFile($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName())) {
+                $this->output->writeln(sprintf(
+                        'Downloading %s %s ...', $binary->getLabel(), $binary->getVersion()
+                ));
+                $this->system->download(
+                    $binary->getDownloadUrl(),
+                    $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName()
+                );
+            } else {
+                $this->output->writeln(sprintf(
+                    'Skipping %s %s. Binary already exists.', $binary->getLabel(), $binary->getVersion()
+                ));
+            }
+        }
     }
 
     public function startServer()
@@ -108,6 +118,10 @@ class StartServerService implements StartServerServiceInterface
             $this->output->writeln('Everything good, let\'s roll ...');
             $this->prepareEnv();
             $this->downloadDrivers();
+            return true;
+        } else {
+            $this->output->writeln('Missing required components. Please review your setup.');
+            return false;
         }
     }
 

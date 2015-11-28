@@ -1,11 +1,13 @@
 <?php
 namespace SeleniumSetup\System;
+use Guzzle\Http\Client;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 /**
  * Class System
  * @package SeleniumSetup\System
+ * @todo Replace with http://symfony.com/doc/current/components/filesystem/introduction.html
  */
 class System implements SystemInterface
 {
@@ -181,5 +183,15 @@ class System implements SystemInterface
         //    echo $process->getOutput();
 
         return $output;
+    }
+
+    // @todo put try catch http://stackoverflow.com/questions/16939794/copy-remote-file-using-guzzle
+    public function download($from, $to)
+    {
+        $client = new Client();
+        $response = $client->get($from)
+            ->setResponseBody($to)
+            ->send();
+        return true;
     }
 }

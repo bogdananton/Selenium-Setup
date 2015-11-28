@@ -11,4 +11,5 @@ interface SystemInterface
     public function openFileForReading($fileFullPath);
     public function readFileLineAsCsv($handler, $limit = 0, $separator = '|');
     public function execCommand($cmd);
+    public function download($from, $to);
 }

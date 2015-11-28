@@ -8,41 +8,49 @@
   "logsPath": "build/log/",
   "binaries": {
     "composer": {
+      "label": "Composer",
       "version": "latest",
       "downloadUrl": "https://getcomposer.org/composer.phar",
       "binName": "composer.phar"
     },
     "selenium": {
+      "label": "Selenium Server",
       "version": "2.48.2",
       "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.2.jar",
       "binName": "selenium-server.jar"
     },
     "phpunit.old": {
+      "label": "PHPUnit Old (for PHP 5.3)",
       "version": "4.8.9",
       "downloadUrl": "https://phar.phpunit.de/phpunit-4.8.9.phar",
       "binName": "phpunit.phar"
     },
     "phpunit.new": {
+      "label": "PHPUnit Latest",
       "version": "5.0.8",
       "downloadUrl": "https://phar.phpunit.de/phpunit-5.0.8.phar",
       "binName": "phpunit.phar"
     },
     "chromedriver.win": {
+      "label": "ChromeDriver for Windows",
       "version": "2.20",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip",
       "binName": "chromedriver.exe"
     },
     "chromedriver.linux": {
+      "label": "ChromeDriver for Linux",
       "version": "2.15",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.15/chromedriver_linux64.zip",
       "binName": "chromedriver"
     },
     "chromedriver.mac": {
+      "label": "ChromeDriver for Mac",
       "version": "2.15",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.15/chromedriver_mac32.zip",
       "binName": "chromedriver"
     },
     "iedriver": {
+      "label": "Internet Explorer Driver for Windows",
       "version": "2.48",
       "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/IEDriverServer_Win32_2.48.0.zip",
       "binName": "IEDriverServer.exe"
