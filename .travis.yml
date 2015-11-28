@@ -9,12 +9,11 @@ before_script:
 script:
   - php bin/selenium-setup.php start
   - chmod +x bin/commands/linux/start_phpunit_tests.sh
-  - seleniumServerPort=4444 ./bin/commands/linux/start_phpunit_tests.sh
+  - seleniumServerHost=localhost seleniumServerPort=4444 ./bin/commands/linux/start_phpunit_tests.sh
 
 after_script:
   - ls -al
-  - cd build
-  - ls -al
+  - cd build && ls -al
   - cat logs/selenium.log
 
 notifications:
