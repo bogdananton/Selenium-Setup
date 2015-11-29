@@ -39,6 +39,12 @@ class CommandWindows implements CommandInterface
         $this->system->execCommand($cmd);
     }
 
+    public function waitForSeleniumServerToStart()
+    {
+        sleep(5);
+        return true;
+    }
+
     public function stopSeleniumServer()
     {
         $this->system->execCommand('taskkill /F /IM java.exe');
@@ -46,6 +52,9 @@ class CommandWindows implements CommandInterface
 
     public function startTests($configPath = null, $testSuite = null)
     {
+        putenv('seleniumServerHost='. $this->config->getHostname());
+        putenv('seleniumServerPort='. $this->config->getPort());
+
         $this->system->execCommand('php '. $this->config->getBuildPath() .'phpunit.phar -c '.$configPath.' --testsuite "'. $testSuite .'"', true);
     }
 }

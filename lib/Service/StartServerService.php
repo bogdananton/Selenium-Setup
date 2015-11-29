@@ -187,9 +187,7 @@ class StartServerService implements StartServerServiceInterface
         $command = CommandFactory::create($this->config, $this->env);
 
         if ($this->startServer()) {
-            sleep(5);
-            putenv('seleniumServerHost='. $this->config->getHostname());
-            putenv('seleniumServerPort='. $this->config->getPort());
+            $command->waitForSeleniumServerToStart();
             $command->startTests(
                 $this->env->getProjectRootPath() . DIRECTORY_SEPARATOR . 'phpunit.xml',
                 $this->env->getOsName()

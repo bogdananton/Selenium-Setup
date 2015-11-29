@@ -9,6 +9,7 @@ interface CommandInterface
     public function invalidateEnvProxy();
     public function addBuildFolderToPath();
     public function startSeleniumServer();
+    public function waitForSeleniumServerToStart();
     public function stopSeleniumServer();
     public function startTests($configPath = null, $testSuite = null);
 }
