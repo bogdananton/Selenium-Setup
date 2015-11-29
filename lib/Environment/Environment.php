@@ -5,7 +5,7 @@ use SeleniumSetup\System\System;
 
 class Environment implements EnvironmentInterface
 {
-    const OS_WINDOWS = 'win';
+    const OS_WINDOWS = 'windows';
     const OS_LINUX = 'linux';
     const OS_MAC = 'mac';
 

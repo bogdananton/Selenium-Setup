@@ -19,7 +19,7 @@ echo Note: this is needed for the web drivers be found by Selenium.
 SET PATH=%PATH%;%cd%/build
 
 echo Starting Selenium standalone server ...
-@start /b "" java -jar build/selenium-server.jar -port %2 -Dhttp.proxyHost=%3 -Dhttp.proxyPort=%4 -log build/logs/selenium.log
+@start /b "" java -jar %~dp0..\..\..\build/selenium-server.jar -port %2 -Dhttp.proxyHost=%3 -Dhttp.proxyPort=%4 -log %~dp0..\..\..\build/logs/selenium.log
 
 echo Wait ...
 timeout /T 3

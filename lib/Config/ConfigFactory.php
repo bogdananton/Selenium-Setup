@@ -21,6 +21,7 @@ class ConfigFactory
             ->setPort($configObj->port)
             ->setProxyHost($configObj->proxyHost)
             ->setProxyPort($configObj->proxyPort)
+            ->setCommandsPath($configObj->commandsPath)
             ->setBuildPath($configObj->buildPath)
             ->setLogsPath($configObj->logsPath);
 

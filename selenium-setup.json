@@ -6,7 +6,7 @@
   "proxyPort": "",
   "buildPath": "build/",
   "commandsPath": "bin/commands/",
-  "logsPath": "build/log/",
+  "logsPath": "build/logs/",
   "binaries": {
     "composer": {
       "label": "Composer",

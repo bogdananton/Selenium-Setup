@@ -159,10 +159,13 @@ class System implements SystemInterface
         return implode("\n", $output);
         */
 
+        var_dump($cmd); var_dump($verbose);
+
         $process = new Process($cmd);
         $process->start();
         $process->setIdleTimeout(0);
         $process->setTimeout(0);
+
 
         $output = null;
 
@@ -184,7 +187,8 @@ class System implements SystemInterface
         //}
 
         //    echo $process->getOutput();
-
+        var_dump($process->getExitCode());
+        var_dump($process->getExitCodeText());
         return $output;
     }
 

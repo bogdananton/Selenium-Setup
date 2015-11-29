@@ -138,11 +138,11 @@ class StartServerService implements StartServerServiceInterface
 
         $this->output->writeln('==> Selenium Server starting... ');
 
-        $this->output->writeln(sprintf(
-            'Start tests: seleniumServerHost=%s seleniumServerPort=%s phpunit',
-            $this->config->getHostname(),
-            $this->config->getPort()
-        ));
+        //$this->output->writeln(sprintf(
+        //    'Start tests: seleniumServerHost=%s seleniumServerPort=%s phpunit',
+        //    $this->config->getHostname(),
+        //    $this->config->getPort()
+        //));
 
         // will run asynchronously with no console output
         $this->system->execCommand($commandString, true);
@@ -153,12 +153,12 @@ class StartServerService implements StartServerServiceInterface
     protected function getSeleniumServerCommand()
     {
         switch ($this->env->getOsName()) {
-            case 'windows':
-                $commandStringRoot = 'win/start_selenium.bat';
+            case Environment::OS_WINDOWS:
+                $commandStringRoot = Environment::OS_WINDOWS . '/start_selenium.bat';
                 break;
 
-            case 'linux':
-                $commandStringRoot = 'linux/start_selenium.sh';
+            case Environment::OS_LINUX:
+                $commandStringRoot = Environment::OS_LINUX . '/start_selenium.sh';
                 break;
 
             default:
@@ -168,7 +168,7 @@ class StartServerService implements StartServerServiceInterface
         }
 
         return sprintf(
-            '%s%s %s %s %s %s &',
+            '%s%s %s %s %s %s',
             $this->config->getCommandsPath(),
             $commandStringRoot,
             $this->config->getHostname(),
