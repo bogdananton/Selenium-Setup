@@ -21,8 +21,14 @@ class BrowserHelper extends \PHPUnit_Framework_TestCase
         
         $capabilities = [
             WebDriverCapabilityType::BROWSER_NAME => $this->getBrowserName(),
-            'phantomjs.page.settings.userAgent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:25.0) Gecko/20100101 Firefox/25.0',
+            //'phantomjs.page.settings.userAgent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:25.0) Gecko/20100101 Firefox/25.0',
         ];
+
+        //var_dump($this->getSeleniumServerHost());
+        //var_dump($this->getSeleniumServerPort());
+        //var_dump($this->getBrowserName());
+        //exit;
+
 
         $this->webDriver = RemoteWebDriver::create('http://' . $this->getSeleniumServerHost() . ':' . $this->getSeleniumServerPort() . '/wd/hub', $capabilities);
 

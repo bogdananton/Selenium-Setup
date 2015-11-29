@@ -5,7 +5,7 @@
         <testsuite name="all">
             <directory suffix="Test.php">tests/</directory>
         </testsuite>
-        <testsuite name="unix">
+        <testsuite name="linux">
             <file>tests/ChromeTest.php</file>
             <file>tests/FirefoxTest.php</file>
         </testsuite>
@@ -18,10 +18,4 @@
             <file>tests/IETest.php</file>
         </testsuite>
     </testsuites>
-
-    <!-- @todo: sync with build.xml -->
-    <php>
-        <env name="seleniumServerHost" value="localhost"/>
-        <env name="seleniumServerPort" value="8321"/>
-    </php>
 </phpunit>

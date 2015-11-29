@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+error_reporting(E_ERROR | E_PARSE);
 
 $greetings = <<<'BANNER'
  ____            ___
@@ -34,5 +35,31 @@ $console
         $c = new \SeleniumSetup\FrontController($input, $output);
         $c->start();
     });
+
+$console
+    ->register('stop')
+    ->setDescription('Stop Selenium server.')
+    ->setDefinition(array(
+        new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Path to your Selenium configuration options.')
+    ))
+    ->setCode(function (InputInterface $input, OutputInterface $output) use ($greetings) {
+        // $output->writeln($greetings);
+        $c = new \SeleniumSetup\FrontController($input, $output);
+        $c->stop();
+    });
+
+$console
+    ->register('selfTest')
+    ->setDescription('Start Selenium server and run tests.')
+    ->setDefinition(array(
+        new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Path to your Selenium configuration options.')
+    ))
+    ->setCode(function (InputInterface $input, OutputInterface $output) use ($greetings) {
+        $output->writeln($greetings);
+        $c = new \SeleniumSetup\FrontController($input, $output);
+        $c->selfTest();
+    });
+
+
 
 $console->run();

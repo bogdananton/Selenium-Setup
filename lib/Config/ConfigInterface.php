@@ -9,6 +9,8 @@ use SeleniumSetup\Binary\Binary;
  */
 interface ConfigInterface
 {
+    public function setName($serverName);
+    public function getName();
     public function setHostname($hostname);
     public function getHostname();
     public function setPort($port);
@@ -17,10 +19,10 @@ interface ConfigInterface
     public function getProxyHost();
     public function setProxyPort($proxyPort);
     public function getProxyPort();
-    public function setCommandsPath($commandPath);
-    public function getCommandsPath();
     public function setBuildPath($buildPath);
     public function getBuildPath();
+    public function setTmpPath($tmpPath);
+    public function getTmpPath();
     public function setLogsPath($logPath);
     public function getLogsPath();
 

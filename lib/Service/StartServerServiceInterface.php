@@ -7,4 +7,6 @@ interface StartServerServiceInterface
     public function prepareEnv();
     public function downloadDrivers();
     public function startServer();
+    public function stopServer();
+    public function runSelfTest();
 }

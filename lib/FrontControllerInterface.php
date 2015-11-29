@@ -9,4 +9,5 @@ interface FrontControllerInterface
     public function __construct(InputInterface $input, OutputInterface $output);
     public function start();
     public function stop();
+    public function selfTest();
 }

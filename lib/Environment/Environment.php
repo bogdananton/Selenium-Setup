@@ -9,12 +9,20 @@ class Environment implements EnvironmentInterface
     const OS_LINUX = 'linux';
     const OS_MAC = 'mac';
 
+    const OS_TYPE_64BIT = '64bit';
+    const OS_TYPE_32BIT = '32bit';
+
 
     protected $system;
 
     public function __construct()
     {
         $this->system = new System();
+    }
+
+    public function getProjectRootPath()
+    {
+        return realpath(dirname(__FILE__) . '/../../');
     }
 
     // @todo Fine-tune the Windows and Mac detection if possible.
@@ -36,6 +44,16 @@ class Environment implements EnvironmentInterface
     public function getOsVersion()
     {
         // TODO: Implement getOsVersion() method.
+    }
+
+    public function getOsType()
+    {
+        //$type = php_uname('m');
+        if (strlen(decbin(~0)) == 64) {
+            return self::OS_TYPE_64BIT;
+        } else {
+            return self::OS_TYPE_32BIT;
+        }
     }
 
     public function getJavaVersion()

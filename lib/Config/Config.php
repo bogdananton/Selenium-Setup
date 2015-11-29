@@ -5,12 +5,13 @@ use SeleniumSetup\Binary\Binary;
 
 class Config implements ConfigInterface
 {
+    protected $name;
     protected $hostname;
     protected $port;
     protected $proxyHost;
     protected $proxyPort;
     protected $buildPath;
-    protected $commandsPath;
+    protected $tmpPath;
     protected $logsPath;
     protected $binaries = [];
 
@@ -25,6 +26,24 @@ class Config implements ConfigInterface
     public static function getAllProperties()
     {
         return array_keys(get_object_vars(new self));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     * @return Config
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
     }
 
     /**
@@ -108,30 +127,30 @@ class Config implements ConfigInterface
     }
 
     /**
-     * @param string $commandsPath
-     * @return Config
-     */
-    public function setCommandsPath($commandsPath)
-    {
-        $this->commandsPath = $commandsPath;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCommandsPath()
-    {
-        return $this->commandsPath;
-    }
-
-    /**
      * @param string $buildPath
      * @return Config
      */
     public function setBuildPath($buildPath)
     {
         $this->buildPath = $buildPath;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTmpPath()
+    {
+        return $this->tmpPath;
+    }
+
+    /**
+     * @param mixed $tmpPath
+     * @return Config
+     */
+    public function setTmpPath($tmpPath)
+    {
+        $this->tmpPath = $tmpPath;
         return $this;
     }
 

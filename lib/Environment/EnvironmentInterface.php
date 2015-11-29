@@ -3,8 +3,10 @@ namespace SeleniumSetup\Environment;
 
 interface EnvironmentInterface
 {
+    public function getProjectRootPath();
     public function getOsName();
     public function getOsVersion();
+    public function getOsType();
     public function getJavaVersion();
     public function isJavaVersionDeprecated($javaVersion);
     public function hasJavaCli();

@@ -11,4 +11,6 @@ interface BinaryInterface
     public function getDownloadUrl();
     public function setBinName($binName);
     public function getBinName();
+    public function setOsSpecific($osName);
+    public function getOsSpecific();
 }

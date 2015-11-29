@@ -143,24 +143,6 @@ class System implements SystemInterface
      */
     public function execCommand($cmd, $verbose = false)
     {
-        /*
-        if ($verbose) {
-            echo "\n" . '-----------' . "\n";
-            echo $cmd;
-            echo "\n" . '-----------' . "\n";
-        }
-
-        exec($cmd, $output, $return);
-
-        //if ($verbose) {
-        //    echo implode("\n", $output);
-        //    flush();
-        //}
-        return implode("\n", $output);
-        */
-
-        var_dump($cmd); var_dump($verbose);
-
         $process = new Process($cmd);
         $process->start();
         $process->setIdleTimeout(0);
@@ -187,8 +169,9 @@ class System implements SystemInterface
         //}
 
         //    echo $process->getOutput();
-        var_dump($process->getExitCode());
-        var_dump($process->getExitCodeText());
+        //  var_dump($cmd);
+        //var_dump($process->getExitCode());
+        //var_dump($process->getExitCodeText());
         return $output;
     }
 

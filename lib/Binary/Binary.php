@@ -7,6 +7,7 @@ class Binary implements BinaryInterface
     protected $version;
     protected $downloadUrl;
     protected $binName;
+    protected $osSpecific = null;
 
     public static function createFromObject(\stdClass $object)
     {
@@ -92,4 +93,23 @@ class Binary implements BinaryInterface
         $this->binName = $binName;
         return $this;
     }
+
+    /**
+     * @return null
+     */
+    public function getOsSpecific()
+    {
+        return $this->osSpecific;
+    }
+
+    /**
+     * @param null $osSpecific
+     * @return Binary
+     */
+    public function setOsSpecific($osSpecific)
+    {
+        $this->osSpecific = $osSpecific;
+        return $this;
+    }
+
 }
