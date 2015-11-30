@@ -3,6 +3,7 @@ namespace SeleniumSetup\System;
 use GuzzleHttp\Client;
 use GuzzleHttp\Event\ProgressEvent;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
 
 /**
@@ -143,25 +144,31 @@ class System implements SystemInterface
      */
     public function execCommand($cmd, $verbose = false)
     {
-        $process = new Process($cmd);
-        $process->start();
-        $process->setIdleTimeout(0);
-        $process->setTimeout(0);
-
+        var_dump($cmd);
 
         $output = null;
 
-        $process->wait(function ($type, $buffer) use (&$output, $verbose) {
-            //if (Process::ERR === $type) {
-            //    echo 'ERR > '.$buffer;
-            //} else {
-            //    echo 'OUT > '.$buffer;
-            //}
-            $output .= $buffer;
-            if ($verbose) {
-                echo $buffer;
-            }
-        });
+        try {
+            $process = new Process($cmd);
+            $process->start();
+            $process->setIdleTimeout(0);
+            $process->setTimeout(0);
+
+            $process->wait(function ($type, $buffer) use (&$output, $verbose) {
+                //if (Process::ERR === $type) {
+                //    echo 'ERR > '.$buffer;
+                //} else {
+                //    echo 'OUT > '.$buffer;
+                //}
+                $output .= $buffer;
+                if ($verbose) {
+                    echo $buffer;
+                }
+            });
+
+        } catch (RuntimeException $e) {
+            var_dump ($e->getMessage());
+        }
 
         // executes after the command finishes
         //if (!$process->isSuccessful()) {
@@ -169,7 +176,7 @@ class System implements SystemInterface
         //}
 
         //    echo $process->getOutput();
-        //  var_dump($cmd);
+        // var_dump($cmd);
         //var_dump($process->getExitCode());
         //var_dump($process->getExitCodeText());
         return $output;

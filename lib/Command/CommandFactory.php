@@ -19,7 +19,7 @@ class CommandFactory
                 break;
 
             case Environment::OS_LINUX:
-                return false;
+                return new CommandLinux($config);
                 break;
 
             default:
