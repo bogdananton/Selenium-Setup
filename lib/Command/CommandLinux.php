@@ -3,6 +3,11 @@ namespace SeleniumSetup\Command;
 
 class CommandLinux extends CommandWindows
 {
+    public function addBuildFolderToPath()
+    {
+        putenv('PATH=' . getenv('PATH') . ':' . $this->config->getBuildPath());
+    }
+
     public function startSeleniumServer()
     {
         $cmd = 'java -jar ' . $this->config->getBuildPath() . 'selenium-server.jar' .

@@ -17,7 +17,7 @@ $greetings = <<<'BANNER'
    /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \
    \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
     \/_____/\/____/\/____/\/____/\/_/\/_/\/_/\/___/  \/_/\/_/\/_/
-    PHPUnit Environment with Facebook's WebDriver
+    Selenium Environment using Facebook's WebDriver
     by Bogdan Anton and contributors.
 
 BANNER;

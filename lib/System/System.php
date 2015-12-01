@@ -144,7 +144,7 @@ class System implements SystemInterface
      */
     public function execCommand($cmd, $verbose = false)
     {
-        var_dump($cmd);
+        // var_dump($cmd);
 
         $output = null;
 

@@ -44,12 +44,12 @@ class StartServerService implements StartServerServiceInterface
             $writeln[] = '[ ] Java is not installed.';
             $canInstall = false;
         } else {
-            $writeln[] = '[x] Java is installed.';
+            $writeln[] = '<info>[x] Java is installed.</info>';
             if ($this->env->isJavaVersionDeprecated($javaVersion)) {
                 $writeln[] = '[ ] Your Java version needs to be >= 1.6';
                 $canInstall = false;
             } else {
-                $writeln[] = '[x] Your Java version '. $javaVersion .' seems up to date.';
+                $writeln[] = '<info>[x] Your Java version '. $javaVersion .' seems up to date.</info>';
             }
         }
 
@@ -57,21 +57,21 @@ class StartServerService implements StartServerServiceInterface
             $writeln[] = '[ ] Your PHP version '. $this->env->getPHPVersion() .' should be >= 5.3';
             $canInstall = false;
         } else {
-            $writeln[] = '[x] Your PHP version is '. $this->env->getPHPVersion();
+            $writeln[] = '<info>[x] Your PHP version is '. $this->env->getPHPVersion() .'</info>';
         }
 
         if (!$this->env->hasPHPCurlExtInstalled()) {
             $writeln[] = '[ ] cURL extension for PHP is missing.';
             $canInstall = false;
         } else {
-            $writeln[] = '[x] cURL '. $this->env->getPHPCurlExtVersion() .' extension is installed.';
+            $writeln[] = '<info>[x] cURL '. $this->env->getPHPCurlExtVersion() .' extension is installed.</info>';
         }
 
         if (!$this->env->hasPHPOpenSSLExtInstalled()) {
             $writeln[] = '[ ] OpenSSL extension for PHP is missing.';
             $canInstall = false;
         } else {
-            $writeln[] = '[x] '. $this->env->getPHPOpenSSLExtVersion() .' extension is installed.';
+            $writeln[] = '<info>[x] '. $this->env->getPHPOpenSSLExtVersion() .' extension is installed.</info>';
         }
 
         $this->output->writeln($writeln);
