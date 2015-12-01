@@ -57,4 +57,10 @@ class CommandWindows implements CommandInterface
 
         $this->system->execCommand('php '. $this->config->getBuildPath() .'phpunit.phar -c '.$configPath.' --testsuite "'. $testSuite .'"', true);
     }
+
+    public function makeFileExecutable($filePath)
+    {}
+
+    public function startDisplay()
+    {}
 }

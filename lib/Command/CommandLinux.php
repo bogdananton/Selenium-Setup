@@ -27,4 +27,19 @@ class CommandLinux extends CommandWindows
     {
         $this->system->execCommand('until $(echo | nc '.$this->config->getHostname().' '.$this->config->getPort().'); do sleep 1; echo Waiting for Selenium Server to start ...; done;', true);
     }
+
+    public function makeFileExecutable($filePath)
+    {
+        $this->system->execCommand('chmod +x '. $filePath);
+    }
+
+    public function startDisplay()
+    {
+        $cmd = 'if ! xset q &>/dev/null; then';
+            $cmd .= 'export DISPLAY=:99.0';
+            $cmd .= '/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16';
+        $cmd .= 'fi;';
+
+        // @todo implement this.
+    }
 }

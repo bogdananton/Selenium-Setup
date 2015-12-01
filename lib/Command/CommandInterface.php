@@ -12,4 +12,6 @@ interface CommandInterface
     public function waitForSeleniumServerToStart();
     public function stopSeleniumServer();
     public function startTests($configPath = null, $testSuite = null);
+    public function makeFileExecutable($filePath);
+    public function startDisplay();
 }

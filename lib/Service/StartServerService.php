@@ -15,6 +15,7 @@ class StartServerService implements StartServerServiceInterface
     protected $output;
     protected $system;
     protected $env;
+    protected $command;
 
     public function __construct(
         ConfigInterface $config,
@@ -27,6 +28,7 @@ class StartServerService implements StartServerServiceInterface
         $this->output = $output;
         $this->system = new System();
         $this->env = new Environment();
+        $this->command = CommandFactory::create($this->config, $this->env);
     }
 
     // @todo Move to public methods into SeleniumSetup\Environment.
@@ -113,12 +115,13 @@ class StartServerService implements StartServerServiceInterface
                 $this->output->writeln(sprintf(
                     'Downloading %s %s ...', $binary->getLabel(), $binary->getVersion()
                 ));
-                // Preserve the original name.
+                // Download.
                 $downloadTo = $this->config->getBuildPath() . DIRECTORY_SEPARATOR . pathinfo($binary->getDownloadUrl(), PATHINFO_BASENAME);
                 $this->system->download(
                     $binary->getDownloadUrl(),
                     $downloadTo
                 );
+                // Unzip.
                 if (in_array(pathinfo($binary->getDownloadUrl(), PATHINFO_EXTENSION), ['zip', 'tar', 'tar.gz'])) {
                     $zip = new \ZipArchive;
                     $res = $zip->open($downloadTo);
@@ -132,6 +135,8 @@ class StartServerService implements StartServerServiceInterface
                 } else {
                     rename($downloadTo, $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
                 }
+                // Make executable.
+                $this->command->makeFileExecutable($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
             } else {
                 $this->output->writeln(sprintf(
                     'Skipping %s %s. Binary already exists.', $binary->getLabel(), $binary->getVersion()
@@ -156,20 +161,19 @@ class StartServerService implements StartServerServiceInterface
 
     protected function runServer()
     {
-        $command = CommandFactory::create($this->config, $this->env);
-
-        $command->stopSeleniumServer();
+        $this->command->stopSeleniumServer();
         if (!empty($this->config->getProxyHost())) {
-            $command->invalidateEnvProxy();
+            $this->command->invalidateEnvProxy();
         }
-        $command->addBuildFolderToPath();
+        $this->command->addBuildFolderToPath();
+        $this->command->startDisplay();
         $this->output->writeln(sprintf(
             'Starting Selenium Server (%s) ... %s:%s',
             $this->config->getName(),
             $this->config->getHostname(),
             $this->config->getPort()
         ));
-        $command->startSeleniumServer();
+        $this->command->startSeleniumServer();
         $this->output->writeln(sprintf(
             'Done. Test it at http://%s:%s/wd/hub/',
             $this->config->getHostname(),
@@ -181,17 +185,14 @@ class StartServerService implements StartServerServiceInterface
 
     public function stopServer()
     {
-        $command = CommandFactory::create($this->config, $this->env);
-        $command->stopSeleniumServer();
+        $this->command->stopSeleniumServer();
     }
 
     public function runSelfTest()
     {
-        $command = CommandFactory::create($this->config, $this->env);
-
         if ($this->startServer()) {
-            $command->waitForSeleniumServerToStart();
-            $command->startTests(
+            $this->command->waitForSeleniumServerToStart();
+            $this->command->startTests(
                 $this->env->getProjectRootPath() . DIRECTORY_SEPARATOR . 'phpunit.xml',
                 $this->env->getOsName()
             );
