@@ -103,7 +103,10 @@ class StartServerService implements StartServerServiceInterface
     {
         foreach ($this->config->getBinaries() as $binary) {
             // Skip binaries that don't belong to the current operating system.
-            if (!empty($binary->getOsSpecific()) && $binary->getOsSpecific() != $this->env->getOsName()) {
+            if (
+                !empty($binary->getOs()) && $binary->getOs() != $this->env->getOsName() ||
+                !empty($binary->getOsType() && $binary->getOsType() != $this->env->getOsType() )
+            ) {
                 continue;
             }
             if (!$this->system->isFile($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName())) {

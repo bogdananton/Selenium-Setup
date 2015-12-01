@@ -13,7 +13,7 @@
       "version": "latest",
       "downloadUrl": "https://getcomposer.org/composer.phar",
       "binName": "composer.phar",
-      "osSpecific": null,
+      "os": null,
       "osType": null
     },
     "selenium": {
@@ -21,7 +21,7 @@
       "version": "2.48.2",
       "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.2.jar",
       "binName": "selenium-server.jar",
-      "osSpecific": null,
+      "os": null,
       "osType": null
     },
     "phpunit.old": {
@@ -29,7 +29,7 @@
       "version": "4.8.9",
       "downloadUrl": "https://phar.phpunit.de/phpunit-4.8.9.phar",
       "binName": "phpunit.phar",
-      "osSpecific": null,
+      "os": null,
       "osType": null
     },
     "phpunit.new": {
@@ -37,7 +37,7 @@
       "version": "5.0.8",
       "downloadUrl": "https://phar.phpunit.de/phpunit-5.0.8.phar",
       "binName": "phpunit.phar",
-      "osSpecific": null,
+      "os": null,
       "osType": null
     },
     "chromedriver.win.32bit": {
@@ -45,7 +45,7 @@
       "version": "2.20",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip",
       "binName": "chromedriver.exe",
-      "osSpecific": "windows",
+      "os": "windows",
       "osType": "32bit"
     },
     "chromedriver.win.64bit": {
@@ -53,23 +53,23 @@
       "version": "2.20",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.20/chromedriver_win64.zip",
       "binName": "chromedriver.exe",
-      "osSpecific": "windows",
+      "os": "windows",
       "osType": "64bit"
     },
     "chromedriver.linux.32bit": {
-      "label": "ChromeDriver for Linux",
+      "label": "ChromeDriver for Linux on 32 bit",
       "version": "2.15",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.15/chromedriver_linux32.zip",
       "binName": "chromedriver",
-      "osSpecific": "linux",
+      "os": "linux",
       "osType": "32bit"
     },
     "chromedriver.linux.64bit": {
-      "label": "ChromeDriver for Linux",
+      "label": "ChromeDriver for Linux on 64 bit",
       "version": "2.15",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.15/chromedriver_linux64.zip",
       "binName": "chromedriver",
-      "osSpecific": "linux",
+      "os": "linux",
       "osType": "64bit"
     },
     "chromedriver.mac.32bit": {
@@ -77,7 +77,7 @@
       "version": "2.15",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.15/chromedriver_mac32.zip",
       "binName": "chromedriver",
-      "osSpecific": "mac",
+      "os": "mac",
       "osType": "32bit"
     },
     "chromedriver.mac.64bit": {
@@ -85,7 +85,7 @@
       "version": "2.15",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.15/chromedriver_mac64.zip",
       "binName": "chromedriver",
-      "osSpecific": "mac",
+      "os": "mac",
       "osType": "64bit"
     },
     "iedriver": {
@@ -93,7 +93,7 @@
       "version": "2.48",
       "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/IEDriverServer_Win32_2.48.0.zip",
       "binName": "IEDriverServer.exe",
-      "osSpecific": "windows",
+      "os": "windows",
       "osType": "32bit"
     },
     "iedriver": {
@@ -101,7 +101,7 @@
       "version": "2.48",
       "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/IEDriverServer_x64_2.48.0.zip",
       "binName": "IEDriverServer.exe",
-      "osSpecific": "windows",
+      "os": "windows",
       "osType": "64bit"
     }
   }
