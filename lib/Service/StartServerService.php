@@ -21,8 +21,7 @@ class StartServerService implements StartServerServiceInterface
         ConfigInterface $config,
         InputInterface $input,
         OutputInterface $output
-    )
-    {
+    ) {
         $this->config = $config;
         $this->input = $input;
         $this->output = $output;
@@ -99,21 +98,22 @@ class StartServerService implements StartServerServiceInterface
             $this->system->createDir($this->config->getLogsPath());
         }
     }
-
-    // @todo here
+    
     public function downloadDrivers()
     {
         foreach ($this->config->getBinaries() as $binary) {
             // Skip binaries that don't belong to the current operating system.
             if (
-                !empty($binary->getOs()) && $binary->getOs() != $this->env->getOsName() ||
-                !empty($binary->getOsType() && $binary->getOsType() != $this->env->getOsType() )
+                !is_null($binary->getOs()) && $binary->getOs() != $this->env->getOsName() ||
+                !is_null($binary->getOsType()) && $binary->getOsType() != $this->env->getOsType()
             ) {
                 continue;
             }
             if (!$this->system->isFile($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName())) {
                 $this->output->writeln(sprintf(
-                    'Downloading %s %s ...', $binary->getLabel(), $binary->getVersion()
+                    'Downloading %s %s ...',
+                    $binary->getLabel(),
+                    $binary->getVersion()
                 ));
                 // Download.
                 $downloadTo = $this->config->getBuildPath() . DIRECTORY_SEPARATOR . pathinfo($binary->getDownloadUrl(), PATHINFO_BASENAME);
@@ -125,7 +125,7 @@ class StartServerService implements StartServerServiceInterface
                 if (in_array(pathinfo($binary->getDownloadUrl(), PATHINFO_EXTENSION), ['zip', 'tar', 'tar.gz'])) {
                     $zip = new \ZipArchive;
                     $res = $zip->open($downloadTo);
-                    if ($res === TRUE) {
+                    if ($res === true) {
                         $zip->extractTo(
                             $this->config->getBuildPath(),
                             [$binary->getBinName()]
@@ -133,13 +133,15 @@ class StartServerService implements StartServerServiceInterface
                         $zip->close();
                     }
                 } else {
-                    rename($downloadTo, $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
+                    $this->system->rename($downloadTo, $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
                 }
                 // Make executable.
                 $this->command->makeFileExecutable($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
             } else {
                 $this->output->writeln(sprintf(
-                    'Skipping %s %s. Binary already exists.', $binary->getLabel(), $binary->getVersion()
+                    'Skipping %s %s. Binary already exists.',
+                    $binary->getLabel(),
+                    $binary->getVersion()
                 ));
             }
         }
@@ -162,7 +164,7 @@ class StartServerService implements StartServerServiceInterface
     protected function runServer()
     {
         $this->command->stopSeleniumServer();
-        if (!empty($this->config->getProxyHost())) {
+        if (!is_null($this->config->getProxyHost())) {
             $this->command->invalidateEnvProxy();
         }
         $this->command->addBuildFolderToPath();
