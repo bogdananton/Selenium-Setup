@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bogdananton/phpunit-selenium-env.svg?branch=master)](https://travis-ci.org/bogdananton/phpunit-selenium-env)
+[![Build Status](https://travis-ci.org/bogdananton/Selenium-Setup.svg)](https://travis-ci.org/bogdananton/Selenium-Setup)
 
 ```
   ____            ___
