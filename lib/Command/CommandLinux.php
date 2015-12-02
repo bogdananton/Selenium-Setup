@@ -36,8 +36,9 @@ class CommandLinux extends CommandWindows
     public function startDisplay()
     {
         $cmd = 'if ! xset q &>/dev/null; then ';
-            $cmd .= 'export DISPLAY=:99.0 && ';
+            $cmd .= 'export DISPLAY=:99 && ';
             $cmd .= '/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16; ';
+            $cmd .= 'sleep 3;'
         $cmd .= 'fi;';
 
         $this->system->execCommand($cmd, true);
