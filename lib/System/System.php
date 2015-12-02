@@ -212,4 +212,11 @@ class System implements SystemInterface
 
         return true;
     }
+
+    public function rename($from, $to)
+    {
+        return rename($from, $to);
+    }
+
+
 }

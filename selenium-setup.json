@@ -88,7 +88,7 @@
       "os": "mac",
       "osType": "64bit"
     },
-    "iedriver": {
+    "iedriver.win.32bit": {
       "label": "Internet Explorer Driver for Windows",
       "version": "2.48",
       "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/IEDriverServer_Win32_2.48.0.zip",
@@ -96,7 +96,7 @@
       "os": "windows",
       "osType": "32bit"
     },
-    "iedriver": {
+    "iedriver.win.64bit": {
       "label": "Internet Explorer Driver for Windows",
       "version": "2.48",
       "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/IEDriverServer_x64_2.48.0.zip",

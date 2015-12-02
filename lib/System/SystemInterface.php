@@ -12,4 +12,5 @@ interface SystemInterface
     public function readFileLineAsCsv($handler, $limit = 0, $separator = '|');
     public function execCommand($cmd);
     public function download($from, $to);
+    public function rename($from, $to);
 }
