@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ERROR | E_PARSE | E_COMPILE_ERROR);
 
 $greetings = <<<'BANNER'
  ____            ___
