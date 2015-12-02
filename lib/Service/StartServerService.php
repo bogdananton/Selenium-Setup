@@ -43,12 +43,12 @@ class StartServerService implements StartServerServiceInterface
         $javaVersion = $this->env->getJavaVersion();
 
         if (empty($javaVersion)) {
-            $writeln[] = '[ ] Java is not installed.';
+            $writeln[] = '<error>[ ] Java is not installed.</error>';
             $canInstall = false;
         } else {
             $writeln[] = '<info>[x] Java is installed.</info>';
             if ($this->env->isJavaVersionDeprecated($javaVersion)) {
-                $writeln[] = '[ ] Your Java version needs to be >= 1.6';
+                $writeln[] = '<error>[ ] Your Java version needs to be >= 1.6</error>';
                 $canInstall = false;
             } else {
                 $writeln[] = '<info>[x] Your Java version '. $javaVersion .' seems up to date.</info>';
@@ -56,21 +56,21 @@ class StartServerService implements StartServerServiceInterface
         }
 
         if ($this->env->isPHPVersionDeprecated()) {
-            $writeln[] = '[ ] Your PHP version '. $this->env->getPHPVersion() .' should be >= 5.3';
+            $writeln[] = '<error>[ ] Your PHP version '. $this->env->getPHPVersion() .' should be >= 5.3</error>';
             $canInstall = false;
         } else {
             $writeln[] = '<info>[x] Your PHP version is '. $this->env->getPHPVersion() .'</info>';
         }
 
         if (!$this->env->hasPHPCurlExtInstalled()) {
-            $writeln[] = '[ ] cURL extension for PHP is missing.';
+            $writeln[] = '<error>[ ] cURL extension for PHP is missing.</error>';
             $canInstall = false;
         } else {
             $writeln[] = '<info>[x] cURL '. $this->env->getPHPCurlExtVersion() .' extension is installed.</info>';
         }
 
         if (!$this->env->hasPHPOpenSSLExtInstalled()) {
-            $writeln[] = '[ ] OpenSSL extension for PHP is missing.';
+            $writeln[] = '<error>[ ] OpenSSL extension for PHP is missing.</error>';
             $canInstall = false;
         } else {
             $writeln[] = '<info>[x] '. $this->env->getPHPOpenSSLExtVersion() .' extension is installed.</info>';
