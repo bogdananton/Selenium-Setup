@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Selenium-setup by bogdananton</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Selenium-setup</h1>
+      <h2 class="project-tagline">Selenium Environment Setup using Facebook&#39;s WebDriver. Automated installs via Phing.</h2>
+      <a href="https://github.com/bogdananton/Selenium-Setup" class="btn">View on GitHub</a>
+      <a href="https://github.com/bogdananton/Selenium-Setup/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/bogdananton/Selenium-Setup/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><a href="https://travis-ci.org/bogdananton/phpunit-selenium-env"><img src="https://travis-ci.org/bogdananton/phpunit-selenium-env.svg?branch=master" alt="Build Status"></a></p>
+
+<pre><code>  ____            ___
+ /\  _`\         /\_ \                  __
+ \ \,\L\_\     __\//\ \      __    ___ /\_\  __  __    ___ ___
+  \/_\__ \   /'__`\\ \ \   /'__`\/' _ `\/\ \/\ \/\ \ /' __` __`\
+    /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \
+    \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
+    \/_____/\/____/\/____/\/____/\/_/\/_/\/_/\/___/  \/_/\/_/\/_/
+    Selenium Environment using Facebook's WebDriver
+</code></pre>
+
+<h2>
+<a id="system-requirements" class="anchor" href="#system-requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>System Requirements:</h2>
+
+<ul>
+<li>PHP (5.3+) with curl and open_ssl</li>
+<li>Java JRE/JDK (1.6+)</li>
+<li>Browser: Chrome, Firefox, IE (only on Windows)</li>
+</ul>
+
+<p>These components should be installed on your system using your software manager.
+<em>On Windows</em> you need to have <code>php</code>, <code>java</code>, <code>curl</code> commands available in your command prompt or registered in your PATH.</p>
+
+<h2>
+<a id="environment-components" class="anchor" href="#environment-components" aria-hidden="true"><span class="octicon octicon-link"></span></a>Environment components:</h2>
+
+<ul>
+<li><a href="https://getcomposer.org/">Composer</a></li>
+<li><a href="https://www.phing.info">Phing</a></li>
+<li>
+<a href="http://www.seleniumhq.org">Selenium</a> Standalone server</li>
+<li><a href="https://github.com/facebook/php-webdriver">Facebook PHP WebDriver</a></li>
+<li>WebDrivers
+
+<ul>
+<li><a href="https://code.google.com/p/selenium/wiki/ChromeDriver">ChromeDriver</a></li>
+<li><a href="https://code.google.com/p/selenium/wiki/FirefoxDriver">FirefoxDriver</a></li>
+<li><a href="https://code.google.com/p/selenium/wiki/InternetExplorerDriver">IEDriver</a></li>
+</ul>
+</li>
+<li>You need to have Chrome, Firefox or IE installed.</li>
+</ul>
+
+<h2>
+<a id="install--self-test" class="anchor" href="#install--self-test" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install &amp; self-test</h2>
+
+<ol>
+<li>Go to project root</li>
+<li>Download <a href="http://www.phing.info/get/phing-latest.phar">phing-latest.phar</a>
+
+<ol>
+<li>
+<em>On Linux</em> <code>wget http://www.phing.info/get/phing-latest.phar -O; mv phing-latest.phar phing; chmod +x phing</code>
+</li>
+</ol>
+</li>
+<li>Run <code>php phing-latest.phar</code>
+</li>
+</ol>
+
+<h2>
+<a id="use-in-your-testing-project" class="anchor" href="#use-in-your-testing-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use in your testing project</h2>
+
+<ol>
+<li>Go to <strong>your</strong> project root</li>
+<li>Add the package <code>composer require bogdananton/phpunit-selenium-env</code>
+</li>
+<li>Import the build.xml from <code>phpunit-selenium-env</code> task in your project. See the example below.</li>
+<li>Run phing: <code>php phing-latest.phar</code>
+</li>
+</ol>
+
+<p>Example of <code>build.xml</code> in <strong>your</strong> project:</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>UTF-8<span class="pl-pds">"</span></span>?&gt;
+&lt;<span class="pl-ent">project</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>phpunit-selenium-env-example<span class="pl-pds">"</span></span> <span class="pl-e">default</span>=<span class="pl-s"><span class="pl-pds">"</span>mySetupEnv<span class="pl-pds">"</span></span> <span class="pl-e">description</span>=<span class="pl-s"><span class="pl-pds">"</span>Example of setup<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">php</span> <span class="pl-e">expression</span>=<span class="pl-s"><span class="pl-pds">"</span>include('vendor/autoload.php')<span class="pl-pds">"</span></span>/&gt;
+    &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>path.to.env<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>${application.startdir}/vendor/bogdananton/phpunit-selenium-env<span class="pl-pds">"</span></span> <span class="pl-e">override</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>/&gt;
+    &lt;<span class="pl-ent">import</span> <span class="pl-e">file</span>=<span class="pl-s"><span class="pl-pds">"</span>${path.to.env}/build.xml<span class="pl-pds">"</span></span>/&gt;
+
+    &lt;<span class="pl-ent">target</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>mySetupEnv<span class="pl-pds">"</span></span>&gt;
+        <span class="pl-c">&lt;!-- Your custom setup of variables. --&gt;</span>
+        &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>selenium.server.host<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>localhost<span class="pl-pds">"</span></span> /&gt;
+        &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>selenium.server.port<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>8321<span class="pl-pds">"</span></span> /&gt;
+        &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>proxy.host<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>proxy.avangate.local<span class="pl-pds">"</span></span> <span class="pl-e">override</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>/&gt;
+        &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>proxy.port<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>8080<span class="pl-pds">"</span></span> <span class="pl-e">override</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>/&gt;
+        <span class="pl-c">&lt;!-- Run targets: runAllTargets, setupEnv, setSeleniumPort, selfTest --&gt;</span>
+        &lt;<span class="pl-ent">phingcall</span> <span class="pl-e">target</span>=<span class="pl-s"><span class="pl-pds">"</span>runAllTargets<span class="pl-pds">"</span></span> <span class="pl-e">inheritAll</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>/&gt;
+    &lt;/<span class="pl-ent">target</span>&gt;
+&lt;/<span class="pl-ent">project</span>&gt;</pre></div>
+
+<p>You can use <a href="https://github.com/serbanghita/phpunit-selenium-env-example">PHPUnit Selenium Env Example</a> repository.</p>
+
+<h2>
+<a id="screenshot-in-windows-git-bash" class="anchor" href="#screenshot-in-windows-git-bash" aria-hidden="true"><span class="octicon octicon-link"></span></a>Screenshot in Windows (git bash)</h2>
+
+<p><img src="https://raw.githubusercontent.com/bogdananton/phpunit-selenium-env/master/screenshot-windows.gif" alt=""></p>
+
+<h2>
+<a id="screenshot-in-linux-guake-bash" class="anchor" href="#screenshot-in-linux-guake-bash" aria-hidden="true"><span class="octicon octicon-link"></span></a>Screenshot in Linux (guake bash)</h2>
+
+<p><img src="https://raw.githubusercontent.com/bogdananton/phpunit-selenium-env/master/screenshot-linux.png" alt=""></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/bogdananton/Selenium-Setup">Selenium-setup</a> is maintained by <a href="https://github.com/bogdananton">bogdananton</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
