@@ -13,25 +13,22 @@ class BrowserHelper extends \PHPUnit_Framework_TestCase
     /** @var RemoteWebDriver */
     protected $webDriver;
     
-    protected function envSetup($seleniumServerHost, $seleniumServerPort, $browserName)
+    protected function envSetup($seleniumServerHost, $seleniumServerPort, $browserName, $capabilities = [])
     {
         $this->setSeleniumServerHost($seleniumServerHost)
              ->setSeleniumServerPort($seleniumServerPort)
              ->setBrowserName($browserName);
         
-        $capabilities = [
-            WebDriverCapabilityType::BROWSER_NAME => $this->getBrowserName(),
-            //'phantomjs.page.settings.userAgent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:25.0) Gecko/20100101 Firefox/25.0',
-        ];
+        if (empty($capabilities)) {
+            $capabilities = [
+                WebDriverCapabilityType::BROWSER_NAME => $this->getBrowserName(),
+            ];
+        }
 
-        //var_dump($this->getSeleniumServerHost());
-        //var_dump($this->getSeleniumServerPort());
-        //var_dump($this->getBrowserName());
-        //exit;
-
-
-        $this->webDriver = RemoteWebDriver::create('http://' . $this->getSeleniumServerHost() . ':' . $this->getSeleniumServerPort() . '/wd/hub', $capabilities);
-
+        $this->webDriver = RemoteWebDriver::create(
+            sprintf('http://%s:%d/wd/hub', $this->getSeleniumServerHost(), $this->getSeleniumServerPort()),
+            $capabilities
+        );
 
         // Delete all cookies to avoid cart products and scenarios conflicts.
         $this->webDriver->manage()->deleteAllCookies();
