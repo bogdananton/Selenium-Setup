@@ -2,12 +2,13 @@ language: php
 php:
   - "5.4"
 
+addons:
+  apt:
+    packages:
+    - chromium-browser
+
 before_script:
-  - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-  - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-  - sudo apt-get update
-  - sudo apt-get install google-chrome-stable
-  - wget https://getcomposer.org/composer.phar
+  - wget --no-check-certificate https://getcomposer.org/composer.phar
   - chmod +x composer.phar
   - php composer.phar install
  
