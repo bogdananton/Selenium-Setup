@@ -8,6 +8,8 @@ before_script:
   - php composer.phar install
  
 script:
+  - google-chrome --version
+  - firefox --version
   - php bin/selenium-setup.php selfTest
   
 after_script:
