@@ -42,3 +42,7 @@
    * [FirefoxDriver](https://code.google.com/p/selenium/wiki/FirefoxDriver)
    * [IEDriver](https://code.google.com/p/selenium/wiki/InternetExplorerDriver)
 * You need to have Chrome, Firefox or IE installed.
+
+## Demo
+
+[![asciicast](https://asciinema.org/a/5s4dt4szujci9dfcx2fe9qwt4.png)](https://asciinema.org/a/5s4dt4szujci9dfcx2fe9qwt4)
