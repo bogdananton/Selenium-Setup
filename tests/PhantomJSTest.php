@@ -8,10 +8,12 @@ class PhantomJSTest extends BrowserHelper
 {
     public function setUp()
     {
-        $this->envSetup(
+        $this->startWebDriver(
             getenv('seleniumServerHost'),
             getenv('seleniumServerPort'),
-            'phantomjs'
+            'phantomjs',
+            getEnv('browserProxyHost'),
+            getEnv('browserProxyPort')
         );
     }
 

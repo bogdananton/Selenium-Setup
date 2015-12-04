@@ -54,6 +54,8 @@ class CommandWindows implements CommandInterface
     {
         putenv('seleniumServerHost='. $this->config->getHostname());
         putenv('seleniumServerPort='. $this->config->getPort());
+        putenv('browserProxyHost='. $this->config->getProxyHost());
+        putenv('browserProxyPort='. $this->config->getProxyPort());
 
         $this->system->execCommand('php '. $this->config->getBuildPath() .'phpunit.phar -c '.$configPath.' --testsuite "'. $testSuite .'"', true);
     }

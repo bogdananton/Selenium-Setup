@@ -8,10 +8,12 @@ class IETest extends BrowserHelper
 {
     public function setUp()
     {
-        $this->envSetup(
+        $this->startWebDriver(
             getenv('seleniumServerHost'),
             getenv('seleniumServerPort'),
-            'internet explorer'
+            'internet explorer',
+            getEnv('browserProxyHost'),
+            getEnv('browserProxyPort')
         );
     }
 

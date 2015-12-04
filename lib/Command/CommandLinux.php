@@ -26,6 +26,7 @@ class CommandLinux extends CommandWindows
     public function waitForSeleniumServerToStart()
     {
         $this->system->execCommand('until $(echo | nc '.$this->config->getHostname().' '.$this->config->getPort().'); do sleep 1; echo Waiting for Selenium Server to start ...; done;', true);
+        //sleep(5);
     }
 
     public function makeFileExecutable($filePath)
@@ -35,12 +36,13 @@ class CommandLinux extends CommandWindows
 
     public function startDisplay()
     {
-        $cmd = 'if ! xset q &>/dev/null; then ';
-            $cmd .= 'export DISPLAY=:99.0 && ';
-            $cmd .= '/sbin/start-stop-daemon --start --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 && ';
-            $cmd .= 'sleep 3; ';
-        $cmd .= 'fi;';
-
-        $this->system->execCommand($cmd, true);
+        if (empty(getenv('DISPLAY'))) {
+            putenv('DISPLAY=:99.0');
+            $cmd = '/sbin/start-stop-daemon --start --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 && ';
+            $this->system->execCommand($cmd, true);
+            var_dump($cmd);
+            sleep(3);
+            
+        }
     }
 }

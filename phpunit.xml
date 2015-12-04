@@ -17,4 +17,12 @@
             <file>tests/IETest.php</file>
         </testsuite>
     </testsuites>
+    <!--
+    <php>
+        <env name="seleniumServerHost" value="localhost"/>
+        <env name="seleniumServerPort" value="4444"/>
+        <env name="browserName" value="chrome"/>
+        <env name="browserCapabilities" value=""/>
+    </php>
+    -->
 </phpunit>

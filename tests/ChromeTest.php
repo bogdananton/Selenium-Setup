@@ -8,10 +8,12 @@ class ChromeTest extends BrowserHelper
 {
     public function setUp()
     {
-        $this->envSetup(
+        $this->startWebDriver(
             getenv('seleniumServerHost'),
             getenv('seleniumServerPort'),
-            'chrome'
+            'chrome',
+            getEnv('browserProxyHost'),
+            getEnv('browserProxyPort')
         );
     }
 
