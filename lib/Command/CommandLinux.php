@@ -36,13 +36,12 @@ class CommandLinux extends CommandWindows
 
     public function startDisplay()
     {
-        if (empty(getenv('DISPLAY'))) {
+        if (!getenv('DISPLAY')) {
             putenv('DISPLAY=:99.0');
-            $cmd = '/sbin/start-stop-daemon --start --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 && ';
+            $cmd = '/sbin/start-stop-daemon --start --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16';
             $this->system->execCommand($cmd, true);
-            var_dump($cmd);
+            // var_dump($cmd);
             sleep(3);
-            
-        }
+       }
     }
 }
