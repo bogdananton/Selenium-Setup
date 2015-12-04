@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bogdananton/phpunit-selenium-env.svg?branch=master)](https://travis-ci.org/bogdananton/phpunit-selenium-env)
+[![Build Status](https://travis-ci.org/bogdananton/Selenium-Setup.svg)](https://travis-ci.org/bogdananton/Selenium-Setup)
 
 ```
   ____            ___
@@ -11,19 +11,30 @@
     Selenium Environment using Facebook's WebDriver
 ```
 
-## System Requirements:
+## Install
 
-* PHP (5.3+) with curl and open_ssl
+1. `git clone https://github.com/bogdananton/Selenium-Setup.git`
+1. `cd Selenium-Setup`
+1. Download [composer.phar](https://getcomposer.org/composer.phar)
+1. Run `php composer.phar install`
+
+## Running
+
+1. `php bin/selenium-setup.php start`
+
+## Running `selfTest`
+
+1. `php bin/selenium-setup.php selfTest`
+
+## System Requirements
+
 * Java JRE/JDK (1.6+)
+* PHP (5.3+) with curl and open_ssl
 * Browser: Chrome, Firefox, IE (only on Windows)
-
-These components should be installed on your system using your software manager.
-*On Windows* you need to have `php`, `java`, `curl` commands available in your command prompt or registered in your PATH.
 
 ## Environment components:
 
 * [Composer](https://getcomposer.org/)
-* [Phing](https://www.phing.info)
 * [Selenium](http://www.seleniumhq.org) Standalone server
 * [Facebook PHP WebDriver](https://github.com/facebook/php-webdriver)
 * WebDrivers
@@ -31,48 +42,3 @@ These components should be installed on your system using your software manager.
    * [FirefoxDriver](https://code.google.com/p/selenium/wiki/FirefoxDriver)
    * [IEDriver](https://code.google.com/p/selenium/wiki/InternetExplorerDriver)
 * You need to have Chrome, Firefox or IE installed.
-
-## Install & self-test
-
-1. Go to project root
-1. Download [phing-latest.phar](http://www.phing.info/get/phing-latest.phar)
-   1. *On Linux* `wget http://www.phing.info/get/phing-latest.phar -O; mv phing-latest.phar phing; chmod +x phing`
-1. Run `php phing-latest.phar`
-
-## Use in your testing project
-
-1. Go to **your** project root
-1. Add the package `composer require bogdananton/phpunit-selenium-env`
-1. Import the build.xml from `phpunit-selenium-env` task in your project. See the example below.
-1. Run phing: `php phing-latest.phar`
-
-Example of `build.xml` in **your** project:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="phpunit-selenium-env-example" default="mySetupEnv" description="Example of setup">
-    <php expression="include('vendor/autoload.php')"/>
-    <property name="path.to.env" value="${application.startdir}/vendor/bogdananton/phpunit-selenium-env" override="true"/>
-    <import file="${path.to.env}/build.xml"/>
-    
-    <target name="mySetupEnv">
-        <!-- Your custom setup of variables. -->
-        <property name="selenium.server.host" value="localhost" />
-        <property name="selenium.server.port" value="8321" />
-        <property name="proxy.host" value="proxy.avangate.local" override="true"/>
-        <property name="proxy.port" value="8080" override="true"/>
-        <!-- Run targets: runAllTargets, setupEnv, setSeleniumPort, selfTest -->
-        <phingcall target="runAllTargets" inheritAll="true"/>
-    </target>
-</project>
-```
-
-You can use [PHPUnit Selenium Env Example](https://github.com/serbanghita/phpunit-selenium-env-example) repository.
-
-## Screenshot in Windows (git bash)
-
-![](https://raw.githubusercontent.com/bogdananton/phpunit-selenium-env/master/screenshot-windows.gif)
-
-## Screenshot in Linux (guake bash)
-
-![](https://raw.githubusercontent.com/bogdananton/phpunit-selenium-env/master/screenshot-linux.png)

@@ -1,40 +1,24 @@
 <?php
-namespace tests\helpers;
+namespace SeleniumSetupTests\helpers;
 
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\WebDriverCapabilityType;
 
 class BrowserHelper extends \PHPUnit_Framework_TestCase
 {
-    protected $browserName;
-    protected $seleniumServerHost;
-    protected $seleniumServerPort;
-    
     /** @var RemoteWebDriver */
     protected $webDriver;
-    
-    protected function envSetup($seleniumServerHost, $seleniumServerPort, $browserName)
-    {
-        $this->setSeleniumServerHost($seleniumServerHost)
-             ->setSeleniumServerPort($seleniumServerPort)
-             ->setBrowserName($browserName);
-        
-        $capabilities = [
-            WebDriverCapabilityType::BROWSER_NAME => $this->getBrowserName(),
-        ];
 
-        $this->webDriver = RemoteWebDriver::create('http://' . $this->getSeleniumServerHost() . ':' . $this->getSeleniumServerPort() . '/wd/hub', $capabilities);
-
-
-        // Delete all cookies to avoid cart products and scenarios conflicts.
-        $this->webDriver->manage()->deleteAllCookies();
-    }
-    
+    // Default setup. Override this when needed.
     public function setUp()
     {
-        $this->markTestSkipped('This is a dummy.');
-        // Default setup. Override this.
-        $this->envSetup(getenv('seleniumServerHost'), getenv('seleniumServerPort'), 'chrome');
+        $this->startWebDriver(
+            getenv('seleniumServerHost'),
+            getenv('seleniumServerPort'),
+            getenv('browserName'),
+            getEnv('browserProxyHost'),
+            getEnv('browserProxyPort')
+        );
     }
 
     public function tearDown()
@@ -44,61 +28,48 @@ class BrowserHelper extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @return mixed
-     */
-    protected function getBrowserName()
-    {
-        return $this->browserName;
+    protected function startWebDriver(
+        $seleniumServerHost,
+        $seleniumServerPort,
+        $browserName,
+        $browserProxyHost = null,
+        $browserProxyPort = null,
+        $browserCapabilities = []
+    ) {
+        if (empty($seleniumServerHost)) {
+            throw new \RuntimeException('Please declare a valid Selenium Server host.');
+        }
+
+        if (empty($seleniumServerPort)) {
+            throw new \RuntimeException('Please declare a valid Selenium Server host.');
+        }
+        
+        if (empty($browserName)) {
+            throw new \RuntimeException('Please declare a valid browser.');
+        }
+        
+        $defaultBrowserCapabilities = [
+            WebDriverCapabilityType::BROWSER_NAME => $browserName,
+        ];
+        
+        if (empty($browserCapabilities)) {
+            if (!empty($browserProxyHost) && !empty($browserProxyPort)) {
+                $browserCapabilities[WebDriverCapabilityType::PROXY] = array(
+                    'proxyType' => 'manual',
+                    'httpProxy' => $browserProxyHost .':'. $browserProxyPort,
+                    'sslProxy' => $browserProxyHost .':'. $browserProxyPort,
+                );
+            }
+        }
+
+        $browserCapabilities = array_merge($defaultBrowserCapabilities, $browserCapabilities);
+
+        $this->webDriver = RemoteWebDriver::create(
+            sprintf('http://%s:%d/wd/hub', $seleniumServerHost, $seleniumServerPort),
+            $browserCapabilities
+        );
+
+        // Delete all cookies to avoid cart products and scenarios conflicts.
+        $this->webDriver->manage()->deleteAllCookies();
     }
-
-    /**
-     * @param mixed $browserName
-     * @return BrowserHelper
-     */
-    protected function setBrowserName($browserName)
-    {
-        $this->browserName = $browserName;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getSeleniumServerHost()
-    {
-        return $this->seleniumServerHost;
-    }
-
-    /**
-     * @param mixed $seleniumServerHost
-     * @return BrowserHelper
-     */
-    protected function setSeleniumServerHost($seleniumServerHost)
-    {
-        $this->seleniumServerHost = $seleniumServerHost;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getSeleniumServerPort()
-    {
-        return $this->seleniumServerPort;
-    }
-
-    /**
-     * @param mixed $seleniumServerPort
-     * @return BrowserHelper
-     */
-    protected function setSeleniumServerPort($seleniumServerPort)
-    {
-        $this->seleniumServerPort = $seleniumServerPort;
-
-        return $this;
-    }
-
 }

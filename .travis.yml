@@ -3,16 +3,20 @@ php:
   - "5.4"
 
 before_script:
-  - wget http://www.phing.info/get/phing-latest.phar
-  - chmod +x phing-latest.phar
+  - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+  - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+  - sudo apt-get update
+  - sudo apt-get install google-chrome-stable
+  - composer self-update
+  - composer install
  
 script:
-  - php phing-latest.phar -Dselenium.server.port=8111
+  - google-chrome --version
+  - firefox --version
+  - php bin/selenium-setup.php selfTest
   
 after_script:
-  - ls -al
-  - cd build
-  - ls -al
+  - cat build/logs/selenium.log
 
 notifications:
   email: false

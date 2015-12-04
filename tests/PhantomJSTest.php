@@ -4,14 +4,14 @@ namespace SeleniumSetupTests;
 use Facebook\WebDriver\WebDriverBy;
 use SeleniumSetupTests\helpers\BrowserHelper;
 
-class ChromeTest extends BrowserHelper
+class PhantomJSTest extends BrowserHelper
 {
     public function setUp()
     {
         $this->startWebDriver(
             getenv('seleniumServerHost'),
             getenv('seleniumServerPort'),
-            'chrome',
+            'phantomjs',
             getEnv('browserProxyHost'),
             getEnv('browserProxyPort')
         );

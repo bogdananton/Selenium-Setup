@@ -1,16 +1,19 @@
 <?php
-namespace tests;
+namespace SeleniumSetupTests;
 
 use Facebook\WebDriver\WebDriverBy;
-use tests\helpers\BrowserHelper;
+use SeleniumSetupTests\helpers\BrowserHelper;
+
 class IETest extends BrowserHelper
 {
     public function setUp()
     {
-        $this->envSetup(
+        $this->startWebDriver(
             getenv('seleniumServerHost'),
             getenv('seleniumServerPort'),
-            'internet explorer'
+            'internet explorer',
+            getEnv('browserProxyHost'),
+            getEnv('browserProxyPort')
         );
     }
 

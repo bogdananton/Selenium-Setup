@@ -1,17 +1,19 @@
 <?php
-namespace tests;
+namespace SeleniumSetupTests;
 
 use Facebook\WebDriver\WebDriverBy;
-use tests\helpers\BrowserHelper;
+use SeleniumSetupTests\helpers\BrowserHelper;
 
 class FirefoxTest extends BrowserHelper
 {
     public function setUp()
     {
-        $this->envSetup(
+        $this->startWebDriver(
             getenv('seleniumServerHost'),
             getenv('seleniumServerPort'),
-            'firefox'
+            'firefox',
+            getEnv('browserProxyHost'),
+            getEnv('browserProxyPort')
         );
     }
 
