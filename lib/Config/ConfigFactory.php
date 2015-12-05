@@ -2,35 +2,24 @@
 namespace SeleniumSetup\Config;
 
 use SeleniumSetup\Binary\Binary;
+use SeleniumSetup\Environment\Environment;
 use SeleniumSetup\System\System;
 
 class ConfigFactory
 {
+    const DEFAULT_CONFIGURATION_FILE = 'selenium-setup.json';
+
     public static function createFromConfigFile($configFilePath)
     {
-        /** @todo expose the selenium-setup.json file when running the initial setup always load from the build/ location */
-
-        // when running as a phar, use different path
-        if (\Phar::running() !== '') {
-            $rootPath = dirname(\Phar::running(false));
-
-        } else {
-            $realPath = realpath($configFilePath);
-            $rootPath = pathinfo($realPath, PATHINFO_DIRNAME);
-        }
-
         $system = new System();
-        $jsonString = $system->readFile($configFilePath);
-        $configObj = json_decode($jsonString);
+        $env = new Environment();
+
+        $rootPath = $env->getProjectRootPath();
+        $configObj = $system->loadJsonFile($configFilePath);
 
         $config = new Config();
-        foreach (Config::getAllProperties() as $propertyName) {
-            if (!isset($configObj->$propertyName)) {
-                throw new \InvalidArgumentException(
-                    sprintf('The required configuration key %s is missing.', $propertyName)
-                );
-            }
-        }
+        self::checkSourceIntegrity($config, $configObj);
+
         $config
             ->setName($configObj->name)
             ->setHostname($configObj->hostname)
@@ -48,5 +37,16 @@ class ConfigFactory
         }
 
         return $config;
+    }
+
+    protected static function checkSourceIntegrity(Config $configObj, $configSource)
+    {
+        foreach ($configObj::getAllProperties() as $propertyName) {
+            if (!isset($configSource->$propertyName)) {
+                throw new \InvalidArgumentException(
+                    sprintf('The required configuration key %s is missing.', $propertyName)
+                );
+            }
+        }
     }
 }

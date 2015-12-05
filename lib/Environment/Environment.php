@@ -12,7 +12,6 @@ class Environment implements EnvironmentInterface
     const OS_TYPE_64BIT = '64bit';
     const OS_TYPE_32BIT = '32bit';
 
-
     protected $system;
 
     public function __construct()
@@ -23,10 +22,10 @@ class Environment implements EnvironmentInterface
     public function getProjectRootPath()
     {
         // when running as a phar, use different path
-        $pharPath = \Phar::running();
+        $pharPath = \Phar::running(false);
 
         if ($pharPath !== '') {
-            return $pharPath;
+            return dirname($pharPath);
         }
 
         return realpath(dirname(__FILE__) . '/../../');

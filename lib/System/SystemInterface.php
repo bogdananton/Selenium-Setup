@@ -15,4 +15,5 @@ interface SystemInterface
     public function setCertificatePath($path);
     public function download($from, $to);
     public function rename($from, $to);
+    public function loadJsonFile($filePath, $assoc = false);
 }

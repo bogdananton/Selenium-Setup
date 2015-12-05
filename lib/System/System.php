@@ -27,6 +27,12 @@ class System implements SystemInterface
         return is_dir($dirFullPath);
     }
 
+    public function isPathAbsolute($path)
+    {
+        preg_match('$/[a-zA-Z]\:/', $path, $matches); /** @todo check regex on win */
+        return (substr($path, 0, 1) === '/') || (count($matches) > 0);
+    }
+
     /**
      * @param $dirFullPath
      * @return bool
@@ -235,5 +241,16 @@ class System implements SystemInterface
         return rename($from, $to);
     }
 
+    public function loadJsonFile($filePath, $assoc = false)
+    {
+        // read original file
+        $jsonString = $this->readFile($filePath);
+        $resultObject = json_decode($jsonString, $assoc);
 
+        if (!$resultObject) {
+            throw new \RuntimeException(sprintf('Cannot json-decode %s file.', $filePath));
+        }
+
+        return $resultObject;
+    }
 }

@@ -24,15 +24,30 @@ BANNER;
 
 $console = new Application('Selenium Setup', '3.0.1');
 
+$getConfigurationFile = function (InputInterface $input)
+{
+    $configurationPath = $input->getOption('config');
+    if (null === $configurationPath) {
+        $path = \Phar::running();
+        if ($path === '') {
+            $path = dirname(__FILE__) . '/..';
+        }
+        $configurationPath = $path . '/' . \SeleniumSetup\Config\ConfigFactory::DEFAULT_CONFIGURATION_FILE;
+    }
+
+    return $configurationPath;
+};
+
 $console
     ->register('start')
     ->setDescription('Start Selenium server with all supported drivers attached to it.')
     ->setDefinition(array(
         new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Path to your Selenium configuration options.')
     ))
-    ->setCode(function (InputInterface $input, OutputInterface $output) use ($greetings) {
+    ->setCode(function (InputInterface $input, OutputInterface $output) use ($greetings, $getConfigurationFile) {
         $output->writeln($greetings);
-        $c = new \SeleniumSetup\FrontController($input, $output);
+        $configurationPath = $getConfigurationFile($input);
+        $c = new \SeleniumSetup\FrontController($input, $output, $configurationPath);
         $c->start();
     });
 
@@ -42,10 +57,24 @@ $console
     ->setDefinition(array(
         new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Path to your Selenium configuration options.')
     ))
-    ->setCode(function (InputInterface $input, OutputInterface $output) use ($greetings) {
+    ->setCode(function (InputInterface $input, OutputInterface $output) use ($greetings, $getConfigurationFile) {
         // $output->writeln($greetings);
-        $c = new \SeleniumSetup\FrontController($input, $output);
+        $configurationPath = $getConfigurationFile($input);
+        $c = new \SeleniumSetup\FrontController($input, $output, $configurationPath);
         $c->stop();
+    });
+
+$console
+    ->register('exportConfiguration')
+    ->setDescription('Exports the current configuration file.')
+    ->setDefinition(array(
+        new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Path to your Selenium configuration options.'),
+        new InputArgument('output', InputArgument::OPTIONAL, 'Path to the output. Default: {buildpath}/selenium-setup.json.'),
+    ))
+    ->setCode(function (InputInterface $input, OutputInterface $output) use ($greetings, $getConfigurationFile) {
+        $configurationPath = $getConfigurationFile($input);
+        $c = new \SeleniumSetup\FrontController($input, $output, $configurationPath);
+        $c->exportConfiguration();
     });
 
 $console
@@ -54,9 +83,10 @@ $console
     ->setDefinition(array(
         new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Path to your Selenium configuration options.')
     ))
-    ->setCode(function (InputInterface $input, OutputInterface $output) use ($greetings) {
+    ->setCode(function (InputInterface $input, OutputInterface $output) use ($greetings, $getConfigurationFile) {
         $output->writeln($greetings);
-        $c = new \SeleniumSetup\FrontController($input, $output);
+        $configurationPath = $getConfigurationFile($input);
+        $c = new \SeleniumSetup\FrontController($input, $output, $configurationPath);
         $c->selfTest();
     });
 

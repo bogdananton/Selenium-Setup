@@ -192,5 +192,18 @@ class Config implements ConfigInterface
         return isset($this->binaries[$binaryName]) ? $this->binaries[$binaryName] : null;
     }
 
+    public function jsonSerialize() {
+        $object = (object)get_object_vars($this);
+        $object->binaries = [];
 
+        /**
+         * @var integer $index
+         * @var Binary $binary
+         */
+        foreach ($this->binaries as $index => $binary) {
+            $object->binaries[$index] = $binary->jsonSerialize();
+        }
+
+        return $object;
+    }
 }

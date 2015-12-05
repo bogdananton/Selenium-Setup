@@ -7,7 +7,7 @@ use SeleniumSetup\Binary\Binary;
  * @package SeleniumSetup\Config
  * Implement specifications from http://www.seleniumhq.org/docs/05_selenium_rc.jsp#server-options
  */
-interface ConfigInterface
+interface ConfigInterface extends \JsonSerializable
 {
     public function setName($serverName);
     public function getName();

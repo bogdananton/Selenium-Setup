@@ -12,16 +12,15 @@ class FrontController implements FrontControllerInterface
     protected $output;
     protected $config;
     
-    public function __construct(InputInterface $input, OutputInterface $output)
+    public function __construct(InputInterface $input, OutputInterface $output, $configurationFilePath)
     {
         $this->input = $input;
         $this->output = $output;
-        $this->config = ConfigFactory::createFromConfigFile(dirname(__FILE__) . '/../selenium-setup.json');
+        $this->config = ConfigFactory::createFromConfigFile($configurationFilePath);
     }
 
     public function start()
     {
-        
         $startService = new StartServerService($this->config, $this->input, $this->output);
         $startService->startServer();
     }
@@ -36,5 +35,11 @@ class FrontController implements FrontControllerInterface
     {
         $startService = new StartServerService($this->config, $this->input, $this->output);
         $startService->runSelfTest();
+    }
+
+    public function exportConfiguration()
+    {
+        $startService = new StartServerService($this->config, $this->input, $this->output);
+        $startService->exportConfigurationFile();
     }
 }

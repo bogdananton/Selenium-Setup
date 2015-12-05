@@ -168,6 +168,26 @@ class StartServerService implements StartServerServiceInterface
         }
     }
 
+    public function exportConfigurationFile()
+    {
+        // Check if the config file is a sample or the build copy.
+        $output = $this->input->getArgument('output');
+
+        // fallback on default: {buildpath}/{selenium-setup.json}
+        if (null === $output) {
+            $output = $this->config->getBuildPath();
+        }
+
+        // make sure that the build path exists
+        $this->prepareEnv();
+
+        // deploy config sample
+        $this->system->createFile($output, json_encode($this->config, JSON_PRETTY_PRINT));
+        $this->output->writeln('Done. ' . $output);
+
+        return true;
+    }
+
     protected function runServer()
     {
         $this->command->stopSeleniumServer();
