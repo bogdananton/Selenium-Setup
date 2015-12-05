@@ -190,7 +190,7 @@ class System implements SystemInterface
     {
 
         $client = new Client();
-        $client->setDefaultOption('verify', false); //, dirname(__FILE__) . '/../../bin/cacert.pem');
+        $client->setDefaultOption('verify', dirname(__FILE__) . '/../../bin/cacert.pem');
         $request = $client->createRequest('GET', $from, ['save_to'=> $to]);
 
         $computeRemainingSize = function(ProgressEvent $e) {
