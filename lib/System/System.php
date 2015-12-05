@@ -14,6 +14,11 @@ use Symfony\Component\Process\Process;
 class System implements SystemInterface
 {
     /**
+     * @var string|false
+     */
+    protected $certificatePath = false;
+
+    /**
      * @param $dirFullPath
      * @return bool
      */
@@ -185,12 +190,21 @@ class System implements SystemInterface
         return $output;
     }
 
+    public function getCertificatePath()
+    {
+        return $this->certificatePath;
+    }
+
+    public function setCertificatePath($path)
+    {
+        $this->certificatePath = $path;
+    }
+
     // @todo put try catch http://stackoverflow.com/questions/16939794/copy-remote-file-using-guzzle
     public function download($from, $to)
     {
-
         $client = new Client();
-        $client->setDefaultOption('verify', dirname(__FILE__) . '/../../bin/cacert.pem');
+        $client->setDefaultOption('verify', $this->getCertificatePath());
         $request = $client->createRequest('GET', $from, ['save_to'=> $to]);
 
         $computeRemainingSize = function(ProgressEvent $e) {

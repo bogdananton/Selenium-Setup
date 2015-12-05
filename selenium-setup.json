@@ -8,6 +8,14 @@
   "tmpPath": "build/tmp/",
   "logsPath": "build/logs/",
   "binaries": {
+    "certificate": {
+      "label": "SSL Certificate",
+      "version": "latest",
+      "downloadUrl": "http://curl.haxx.se/ca/cacert.pem",
+      "binName": "cacert.pem",
+      "os": null,
+      "osType": null
+    },
     "composer": {
       "label": "Composer",
       "version": "latest",

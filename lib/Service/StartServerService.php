@@ -109,7 +109,10 @@ class StartServerService implements StartServerServiceInterface
             ) {
                 continue;
             }
-            if (!$this->system->isFile($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName())) {
+
+            $binaryPath = $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName();
+
+            if (!$this->system->isFile($binaryPath)) {
                 $this->output->writeln(sprintf(
                     'Downloading %s %s ...',
                     $binary->getLabel(),
@@ -143,6 +146,10 @@ class StartServerService implements StartServerServiceInterface
                     $binary->getLabel(),
                     $binary->getVersion()
                 ));
+            }
+
+            if ($binary->getLabel() === 'SSL Certificate') {
+                $this->system->setCertificatePath($binaryPath);
             }
         }
     }
