@@ -60,6 +60,24 @@ class CommandWindows implements CommandInterface
         $this->system->execCommand('php '. $this->config->getBuildPath() .'phpunit.phar -c '.$configPath.' --testsuite "'. $testSuite .'"', true);
     }
 
+    /**
+     * Extract to build path to perform selfTest when running from phar.
+     */
+    public function prepareTestFiles()
+    {
+        $getPharPath = \Phar::running();
+
+        if ($getPharPath === '') {
+            return false; // not running in phar, no need to unzip
+        }
+
+        $buildPath = $this->config->getBuildPath();
+        $phar = new \Phar($getPharPath);
+        $phar->extractTo($buildPath . DIRECTORY_SEPARATOR . 'selfTest');
+
+        return true;
+    }
+
     public function makeFileExecutable($filePath)
     {}
 

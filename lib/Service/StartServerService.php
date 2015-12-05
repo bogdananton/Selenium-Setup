@@ -194,8 +194,15 @@ class StartServerService implements StartServerServiceInterface
     {
         if ($this->startServer()) {
             $this->command->waitForSeleniumServerToStart();
+
+            $areTestsExtractedToBuildPath = $this->command->prepareTestFiles();
+
+            $phpunitConfigRootPath = $areTestsExtractedToBuildPath
+                ? $this->config->getBuildPath() . DIRECTORY_SEPARATOR . 'selfTest'
+                : $this->env->getProjectRootPath();
+
             $this->command->startTests(
-                $this->env->getProjectRootPath() . DIRECTORY_SEPARATOR . 'phpunit.xml',
+                $phpunitConfigRootPath . DIRECTORY_SEPARATOR . 'phpunit.xml',
                 $this->env->getOsName()
             );
             $this->stopServer();
