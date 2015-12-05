@@ -8,8 +8,16 @@ class ConfigFactory
 {
     public static function createFromConfigFile($configFilePath)
     {
-        $realPath = realpath($configFilePath);
-        $rootPath = pathinfo($realPath, PATHINFO_DIRNAME);
+        /** @todo expose the selenium-setup.json file when running the initial setup always load from the build/ location */
+
+        // when running as a phar, use different path
+        if (\Phar::running() !== '') {
+            $rootPath = dirname(\Phar::running(false));
+
+        } else {
+            $realPath = realpath($configFilePath);
+            $rootPath = pathinfo($realPath, PATHINFO_DIRNAME);
+        }
 
         $system = new System();
         $jsonString = $system->readFile($configFilePath);

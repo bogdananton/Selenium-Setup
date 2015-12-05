@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Selenium-Setup" default="build-PHAR-using-box2">
+    <property name="path.to.env" value="${application.startdir}" />
+
+    <target name="build-PHAR-using-box2">
+        <if>
+            <not>
+                <available type="file" file="box.phar" property="box2exists" />
+            </not>
+            <then>
+                <exec command="curl -LSs http://box-project.github.io/box2/installer.php | php" passthru="true" />
+            </then>
+        </if>
+
+        <delete file="selenium-setup.phar.phar" quiet="true" />
+        <exec command="php -dphar.readonly=0 ./box.phar build -c compile" passthru="true" />
+        <chmod file="selenium-setup.phar" mode="0777" />
+
+        <echo>Have fun! http://www.seleniumsetup.org</echo>
+    </target>
+</project>
+

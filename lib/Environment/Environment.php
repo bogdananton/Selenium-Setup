@@ -22,6 +22,13 @@ class Environment implements EnvironmentInterface
 
     public function getProjectRootPath()
     {
+        // when running as a phar, use different path
+        $pharPath = \Phar::running();
+
+        if ($pharPath !== '') {
+            return $pharPath;
+        }
+
         return realpath(dirname(__FILE__) . '/../../');
     }
 
