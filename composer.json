@@ -1,5 +1,5 @@
 {
-  "name": "bogdananton/phpunit-selenium-env",
+  "name": "bogdananton/Selenium-Setup",
   "license": "MIT",
   "keywords": ["selenium", "selenium setup", "webdriver"],
   "authors": [

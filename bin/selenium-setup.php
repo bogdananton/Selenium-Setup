@@ -22,7 +22,7 @@ $greetings = <<<'BANNER'
 
 BANNER;
 
-$console = new Application('Selenium Setup', '3.0.0');
+$console = new Application('Selenium Setup', '3.0.1');
 
 $console
     ->register('start')

@@ -17,7 +17,7 @@
             "in": "vendor"
         }
     ],
-    "git-version": "3.0.0",
+    "git-version": "3.0.1",
     "main": "bin/selenium-setup.php",
     "output": "selenium-setup.phar",
     "stub": true
