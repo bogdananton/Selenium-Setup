@@ -1,5 +1,10 @@
 <?php
-require_once dirname(__FILE__) . '/../vendor/autoload.php';
+// Use composers autoload.php if available
+if (file_exists(dirname(__FILE__) . '/../vendor/autoload.php')) {
+    require_once dirname(__FILE__) . '/../vendor/autoload.php';
+} elseif (file_exists(dirname(__FILE__) . '/../../../autoload.php')) {
+    require_once dirname(__FILE__) . '/../../../autoload.php';
+}
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
