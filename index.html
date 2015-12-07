@@ -1,136 +1,208 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>Selenium-setup by bogdananton</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <!--<link rel="icon" href="../../favicon.ico">-->
+
+    <title>Selenium Setup | Install a Selenium Server fast on Linux, Windows or Mac.</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .bd-pageheader {
+        padding: 2rem .9375rem;
+        margin-bottom: 1.5rem;
+        color: #cdbfe3;
+        text-align: center;
+        background-color: #f2704c;
+      }
+
+      @media (min-width: 34em) {
+        .bd-pageheader {
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            margin-bottom: 3rem;
+            text-align: left;
+        }
+      }
+
+      @media (min-width: 48em) {}
+        .bd-pageheader h1 {
+            font-size: 4rem;
+        }
+      }
+      @media (min-width: 62em) {
+        .bd-pageheader h1, .bd-pageheader p {
+            margin-right: 380px;
+        }
+      }
+      .bd-pageheader h1 {
+          font-size: 3rem;
+          font-weight: 400;
+          color: #fff;
+          text-shadow: 0 1px 2px rgba(0,0,0,.3);
+      }
+      .bd-pageheader .lead {
+        color: #fff;
+      }
+
+      @media (min-width: 62em) {
+        .featurette-heading {
+            margin-top: 2rem;
+        }
+      }
+      @media (min-width: 40em) {
+        .featurette-heading {
+            font-size: 50px;
+        }
+      }
+      .featurette-heading {
+          font-weight: 300;
+          line-height: 1;
+          letter-spacing: -.05rem;
+      }
+
+      .author {
+        text-align: center;
+      }
+      .author h2 {
+        font-weight: normal;
+        color: #5a5a5a;
+      }
+    </style>
+
   </head>
   <body>
-    <section class="page-header">
-      <h1 class="project-name">Selenium-setup</h1>
-      <h2 class="project-tagline">Selenium Environment Setup using Facebook&#39;s WebDriver. Automated installs via Phing.</h2>
-      <a href="https://github.com/bogdananton/Selenium-Setup" class="btn">View on GitHub</a>
-      <a href="https://github.com/bogdananton/Selenium-Setup/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/bogdananton/Selenium-Setup/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
 
-    <section class="main-content">
-      <p><a href="https://travis-ci.org/bogdananton/phpunit-selenium-env"><img src="https://travis-ci.org/bogdananton/phpunit-selenium-env.svg?branch=master" alt="Build Status"></a></p>
+    <nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <span class="navbar-brand">Selenium Setup</span>
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link" href="#why">Why?</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://asciinema.org/a/31202">Demo</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/bogdananton/Selenium-Setup">Repository (GitHub)</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#authors">About</a>
+        </li>
+      </ul>
+      </div>
+    </nav>
 
-<pre><code>  ____            ___
- /\  _`\         /\_ \                  __
- \ \,\L\_\     __\//\ \      __    ___ /\_\  __  __    ___ ___
-  \/_\__ \   /'__`\\ \ \   /'__`\/' _ `\/\ \/\ \/\ \ /' __` __`\
-    /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \
-    \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
-    \/_____/\/____/\/____/\/____/\/_/\/_/\/_/\/___/  \/_/\/_/\/_/
-    Selenium Environment using Facebook's WebDriver
-</code></pre>
 
-<h2>
-<a id="system-requirements" class="anchor" href="#system-requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>System Requirements:</h2>
+    <div class="bd-pageheader">
+      <div class="container">
+        
+        <h1>Selenium Setup</h1>
+        <p class="lead">
+         Start your own Selenium test server with Chrome, Firefox and Internet Explorer drivers.<br>
+         If you are a PHP developer we have a helper included for you to easely write tests with Facebook's WebDriver.
+        </p>
 
-<ul>
-<li>PHP (5.3+) with curl and open_ssl</li>
-<li>Java JRE/JDK (1.6+)</li>
-<li>Browser: Chrome, Firefox, IE (only on Windows)</li>
-</ul>
+      </div>
+    </div>
 
-<p>These components should be installed on your system using your software manager.
-<em>On Windows</em> you need to have <code>php</code>, <code>java</code>, <code>curl</code> commands available in your command prompt or registered in your PATH.</p>
 
-<h2>
-<a id="environment-components" class="anchor" href="#environment-components" aria-hidden="true"><span class="octicon octicon-link"></span></a>Environment components:</h2>
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
 
-<ul>
-<li><a href="https://getcomposer.org/">Composer</a></li>
-<li><a href="https://www.phing.info">Phing</a></li>
-<li>
-<a href="http://www.seleniumhq.org">Selenium</a> Standalone server</li>
-<li><a href="https://github.com/facebook/php-webdriver">Facebook PHP WebDriver</a></li>
-<li>WebDrivers
+    <div class="container marketing">
 
-<ul>
-<li><a href="https://code.google.com/p/selenium/wiki/ChromeDriver">ChromeDriver</a></li>
-<li><a href="https://code.google.com/p/selenium/wiki/FirefoxDriver">FirefoxDriver</a></li>
-<li><a href="https://code.google.com/p/selenium/wiki/InternetExplorerDriver">IEDriver</a></li>
-</ul>
-</li>
-<li>You need to have Chrome, Firefox or IE installed.</li>
-</ul>
 
-<h2>
-<a id="install--self-test" class="anchor" href="#install--self-test" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install &amp; self-test</h2>
 
-<ol>
-<li>Go to project root</li>
-<li>Download <a href="http://www.phing.info/get/phing-latest.phar">phing-latest.phar</a>
 
-<ol>
-<li>
-<em>On Linux</em> <code>wget http://www.phing.info/get/phing-latest.phar -O; mv phing-latest.phar phing; chmod +x phing</code>
-</li>
-</ol>
-</li>
-<li>Run <code>php phing-latest.phar</code>
-</li>
-</ol>
+      <!-- START THE FEATURETTES -->
 
-<h2>
-<a id="use-in-your-testing-project" class="anchor" href="#use-in-your-testing-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use in your testing project</h2>
+      <hr class="featurette-divider">
 
-<ol>
-<li>Go to <strong>your</strong> project root</li>
-<li>Add the package <code>composer require bogdananton/phpunit-selenium-env</code>
-</li>
-<li>Import the build.xml from <code>phpunit-selenium-env</code> task in your project. See the example below.</li>
-<li>Run phing: <code>php phing-latest.phar</code>
-</li>
-</ol>
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">Start Selenium Server <span class="text-muted">on Windows, Linux or Mac.</span></h2>
+          <p>Selenium Setup will attempt to detect your environment and automatically install
+              everything you need. A simple command line can get you up and running in no time.</p>
+            <samp>php bin/selenium-setup.php start</samp>
+        </div>
+        <div class="col-md-5">
+            <a href="https://asciinema.org/a/31202" target="_blank"><img src="/img/start-selenium-setup.gif" width="100%"></a>
+        </div>
+      </div>
 
-<p>Example of <code>build.xml</code> in <strong>your</strong> project:</p>
+      <hr class="featurette-divider">
 
-<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>UTF-8<span class="pl-pds">"</span></span>?&gt;
-&lt;<span class="pl-ent">project</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>phpunit-selenium-env-example<span class="pl-pds">"</span></span> <span class="pl-e">default</span>=<span class="pl-s"><span class="pl-pds">"</span>mySetupEnv<span class="pl-pds">"</span></span> <span class="pl-e">description</span>=<span class="pl-s"><span class="pl-pds">"</span>Example of setup<span class="pl-pds">"</span></span>&gt;
-    &lt;<span class="pl-ent">php</span> <span class="pl-e">expression</span>=<span class="pl-s"><span class="pl-pds">"</span>include('vendor/autoload.php')<span class="pl-pds">"</span></span>/&gt;
-    &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>path.to.env<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>${application.startdir}/vendor/bogdananton/phpunit-selenium-env<span class="pl-pds">"</span></span> <span class="pl-e">override</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>/&gt;
-    &lt;<span class="pl-ent">import</span> <span class="pl-e">file</span>=<span class="pl-s"><span class="pl-pds">"</span>${path.to.env}/build.xml<span class="pl-pds">"</span></span>/&gt;
+      <div class="row featurette">
+        <div class="col-md-12">
+          <h2 class="featurette-heading">How? <span class="text-muted">See for yourself.</span></h2>
+          <p>
+              We tried to narrow the tech stack needed to run the whole setup.
+          </p>
+            <samp>git clone https://github.com/bogdananton/Selenium-Setup.git<br>
+                cd Selenium-Setup<br>
+                wget https://getcomposer.org/composer.phar<br>
+                php composer.phar install<br>
+                php bin/selenium-setup.php start
+            </samp>
+        </div>
+      </div>
 
-    &lt;<span class="pl-ent">target</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>mySetupEnv<span class="pl-pds">"</span></span>&gt;
-        <span class="pl-c">&lt;!-- Your custom setup of variables. --&gt;</span>
-        &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>selenium.server.host<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>localhost<span class="pl-pds">"</span></span> /&gt;
-        &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>selenium.server.port<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>8321<span class="pl-pds">"</span></span> /&gt;
-        &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>proxy.host<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>proxy.avangate.local<span class="pl-pds">"</span></span> <span class="pl-e">override</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>/&gt;
-        &lt;<span class="pl-ent">property</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>proxy.port<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>8080<span class="pl-pds">"</span></span> <span class="pl-e">override</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>/&gt;
-        <span class="pl-c">&lt;!-- Run targets: runAllTargets, setupEnv, setSeleniumPort, selfTest --&gt;</span>
-        &lt;<span class="pl-ent">phingcall</span> <span class="pl-e">target</span>=<span class="pl-s"><span class="pl-pds">"</span>runAllTargets<span class="pl-pds">"</span></span> <span class="pl-e">inheritAll</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>/&gt;
-    &lt;/<span class="pl-ent">target</span>&gt;
-&lt;/<span class="pl-ent">project</span>&gt;</pre></div>
+      <hr class="featurette-divider">
 
-<p>You can use <a href="https://github.com/serbanghita/phpunit-selenium-env-example">PHPUnit Selenium Env Example</a> repository.</p>
+      <div id="why" class="row featurette">
+        <div class="col-md-12">
+          <h2 class="featurette-heading">Why? <span class="text-muted">Testing your code is important!</span></h2>
+            <p>There are a couple of reasons this library was written, we needed the following:</p>
+              <ul>
+                <li>a quick way to start Selenium Server without the hassle involving the web drivers</li>
+                <li>a way to configure every detail about the Selenium Server we want through <code>selenium-setup.json</code></li>
+                <li>give the opportunity to PHP devs to focus on writing acceptance tests with Facebook's WebDriver</li>
+                <li>raise multiple Selenium Server instances on both <code>Windows</code> and <code>Linux</code> environments</li>
+            </ul>
 
-<h2>
-<a id="screenshot-in-windows-git-bash" class="anchor" href="#screenshot-in-windows-git-bash" aria-hidden="true"><span class="octicon octicon-link"></span></a>Screenshot in Windows (git bash)</h2>
+        </div>
+      </div>
 
-<p><img src="https://raw.githubusercontent.com/bogdananton/phpunit-selenium-env/master/screenshot-windows.gif" alt=""></p>
+      <hr class="featurette-divider">
 
-<h2>
-<a id="screenshot-in-linux-guake-bash" class="anchor" href="#screenshot-in-linux-guake-bash" aria-hidden="true"><span class="octicon octicon-link"></span></a>Screenshot in Linux (guake bash)</h2>
+      <!-- /END THE FEATURETTES -->
 
-<p><img src="https://raw.githubusercontent.com/bogdananton/phpunit-selenium-env/master/screenshot-linux.png" alt=""></p>
+       
+      <div id="authors" class="row featurette authors">
+        <h2 class="featurette-heading">Authors</h2>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/bogdananton/Selenium-Setup">Selenium-setup</a> is maintained by <a href="https://github.com/bogdananton">bogdananton</a>.</span>
+        <div class="col-lg-3 col-lg-offset-3">
+            <div class="author">
+              <img class="img-circle" src="/img/bogdan-anton.jpg" alt="Generic placeholder image" width="140" height="140">
+              <h2><a href="https://github.com/bogdananton">Bogdan Anton</a></h2>
+              <p>Creator &amp; Developer</p>
+            </div>
+        </div>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+        <div class="col-lg-3">
+            <div class="author">
+              <img class="img-circle" src="/img/serban-ghita.jpg" alt="Generic placeholder image" width="140" height="140">
+              <h2><a href="https://github.com/serbanghita">Serban Ghita</a></h2>
+              <p>Maintainer &amp; Developer</p>
+            </div>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2015 Bogdan Anton &amp; contributors &middot; <a href="https://github.com/bogdananton/Selenium-Setup">Repo</a> &middot; <a href="https://github.com/bogdananton/Selenium-Setup/blob/master/LICENSE">MIT License</a></p>
       </footer>
 
-    </section>
+    </div><!-- /.container -->
 
-  
   </body>
 </html>
