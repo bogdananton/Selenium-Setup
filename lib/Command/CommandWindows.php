@@ -2,7 +2,7 @@
 namespace SeleniumSetup\Command;
 
 use SeleniumSetup\Config\ConfigInterface;
-use SeleniumSetup\System\System;
+use SeleniumSetup\System\FileSystem;
 
 class CommandWindows implements CommandInterface
 {
@@ -12,16 +12,13 @@ class CommandWindows implements CommandInterface
     public function __construct(ConfigInterface $config)
     {
         $this->config = $config;
-        $this->system = new System();
+        $this->system = new FileSystem();
     }
 
-    public function invalidateEnvProxy()
-    {
-        //$this->system->execCommand('SET HTTP_PROXY=');
-        //$this->system->execCommand('SET HTTPS_PROXY=');
-        putenv('HTTP_PROXY');
-        putenv('HTTPS_PROXY');
-    }
+    /**
+     *         putenv('HTTP_PROXY');
+    putenv('HTTPS_PROXY');
+     */
 
     public function addBuildFolderToPath()
     {

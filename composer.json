@@ -1,7 +1,7 @@
 {
   "name": "bogdananton/selenium-setup",
   "license": "MIT",
-  "keywords": ["selenium", "selenium setup", "webdriver"],
+  "keywords": ["selenium", "selenium setup"],
   "authors": [
     {
       "name": "Bogdan Anton",
@@ -16,15 +16,13 @@
   ],
   "require": {
     "php": "^5.4",
-    "facebook/webdriver": "1.0.*",
     "symfony/console": "^2.7",
     "symfony/process": "^2.7",
     "guzzlehttp/guzzle": "5.3.*"
   },
   "autoload": {
     "psr-4": {
-      "SeleniumSetup\\": "lib/",
-      "SeleniumSetupTests\\": "tests/"
+      "SeleniumSetup\\": "lib/"
     }
   }
 }

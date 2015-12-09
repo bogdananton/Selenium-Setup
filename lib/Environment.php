@@ -1,7 +1,7 @@
 <?php
-namespace SeleniumSetup\Environment;
+namespace SeleniumSetup;
 
-use SeleniumSetup\System\System;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Environment implements EnvironmentInterface
 {
@@ -12,11 +12,54 @@ class Environment implements EnvironmentInterface
     const OS_TYPE_64BIT = '64bit';
     const OS_TYPE_32BIT = '32bit';
 
-    protected $system;
-
-    public function __construct()
+    // @todo Move to public methods into SeleniumSetup\Environment.
+    public function test(OutputInterface $output)
     {
-        $this->system = new System();
+        // Pre-requisites.
+        $canInstall = true;
+        $writeln = [];
+
+        // Start checking.
+
+        $javaVersion = $this->getJavaVersion();
+
+        if (empty($javaVersion)) {
+            $writeln[] = '<error>[ ] Java is not installed.</error>';
+            $canInstall = false;
+        } else {
+            $writeln[] = '<info>[x] Java is installed.</info>';
+            if ($this->isJavaVersionDeprecated($javaVersion)) {
+                $writeln[] = '<error>[ ] Your Java version needs to be >= 1.6</error>';
+                $canInstall = false;
+            } else {
+                $writeln[] = '<info>[x] Your Java version '. $javaVersion .' seems up to date.</info>';
+            }
+        }
+
+        if ($this->isPHPVersionDeprecated()) {
+            $writeln[] = '<error>[ ] Your PHP version '. $this->getPHPVersion() .' should be >= 5.3</error>';
+            $canInstall = false;
+        } else {
+            $writeln[] = '<info>[x] Your PHP version is '. $this->getPHPVersion() .'</info>';
+        }
+
+        if (!$this->hasPHPCurlExtInstalled()) {
+            $writeln[] = '<error>[ ] cURL extension for PHP is missing.</error>';
+            $canInstall = false;
+        } else {
+            $writeln[] = '<info>[x] cURL '. $this->getPHPCurlExtVersion() .' extension is installed.</info>';
+        }
+
+        if (!$this->hasPHPOpenSSLExtInstalled()) {
+            $writeln[] = '<error>[ ] OpenSSL extension for PHP is missing.</error>';
+            $canInstall = false;
+        } else {
+            $writeln[] = '<info>[x] '. $this->getPHPOpenSSLExtVersion() .' extension is installed.</info>';
+        }
+
+        $output->writeln($writeln);
+
+        return $canInstall;
     }
 
     public function getProjectRootPath()

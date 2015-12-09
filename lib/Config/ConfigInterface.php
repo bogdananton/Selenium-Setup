@@ -1,6 +1,6 @@
 <?php
 namespace SeleniumSetup\Config;
-use SeleniumSetup\Binary\Binary;
+use SeleniumSetup\Binary;
 
 /**
  * Interface SeleniumServerConfigInterface

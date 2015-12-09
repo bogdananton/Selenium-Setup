@@ -3,7 +3,7 @@ namespace SeleniumSetup\Config;
 
 use SeleniumSetup\Binary\Binary;
 use SeleniumSetup\Environment\Environment;
-use SeleniumSetup\System\System;
+use SeleniumSetup\System\FileSystem;
 
 class ConfigFactory
 {
@@ -11,7 +11,7 @@ class ConfigFactory
 
     public static function createFromConfigFile($configFilePath)
     {
-        $system = new System();
+        $system = new FileSystem();
         $env = new Environment();
 
         $rootPath = $env->getProjectRootPath();

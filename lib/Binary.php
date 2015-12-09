@@ -1,5 +1,5 @@
 <?php
-namespace SeleniumSetup\Binary;
+namespace SeleniumSetup;
 
 class Binary implements BinaryInterface
 {

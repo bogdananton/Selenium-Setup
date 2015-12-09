@@ -1,5 +1,5 @@
 <?php
-namespace SeleniumSetup\Environment;
+namespace SeleniumSetup;
 
 interface EnvironmentInterface
 {
