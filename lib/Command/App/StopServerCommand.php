@@ -2,6 +2,7 @@
 namespace SeleniumSetup\Command\App;
 
 use SeleniumSetup\Environment;
+use SeleniumSetup\Process\StopSeleniumProcess;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
@@ -34,7 +35,9 @@ class StopServerCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Inside execute() of ' . $this->getName());
+        // Kill existing Selenium instance.
+        $process = new StopSeleniumProcess(['name' => $input->getArgument('name')], new Environment());
+        $process->start();
     }
 
 }

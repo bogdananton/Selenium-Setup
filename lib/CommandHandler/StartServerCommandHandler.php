@@ -6,7 +6,7 @@ use SeleniumSetup\Command\System\DownloadCommand;
 use SeleniumSetup\Command\System\KillCommand;
 use SeleniumSetup\Command\System\MakeExecutableCommand;
 use SeleniumSetup\Command\System\StartDisplayCommand;
-use SeleniumSetup\Command\System\StartSeleniumCommand;
+use SeleniumSetup\Process\StartSeleniumProcess;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -107,7 +107,7 @@ class StartServerCommandHandler extends AbstractCommandHandler
         ]);
         $commandOutput = new BufferedOutput();
         $returnCode = $command->run($commandInput, $commandOutput);
-        $this->output->writeln($commandOutput->fetch());
+        //$this->output->writeln($commandOutput->fetch());
         
         // Add build folder to path.
         $command = new AddPathToGlobalPathCommand();
@@ -116,30 +116,33 @@ class StartServerCommandHandler extends AbstractCommandHandler
         ]);
         $commandOutput = new BufferedOutput();
         $returnCode = $command->run($commandInput, $commandOutput);
-        $this->output->writeln($commandOutput->fetch());
+        //$this->output->writeln($commandOutput->fetch());
         
         // Start display.
         $command = new StartDisplayCommand();
         $commandInput = new ArrayInput([]);
         $commandOutput = new BufferedOutput();
         $returnCode = $command->run($commandInput, $commandOutput);
-        $this->output->writeln($commandOutput->fetch());
+        //$this->output->writeln($commandOutput->fetch());
 
         // Start Selenium Server instance.
         $this->output->writeln(
             sprintf('Starting Selenium Server (%s) ... %s:%s', $this->config->getName(), $this->config->getHostname(), $this->config->getPort())
         );
-        $command = new StartSeleniumCommand();
-        $commandInput = new ArrayInput([
-            'binary' => $this->config->getBuildPath() . $this->config->getBinary('selenium')->getBinName(),
-            'port' => $this->config->getPort(),
-            'proxyHost' => $this->config->getProxyHost(),
-            'proxyPort' => $this->config->getProxyPort(),
-            'log' => $this->config->getLogsPath() . 'selenium.log'
-        ]);
-        $commandOutput = new BufferedOutput();
-        $returnCode = $command->run($commandInput, $commandOutput);
-        $this->output->writeln($commandOutput->fetch());
+        // @todo Create StartSeleniumProcessArgs
+        $process = new StartSeleniumProcess(
+            [
+                'binary' => $this->config->getBuildPath() . $this->config->getBinary('selenium')->getBinName(),
+                'port' => $this->config->getPort(),
+                'proxyHost' => $this->config->getProxyHost(),
+                'proxyPort' => $this->config->getProxyPort(),
+                'log' => $this->config->getLogsPath() . 'selenium.log'
+            ],
+            $this->env
+        );
+        $pid = $process->start();
+        var_dump($pid);
+
 
         $this->output->writeln(
             sprintf('Done. Test it at http://%s:%s/wd/hub/', $this->config->getHostname(), $this->config->getPort())

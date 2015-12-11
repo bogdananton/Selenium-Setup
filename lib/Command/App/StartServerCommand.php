@@ -38,8 +38,6 @@ class StartServerCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Inside execute() of ' . $this->getName());
-        
         // Prepare.
         $config = ConfigFactory::createFromConfigFile();
         $fileSystem = new FileSystem();
