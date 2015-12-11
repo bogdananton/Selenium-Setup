@@ -1,7 +1,9 @@
 <?php
-namespace SeleniumSetup\Command;
+namespace SeleniumSetup\Command\System;
 
-use SeleniumSetup\Environment\Environment;
+use SeleniumSetup\Environment;
+use SeleniumSetup\EnvironmentInterface;
+use SeleniumSetup\SeleniumSetup;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -31,7 +33,8 @@ class KillCommand extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $process = new Process($this->executable(new Environment()), realpath(__DIR__.'/../'), array_merge($_SERVER, $_ENV), null, null);
+        $cmd = $this->executable(new Environment());
+        $process = new Process(sprintf($cmd, $input->getArgument('taskName')), SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
         $process->run(function ($type, $line) use ($output) {
             $output->write($line);
         });
@@ -40,10 +43,10 @@ class KillCommand extends Command
     /**
      * Find the correct executable to run depending on the OS.
      *
-     * @param Environment $env
+     * @param EnvironmentInterface $env
      * @return string
      */
-    protected function executable(Environment $env)
+    protected function executable(EnvironmentInterface $env)
     {
         if ($env->getOsName() == 'windows') {
             $cmd = 'taskkill /F /IM %s';

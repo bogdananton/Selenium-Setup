@@ -1,7 +1,8 @@
 <?php
-namespace SeleniumSetup\Command;
+namespace SeleniumSetup\Command\System;
 
 use SeleniumSetup\Environment;
+use SeleniumSetup\SeleniumSetup;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,10 +31,13 @@ class StartDisplayCommand extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $process = new Process($this->executable(new Environment()), realpath(__DIR__.'/../'), array_merge($_SERVER, $_ENV), null, null);
-        $process->run(function ($type, $line) use ($output) {
-            $output->write($line);
-        });
+        $cmd = $this->executable(new Environment());
+        if (!is_null($cmd)) {
+            $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+            $process->run(function ($type, $line) use ($output) {
+                $output->write($line);
+            });
+        }
     }
 
     /**

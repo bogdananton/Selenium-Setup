@@ -1,13 +1,14 @@
 <?php
-namespace SeleniumSetup\Command\System;
+namespace SeleniumSetup\Command\Environment;
 
+use SeleniumSetup\Environment;
 use SeleniumSetup\EnvironmentInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SetEnvSystemCommand extends Command
+class AddPathToGlobalPathCommand extends Command
 {
     /**
      * Configure the command options.
@@ -17,10 +18,9 @@ class SetEnvSystemCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('setEnvVar')
+            ->setName('addPathToGlobalPath')
             ->setDescription('')
-            ->addArgument('name', InputArgument::REQUIRED, 'The var name.')
-            ->addArgument('value', InputArgument::OPTIONAL, 'The var value.');
+            ->addArgument('path', InputArgument::REQUIRED, 'The path.');
     }
     /**
      * Execute the command.
@@ -31,11 +31,8 @@ class SetEnvSystemCommand extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('value') != '') {
-            putenv($input->getOption('name'). '=' .$input->getOption('value'));
-        } else {
-            putenv($input->getOption('name'));
-        }
+        putenv('PATH=' . getenv('PATH') . $this->getSeparator(new Environment()) . $input->getArgument('path'));
+        $output->writeln(sprintf('Added %s to global path.', $input->getArgument('path')));
     }
 
     /**

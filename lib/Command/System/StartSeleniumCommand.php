@@ -1,15 +1,15 @@
 <?php
-namespace SeleniumSetup\Command;
+namespace SeleniumSetup\Command\System;
 
 use SeleniumSetup\Environment;
-use Symfony\Component\Console\Input\InputOption;
+use SeleniumSetup\SeleniumSetup;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class StartSeleniumCommand extends AbstractCommand
+class StartSeleniumCommand extends Command
 {
     /**
      * Configure the command options.
@@ -21,11 +21,11 @@ class StartSeleniumCommand extends AbstractCommand
         $this
             ->setName('startSelenium')
             ->setDescription('')
-            ->addOption('host', 'h', InputOption::VALUE_REQUIRED, 'The host of the server.')
-            ->addOption('port', 'p', InputOption::VALUE_REQUIRED, 'The port of the server.')
-            ->addOption('proxyHost', 'pH', InputOption::VALUE_OPTIONAL, '')
-            ->addOption('proxyPort', 'pP', InputOption::VALUE_OPTIONAL, '')
-            ->addOption('log', 'l', InputOption::VALUE_OPTIONAL, '');
+            ->addArgument('binary', InputArgument::REQUIRED, 'The Selenium binary full path.')
+            ->addArgument('port', InputArgument::REQUIRED, 'The port of the server.')
+            ->addArgument('proxyHost', InputArgument::OPTIONAL, '')
+            ->addArgument('proxyPort', InputArgument::OPTIONAL, '')
+            ->addArgument('log', InputArgument::OPTIONAL, '');
     }
     /**
      * Execute the command.
@@ -36,7 +36,9 @@ class StartSeleniumCommand extends AbstractCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $process = new Process($this->executable(new Environment()), realpath(__DIR__.'/../'), array_merge($_SERVER, $_ENV), null, null);
+        $cmd = vsprintf($this->executable(new Environment()), $input->getArguments());
+        $output->writeln($cmd);
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
         $process->run(function ($type, $line) use ($output) {
             $output->write($line);
         });
@@ -51,11 +53,11 @@ class StartSeleniumCommand extends AbstractCommand
     protected function executable(Environment $env)
     {
         if ($env->getOsName() == $env::OS_WINDOWS) {
-            $cmd = 'start /b java -jar ' . '%s' . ' -port %s' . ' -Dhttp.proxyHost=%s' . ' -Dhttp.proxyPort=%s' . ' -log %s';
+            $cmd = 'start /b java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s';
         } else if ($env->getOsName() == $env::OS_LINUX) {
-            $cmd = 'java -jar %s' . ' -port %s' . ' -Dhttp.proxyHost=%s' . ' -Dhttp.proxyPort=%s' . ' -log %s' . ' >/dev/null 2>&1 &';
+            $cmd = 'java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s >/dev/null 2>&1 &';
         } else {
-            $cmd = 'java -jar %s' . ' -port %s' . ' -Dhttp.proxyHost=%s' . ' -Dhttp.proxyPort=%s' . ' -log %s' . ' >/dev/null 2>&1 &';
+            $cmd = 'java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s >/dev/null 2>&1 &';
         }
 
         return $cmd;

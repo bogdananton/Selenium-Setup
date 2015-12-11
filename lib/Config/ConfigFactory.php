@@ -1,25 +1,28 @@
 <?php
 namespace SeleniumSetup\Config;
 
-use SeleniumSetup\Binary\Binary;
-use SeleniumSetup\Environment\Environment;
-use SeleniumSetup\System\FileSystem;
+use SeleniumSetup\Binary;
+use SeleniumSetup\Environment;
+use SeleniumSetup\FileSystem;
 
 class ConfigFactory
 {
-    const DEFAULT_CONFIGURATION_FILE = 'selenium-setup.json';
-
-    public static function createFromConfigFile($configFilePath)
+    public static function createFromConfigFile($configFilePath = null)
     {
-        $system = new FileSystem();
-        $env = new Environment();
-
-        $rootPath = $env->getProjectRootPath();
-        $configObj = $system->loadJsonFile($configFilePath);
-
+        $fileSystem = new FileSystem();
+        
+        $rootPath = realpath(dirname(__FILE__) .'/../..');
+        
+        if (empty($configFilePath)) {
+            $configFilePath = $rootPath . DIRECTORY_SEPARATOR . Config::DEFAULT_CONFIGURATION_FILENAME;
+        }
+        $configContents = $fileSystem->readFile($configFilePath);
+        $configObj = json_decode($configContents);
+        
+        // @todo: Validate config.
+        
         $config = new Config();
-        self::checkSourceIntegrity($config, $configObj);
-
+        
         $config
             ->setName($configObj->name)
             ->setHostname($configObj->hostname)
@@ -37,16 +40,5 @@ class ConfigFactory
         }
 
         return $config;
-    }
-
-    protected static function checkSourceIntegrity(Config $configObj, $configSource)
-    {
-        foreach ($configObj::getAllProperties() as $propertyName) {
-            if (!isset($configSource->$propertyName)) {
-                throw new \InvalidArgumentException(
-                    sprintf('The required configuration key %s is missing.', $propertyName)
-                );
-            }
-        }
     }
 }

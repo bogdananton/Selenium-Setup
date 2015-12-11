@@ -3,7 +3,13 @@ namespace SeleniumSetup;
 
 interface EnvironmentInterface
 {
-    public function getProjectRootPath();
+    const OS_WINDOWS = 'windows';
+    const OS_LINUX = 'linux';
+    const OS_MAC = 'mac';
+
+    const OS_TYPE_64BIT = '64bit';
+    const OS_TYPE_32BIT = '32bit';
+    
     public function getOsName();
     public function getOsVersion();
     public function getOsType();

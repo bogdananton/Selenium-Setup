@@ -1,10 +1,12 @@
 <?php
 namespace SeleniumSetup\Config;
 
-use SeleniumSetup\Binary\Binary;
+use SeleniumSetup\Binary;
 
 class Config implements ConfigInterface
 {
+    const DEFAULT_CONFIGURATION_FILENAME = 'defaultServer.json';
+    
     protected $name;
     protected $hostname;
     protected $port;
@@ -190,20 +192,5 @@ class Config implements ConfigInterface
     public function getBinary($binaryName)
     {
         return isset($this->binaries[$binaryName]) ? $this->binaries[$binaryName] : null;
-    }
-
-    public function jsonSerialize() {
-        $object = (object)get_object_vars($this);
-        $object->binaries = [];
-
-        /**
-         * @var integer $index
-         * @var Binary $binary
-         */
-        foreach ($this->binaries as $index => $binary) {
-            $object->binaries[$index] = $binary->jsonSerialize();
-        }
-
-        return $object;
     }
 }

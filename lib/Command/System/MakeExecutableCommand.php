@@ -1,7 +1,9 @@
 <?php
-namespace SeleniumSetup\Command;
+namespace SeleniumSetup\Command\System;
 
 use SeleniumSetup\Environment;
+use SeleniumSetup\EnvironmentInterface;
+use SeleniumSetup\SeleniumSetup;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Command\Command;
@@ -9,7 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MakeExecutableCommand extends AbstractCommand
+class MakeExecutableCommand extends Command
 {
     /**
      * Configure the command options.
@@ -21,7 +23,7 @@ class MakeExecutableCommand extends AbstractCommand
         $this
             ->setName('makeExecutable')
             ->setDescription('')
-            ->addOption('file', 'f', InputOption::VALUE_REQUIRED, 'The file path.');
+            ->addArgument('file', InputArgument::REQUIRED, 'The file path.');
     }
     /**
      * Execute the command.
@@ -32,19 +34,24 @@ class MakeExecutableCommand extends AbstractCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $process = new Process($this->executable(new Environment()), realpath(__DIR__.'/../'), array_merge($_SERVER, $_ENV), null, null);
-        $process->run(function ($type, $line) use ($output) {
-            $output->write($line);
-        });
+        $cmd = $this->executable(new Environment());
+
+        if (!is_null($cmd)) {
+            $executable = sprintf($cmd, $input->getArgument('file'));
+            $process = new Process($executable, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+            $process->run(function ($type, $line) use ($output) {
+                $output->write($line);
+            });
+        }
     }
 
     /**
      * Find the correct executable to run depending on the OS.
      *
-     * @param Environment $env
+     * @param EnvironmentInterface $env
      * @return string
      */
-    protected function executable(Environment $env)
+    protected function executable(EnvironmentInterface $env)
     {
         if ($env->getOsName() == $env::OS_WINDOWS) {
             $cmd = null;
