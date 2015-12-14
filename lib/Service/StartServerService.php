@@ -1,7 +1,6 @@
 <?php
 namespace SeleniumSetup\Service;
 
-use SeleniumSetup\Locker\Locker;
 use SeleniumSetup\Locker\ServerItemFactory;
 
 class StartServerService extends AbstractService
@@ -83,7 +82,7 @@ class StartServerService extends AbstractService
         $this->downloadDrivers();
         
         // Kill existing Selenium instance.
-        $this->env->killProcess('selenium');
+        // $this->env->killProcess('selenium');
         
         // Add build folder to path.
         $this->env->addPathToGlobalPath($this->config->getBuildPath());
@@ -98,10 +97,24 @@ class StartServerService extends AbstractService
 
         $pid = $this->env->startSeleniumProcess();
         if ($pid > 0) {
-            $locker = new Locker();
-            $locker->openLockFile();
-            $locker->addServer(ServerItemFactory::createFromProperties($this->config->getName(), $pid, $this->config->getPort(), $this->config->getFilePath()));
-            $locker->writeToLockFile();
+            // Make sure that we capture the right PID.
+            while ($this->env->listenToPort($this->config->getPort()) == '') {
+                $this->output->write('<info>.</info>');
+            }
+            $parentPid = $this->env->getPidFromListeningToPort($this->config->getPort());
+            if ($parentPid) {
+                $pid = $parentPid;
+            }
+            $this->locker->openLockFile();
+            $this->locker->addServer(
+                ServerItemFactory::createFromProperties(
+                    $this->config->getName(),
+                    $pid,
+                    $this->config->getPort(),
+                    $this->config->getFilePath()
+                )
+            );
+            $this->locker->writeToLockFile();
         }
 
         $this->output->writeln(

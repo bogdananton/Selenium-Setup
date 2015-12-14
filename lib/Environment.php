@@ -288,8 +288,26 @@ class Environment
             $output->write($line);
         });
     }
+    
+    public function killProcessByPid($pid)
+    {
+        if ($this->isWindows()) {
+            $cmd = 'taskkill /F /PID %d';
+        } else {
+            $cmd = 'kill -9 %d';
+        }
 
-    public function killProcess($processName)
+        $cmd = sprintf($cmd, $pid);
+
+        $output = $this->output;
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->run(function ($type, $line) use ($output) {
+            $output->write($line);
+        });
+    }
+
+    public function killProcessByName($processName)
     {
         if ($this->isWindows()) {
             $cmd = 'taskkill /F /IM %s';
@@ -310,19 +328,36 @@ class Environment
     public function listenToPort($port)
     {
         if ($this->isWindows()) {
-            $cmd = 'netstat -an|findstr :%d';
+            $cmd = 'netstat -ano|findstr :%d';
         } else {
             $cmd = 'nc -z localhost %d';
         }
 
         $cmd = sprintf($cmd, $port);
 
-        $output = $this->output;
+        $output = new BufferedOutput();
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
         $process->run(function ($type, $line) use ($output) {
             $output->write($line);
         });
+        
+        return $output->fetch();
+        
+    }
+    
+    public function getPidFromListeningToPort($port)
+    {
+        $listenToPort = $this->listenToPort($port);
+        if (!empty($listenToPort)) {
+            if ($this->isWindows() && preg_match('/LISTENING[\s]+([0-9]+)/is', $listenToPort, $matches)) {
+                return isset($matches[1]) ? $matches[1] : null;
+            } else {
+                // @todo Implement for Linux / Mac.
+                return null;
+            }
+        }
+        return null;
     }
 
     public function makeExecutable($file)

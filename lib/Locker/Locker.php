@@ -47,7 +47,7 @@ class Locker
             throw new \Exception('Unknown server.');
         }
 
-        return new ServerItem();
+        return $this->locker[$name];
     }
 
     public function addServer(ServerItem $server)
@@ -58,6 +58,15 @@ class Locker
     public function emptyLocker()
     {
         $this->locker = [];
+    }
+    
+    public function toArray()
+    {
+        $result = [];
+        foreach ($this->locker as $server) {
+            $result[$server->getName()] = $server->toArray();
+        }
+        return $result;
     }
     
     public function toJson()

@@ -124,5 +124,13 @@ class ServerItem
     {
         return (array)get_object_vars($this);
     }
+
+    /**
+     * @return array
+     */
+    public static function getAllProperties()
+    {
+        return array_keys(get_object_vars(new self));
+    }
     
 }
