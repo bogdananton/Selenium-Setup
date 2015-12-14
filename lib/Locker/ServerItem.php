@@ -3,6 +3,8 @@ namespace SeleniumSetup\Locker;
 
 class ServerItem
 {
+    const DATE_FORMAT = 'Y-m-d H:i:s';
+    
     protected $name;
     protected $dateStarted;
     protected $dateStopped;
@@ -118,5 +120,9 @@ class ServerItem
         return $this;
     }
 
+    public function toArray()
+    {
+        return (array)get_object_vars($this);
+    }
     
 }

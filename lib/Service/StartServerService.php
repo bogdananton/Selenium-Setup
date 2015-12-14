@@ -1,9 +1,10 @@
 <?php
-namespace SeleniumSetup\Handler;
+namespace SeleniumSetup\Service;
 
-use SeleniumSetup\SeleniumSetup;
+use SeleniumSetup\Locker\Locker;
+use SeleniumSetup\Locker\ServerItemFactory;
 
-class StartServerHandler extends AbstractHandler
+class StartServerService extends AbstractService
 {
     protected function createFolders()
     {
@@ -97,18 +98,10 @@ class StartServerHandler extends AbstractHandler
 
         $pid = $this->env->startSeleniumProcess();
         if ($pid > 0) {
-            // Create the lock file if it not exist.
-            $lockFilePath = SeleniumSetup::$APP_ROOT_PATH . DIRECTORY_SEPARATOR . SeleniumSetup::DEFAULT_LOCK_FILENAME;
-            if (!$this->fileSystem->isFile($lockFilePath)) {
-                $this->fileSystem->createFile($lockFilePath);
-            }
-
-            $lockFileContents = $this->fileSystem->readFile($lockFilePath);
-            $lockFileObj
-            if (!empty($lockFileContents)) {
-
-            }
-
+            $locker = new Locker();
+            $locker->openLockFile();
+            $locker->addServer(ServerItemFactory::createFromProperties($this->config->getName(), $pid, $this->config->getPort(), $this->config->getFilePath()));
+            $locker->writeToLockFile();
         }
 
         $this->output->writeln(

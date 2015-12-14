@@ -1,8 +1,7 @@
 <?php
 namespace SeleniumSetup\Config;
 
-use SeleniumSetup\Binary;
-use SeleniumSetup\Environment;
+use SeleniumSetup\Binary\Binary;
 use SeleniumSetup\FileSystem;
 
 class ConfigFactory
@@ -32,7 +31,8 @@ class ConfigFactory
             // Set absolute paths (needed for issuing CLI commands).
             ->setBuildPath($rootPath . DIRECTORY_SEPARATOR . $configObj->buildPath)
             ->setTmpPath($rootPath . DIRECTORY_SEPARATOR . $configObj->tmpPath)
-            ->setLogsPath($rootPath . DIRECTORY_SEPARATOR . $configObj->logsPath);
+            ->setLogsPath($rootPath . DIRECTORY_SEPARATOR . $configObj->logsPath)
+            ->setFilePath($configFilePath);
 
         foreach ($configObj->binaries as $binaryId => $binaryInfo) {
             $binary = Binary::createFromObject($binaryInfo);

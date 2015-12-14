@@ -1,7 +1,7 @@
 <?php
-namespace SeleniumSetup;
+namespace SeleniumSetup\Binary;
 
-interface BinaryInterface extends \JsonSerializable
+interface BinaryInterface
 {
     public function setLabel($label);
     public function getLabel();
@@ -15,4 +15,5 @@ interface BinaryInterface extends \JsonSerializable
     public function getOs();
     public function setOsType($osType);
     public function getOsType();
+    public function toArray();
 }

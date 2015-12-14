@@ -1,6 +1,7 @@
 <?php
 namespace SeleniumSetup;
 
+use SeleniumSetup\Controller\StartServer;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -53,7 +54,10 @@ BANNER;
             $command = $event->getCommand();
 
             // write something about the command
-            $output->writeln(sprintf('Before running command <info>%s</info>', $command->getName()));
+            //$output->writeln(sprintf('Before running command <info>%s</info>', $command->getName()));
+            if ($command->getName() == StartServer::CLI_COMMAND) {
+                $output->write(self::$BANNER);
+            }
 
             // get the application
             // $application = $command->getApplication();

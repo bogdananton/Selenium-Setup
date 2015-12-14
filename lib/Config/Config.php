@@ -1,12 +1,13 @@
 <?php
 namespace SeleniumSetup\Config;
 
-use SeleniumSetup\Binary;
+use SeleniumSetup\Binary\Binary;
 
 class Config implements ConfigInterface
 {
     const DEFAULT_CONFIGURATION_FILENAME = 'defaultServer.json';
     
+    protected $filePath;
     protected $name;
     protected $hostname;
     protected $port;
@@ -28,6 +29,17 @@ class Config implements ConfigInterface
     public static function getAllProperties()
     {
         return array_keys(get_object_vars(new self));
+    }
+
+    public function setFilePath($filePath)
+    {
+        $this->filePath = $filePath;
+        return $this;
+    }
+
+    public function getFilePath()
+    {
+        return $this->filePath;
     }
 
     /**

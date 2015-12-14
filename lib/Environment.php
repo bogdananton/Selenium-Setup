@@ -197,14 +197,15 @@ class Environment
         return OPENSSL_VERSION_TEXT;
     }
 
+    // @todo Decide if this is still neded.
     public function hasCurlCli()
     {
-        $command = new GetCurlVersionCommand();
-        $commandInput = new ArrayInput([]);
-        $commandOutput = new BufferedOutput();
-        $returnCode = $command->run($commandInput, $commandOutput);
+        //$command = new GetCurlVersionCommand();
+        //$commandInput = new ArrayInput([]);
+        //$commandOutput = new BufferedOutput();
+        //$returnCode = $command->run($commandInput, $commandOutput);
 
-        return preg_match('/^curl ([0-9._]+)/', $commandOutput->fetch());
+        //return preg_match('/^curl ([0-9._]+)/', $commandOutput->fetch());
     }
     
     public function getEnvVar($varName)

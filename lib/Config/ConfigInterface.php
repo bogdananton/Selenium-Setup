@@ -1,6 +1,6 @@
 <?php
 namespace SeleniumSetup\Config;
-use SeleniumSetup\Binary;
+use SeleniumSetup\Binary\Binary;
 
 /**
  * Interface SeleniumServerConfigInterface
@@ -9,6 +9,8 @@ use SeleniumSetup\Binary;
  */
 interface ConfigInterface
 {
+    public function setFilePath($filePath);
+    public function getFilePath();
     public function setName($serverName);
     public function getName();
     public function setHostname($hostname);
