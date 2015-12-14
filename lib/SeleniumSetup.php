@@ -4,10 +4,6 @@ namespace SeleniumSetup;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SeleniumSetup
@@ -19,6 +15,7 @@ class SeleniumSetup
     public static $APP_PROCESS_ENV;
     
     const SSL_CERT_FILENAME = 'cacert.pem';
+    const DEFAULT_LOCK_FILENAME = 'selenium-servers.lock';
 
     public static $BANNER = <<<'BANNER'
  ____            ___
@@ -64,9 +61,9 @@ BANNER;
         $console->setDispatcher($dispatcher);
 
         $console->addCommands([
-            new Command\App\StartServerCommand,
-            new Command\App\StopServerCommand,
-            new Command\App\ListServersCommand
+            new Controller\StartServer,
+            new Controller\StopServer,
+            new Controller\ListServers
         ]);
 
         $console->run();

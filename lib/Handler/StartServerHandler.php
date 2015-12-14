@@ -1,16 +1,9 @@
 <?php
-namespace SeleniumSetup\CommandHandler;
+namespace SeleniumSetup\Handler;
 
-use SeleniumSetup\Command\Environment\AddPathToGlobalPathCommand;
-use SeleniumSetup\Command\System\DownloadCommand;
-use SeleniumSetup\Command\System\KillCommand;
-use SeleniumSetup\Command\System\MakeExecutableCommand;
-use SeleniumSetup\Command\System\StartDisplayCommand;
-use SeleniumSetup\Process\StartSeleniumProcess;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
+use SeleniumSetup\SeleniumSetup;
 
-class StartServerCommandHandler extends AbstractCommandHandler
+class StartServerHandler extends AbstractHandler
 {
     protected function createFolders()
     {
@@ -50,15 +43,8 @@ class StartServerCommandHandler extends AbstractCommandHandler
                 
                 // Download.
                 $downloadTo = $this->config->getBuildPath() . DIRECTORY_SEPARATOR . pathinfo($binary->getDownloadUrl(), PATHINFO_BASENAME);
-
-                $command = new DownloadCommand();
-                $commandInput = new ArrayInput([
-                    'from'    => $binary->getDownloadUrl(),
-                    'to'  => $downloadTo
-                ]);
-                $commandOutput = new BufferedOutput();
-                $returnCode = $command->run($commandInput, $commandOutput);
-                $this->output->writeln($commandOutput->fetch());
+                $download = $this->env->download($binary->getDownloadUrl(), $downloadTo);
+                $this->output->writeln($download);
 
                 // Unzip.
                 if (in_array(pathinfo($binary->getDownloadUrl(), PATHINFO_EXTENSION), ['zip', 'tar', 'tar.gz'])) {
@@ -76,12 +62,7 @@ class StartServerCommandHandler extends AbstractCommandHandler
                 }
 
                 // Make executable.
-                $command = new MakeExecutableCommand();
-                $commandInput = new ArrayInput([
-                    'file'    => $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName()
-                ]);
-                $commandOutput = new BufferedOutput();
-                $returnCode = $command->run($commandInput, $commandOutput);
+                $this->env->makeExecutable($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
             } else {
                 $this->output->writeln(
                     sprintf('Skipping %s %s. Binary already exists.', $binary->getLabel(), $binary->getVersion())
@@ -92,7 +73,7 @@ class StartServerCommandHandler extends AbstractCommandHandler
     
     public function test()
     {
-        return $this->env->test($this->output);
+        return $this->env->test();
     }
     
     public function handle()
@@ -101,48 +82,34 @@ class StartServerCommandHandler extends AbstractCommandHandler
         $this->downloadDrivers();
         
         // Kill existing Selenium instance.
-        $command = new KillCommand();
-        $commandInput = new ArrayInput([
-            'taskName'    => 'selenium'
-        ]);
-        $commandOutput = new BufferedOutput();
-        $returnCode = $command->run($commandInput, $commandOutput);
-        //$this->output->writeln($commandOutput->fetch());
+        $this->env->killProcess('selenium');
         
         // Add build folder to path.
-        $command = new AddPathToGlobalPathCommand();
-        $commandInput = new ArrayInput([
-            'path'    => $this->config->getBuildPath()
-        ]);
-        $commandOutput = new BufferedOutput();
-        $returnCode = $command->run($commandInput, $commandOutput);
-        //$this->output->writeln($commandOutput->fetch());
+        $this->env->addPathToGlobalPath($this->config->getBuildPath());
         
         // Start display.
-        $command = new StartDisplayCommand();
-        $commandInput = new ArrayInput([]);
-        $commandOutput = new BufferedOutput();
-        $returnCode = $command->run($commandInput, $commandOutput);
-        //$this->output->writeln($commandOutput->fetch());
+        $pid = $this->env->startDisplayProcess();
 
         // Start Selenium Server instance.
         $this->output->writeln(
             sprintf('Starting Selenium Server (%s) ... %s:%s', $this->config->getName(), $this->config->getHostname(), $this->config->getPort())
         );
-        // @todo Create StartSeleniumProcessArgs
-        $process = new StartSeleniumProcess(
-            [
-                'binary' => $this->config->getBuildPath() . $this->config->getBinary('selenium')->getBinName(),
-                'port' => $this->config->getPort(),
-                'proxyHost' => $this->config->getProxyHost(),
-                'proxyPort' => $this->config->getProxyPort(),
-                'log' => $this->config->getLogsPath() . 'selenium.log'
-            ],
-            $this->env
-        );
-        $pid = $process->start();
-        var_dump($pid);
 
+        $pid = $this->env->startSeleniumProcess();
+        if ($pid > 0) {
+            // Create the lock file if it not exist.
+            $lockFilePath = SeleniumSetup::$APP_ROOT_PATH . DIRECTORY_SEPARATOR . SeleniumSetup::DEFAULT_LOCK_FILENAME;
+            if (!$this->fileSystem->isFile($lockFilePath)) {
+                $this->fileSystem->createFile($lockFilePath);
+            }
+
+            $lockFileContents = $this->fileSystem->readFile($lockFilePath);
+            $lockFileObj
+            if (!empty($lockFileContents)) {
+
+            }
+
+        }
 
         $this->output->writeln(
             sprintf('Done. Test it at http://%s:%s/wd/hub/', $this->config->getHostname(), $this->config->getPort())

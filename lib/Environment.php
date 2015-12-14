@@ -1,16 +1,42 @@
 <?php
 namespace SeleniumSetup;
 
-use SeleniumSetup\Command\Environment\GetCurlVersionCommand;
-use SeleniumSetup\Command\Environment\GetJavaVersionCommand;
+use GuzzleHttp\Client;
+use GuzzleHttp\Event\ProgressEvent;
+use SeleniumSetup\Config\ConfigInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Environment implements EnvironmentInterface
+class Environment
 {
+    protected $config;
+    protected $fileSystem;
+    protected $env;
+    protected $input;
+    protected $output;
+
+    const OS_WINDOWS = 'windows';
+    const OS_LINUX = 'linux';
+    const OS_MAC = 'mac';
+    const OS_TYPE_64BIT = '64bit';
+    const OS_TYPE_32BIT = '32bit';
+
+    public function __construct(
+        ConfigInterface $config,
+        InputInterface $input,
+        OutputInterface $output
+    ) {
+        $this->config = $config;
+        $this->fileSystem = new FileSystem();
+        $this->input = $input;
+        $this->output = $output;
+    }
+
     // @todo Move to public methods into SeleniumSetup\Environment.
-    public function test(OutputInterface $output)
+    public function test()
     {
         // Pre-requisites.
         $canInstall = true;
@@ -53,7 +79,7 @@ class Environment implements EnvironmentInterface
             $writeln[] = '<info>[x] '. $this->getPHPOpenSSLExtVersion() .' extension is installed.</info>';
         }
 
-        $output->writeln($writeln);
+        $this->output->writeln($writeln);
 
         return $canInstall;
     }
@@ -89,14 +115,33 @@ class Environment implements EnvironmentInterface
         }
     }
 
+    public function isWindows()
+    {
+        return $this->getOsName() == self::OS_WINDOWS;
+    }
+
+    public function isMac()
+    {
+        return $this->getOsName() == self::OS_MAC;
+    }
+
+    public function isLinux()
+    {
+        return $this->getOsName() == self::OS_LINUX;
+    }
+
     public function getJavaVersion()
     {
-        $command = new GetJavaVersionCommand();
-        $commandInput = new ArrayInput([]);
-        $commandOutput = new BufferedOutput();
-        $returnCode = $command->run($commandInput, $commandOutput);
+        $cmd = 'java -version';
+
+        $output = new BufferedOutput();
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->run(function ($type, $line) use ($output) {
+            $output->write($line);
+        });
         
-        preg_match('/version "([0-9._]+)"/', $commandOutput->fetch(), $javaVersionMatches);
+        preg_match('/version "([0-9._]+)"/', $output->fetch(), $javaVersionMatches);
         $javaVersion = isset($javaVersionMatches[1]) ? $javaVersionMatches[1] : null;
 
         return $javaVersion;
@@ -176,4 +221,161 @@ class Environment implements EnvironmentInterface
         }
     }
 
+    public function addPathToGlobalPath($path)
+    {
+        if ($this->isWindows()) {
+            $separator = ';';
+        } else {
+            $separator = ':';
+        }
+
+        putenv('PATH=' . getenv('PATH') . $separator . $path);
+        $this->output->writeln(sprintf('Added %s to global path.', $path));
+    }
+
+    public function download($from, $to)
+    {
+        $client = new Client();
+        $client->setDefaultOption('verify', SeleniumSetup::$APP_ROOT_PATH . DIRECTORY_SEPARATOR . SeleniumSetup::SSL_CERT_FILENAME);
+        $request = $client->createRequest('GET', $from, ['save_to'=> $to]);
+
+        $computeRemainingSize = function(ProgressEvent $e) {
+            if ($e->downloaded <= 0) {
+                return 0;
+            }
+            $remainingSize = $e->downloadSize - $e->downloaded;
+            if ($remainingSize > 0) {
+                return round($e->downloaded / $e->downloadSize, 2) * 100;
+            } else {
+                return 100;
+            }
+        };
+
+        // $progress = new ProgressBar($output, 5);
+        // $progress->start();
+        $output = new BufferedOutput();
+
+        $request->getEmitter()->on('progress', function (ProgressEvent $e) use ($computeRemainingSize, $output) {
+
+            $output->write(
+                sprintf("Downloaded %s%%\r", $computeRemainingSize($e))
+            );
+
+            //$a = $computeRemainingSize($e);
+            //if ($a == 100) {
+            //    $progress->finish();
+            //} else {
+            //    if ($a % 10 == 0) {
+            //        $progress->advance();
+            //    }
+            //}
+        });
+
+        $client->send($request);
+
+        return $output->fetch();
+    }
+
+    public function getCurlVersion()
+    {
+        $cmd = 'curl -V';
+
+        $output = $this->output;
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->run(function ($type, $line) use ($output) {
+            $output->write($line);
+        });
+    }
+
+    public function killProcess($processName)
+    {
+        if ($this->isWindows()) {
+            $cmd = 'taskkill /F /IM %s';
+        } else {
+            $cmd = 'pgrep -f "%s" | xargs kill';
+        }
+
+        $cmd = sprintf($cmd, $processName);
+
+        $output = $this->output;
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->run(function ($type, $line) use ($output) {
+            $output->write($line);
+        });
+    }
+
+    public function listenToPort($port)
+    {
+        if ($this->isWindows()) {
+            $cmd = 'netstat -an|findstr :%d';
+        } else {
+            $cmd = 'nc -z localhost %d';
+        }
+
+        $cmd = sprintf($cmd, $port);
+
+        $output = $this->output;
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->run(function ($type, $line) use ($output) {
+            $output->write($line);
+        });
+    }
+
+    public function makeExecutable($file)
+    {
+        if ($this->isWindows()) {
+            $cmd = null;
+        } else {
+            $cmd = 'chmod +x %s';
+        }
+
+        if (!is_null($cmd)) {
+            $output = $this->output;
+
+            $cmd = sprintf($cmd, $file);
+            $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+            $process->run(function ($type, $line) use ($output) {
+                $output->write($line);
+            });
+        }
+    }
+
+    public function startSeleniumProcess()
+    {
+        if ($this->isWindows()) {
+            $cmd = 'start /b java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s';
+        } else {
+            $cmd = 'java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s >/dev/null 2>&1 &';
+        }
+
+        $cmd = vsprintf($cmd, [
+            'binary' => $this->config->getBuildPath() . $this->config->getBinary('selenium')->getBinName(),
+            'port' => $this->config->getPort(),
+            'proxyHost' => $this->config->getProxyHost(),
+            'proxyPort' => $this->config->getProxyPort(),
+            'log' => $this->config->getLogsPath() . 'selenium.log'
+        ]);
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->start();
+        // $process->getOutput();
+        return $process->getPid();
+    }
+
+    public function startDisplayProcess()
+    {
+        if ($this->isWindows()) {
+            $cmd = null;
+        } else {
+            $cmd = '/sbin/start-stop-daemon --start --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16';
+        }
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->start();
+        // $process->getOutput();
+        return $process->getPid();
+    }
 }

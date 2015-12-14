@@ -1,16 +1,14 @@
 <?php
-namespace SeleniumSetup\Command\System;
+namespace SeleniumSetup\Controller;
 
-use SeleniumSetup\Environment;
-use SeleniumSetup\EnvironmentInterface;
 use SeleniumSetup\SeleniumSetup;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
-class KillCommand extends Command
+class StopServer extends Command
 {
     /**
      * Configure the command options.
@@ -20,10 +18,11 @@ class KillCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('kill')
-            ->setDescription('')
-            ->addArgument('taskName', InputArgument::REQUIRED, 'The task name.');
+            ->setName('stop-server')
+            ->setDescription('Stop Selenium Server.')
+            ->addArgument('name', InputArgument::REQUIRED, 'The name of the server.');
     }
+
     /**
      * Execute the command.
      *
@@ -33,8 +32,9 @@ class KillCommand extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $cmd = $this->executable(new Environment());
-        $process = new Process(sprintf($cmd, $input->getArgument('taskName')), SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $cmd = vsprintf($this->executable(), $input->getArguments());
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
         $process->run(function ($type, $line) use ($output) {
             $output->write($line);
         });
@@ -43,19 +43,17 @@ class KillCommand extends Command
     /**
      * Find the correct executable to run depending on the OS.
      *
-     * @param EnvironmentInterface $env
      * @return string
      */
-    protected function executable(EnvironmentInterface $env)
+    protected function executable()
     {
-        if ($env->getOsName() == 'windows') {
-            $cmd = 'taskkill /F /IM %s';
-        } else if ($env->getOsName() == 'mac') {
-            $cmd = 'pgrep -f "%s" | xargs kill';
+        if ($this->env->isWindows()) {
+            $cmd = 'taskkill /F /IM java.exe';
         } else {
-            $cmd = 'pgrep -f "%s" | xargs kill';
+            $cmd = 'pgrep -f "selenium-setup.jar" | xargs kill';
         }
 
         return $cmd;
     }
+
 }

@@ -1,20 +1,15 @@
 <?php
-namespace SeleniumSetup\Command\App;
+namespace SeleniumSetup\Controller;
 
-use SeleniumSetup\Command\AbstractCommand;
-use SeleniumSetup\CommandHandler\StartServerCommandHandler;
 use SeleniumSetup\Config\ConfigFactory;
 use SeleniumSetup\Environment;
-use SeleniumSetup\FileSystem;
-use Symfony\Component\Console\Input\ArrayInput;
+use SeleniumSetup\Handler\StartServerHandler;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class StartServerCommand extends Command
+class StartServer extends Command
 {
     /**
      * Configure the command options.
@@ -40,16 +35,9 @@ class StartServerCommand extends Command
     {
         // Prepare.
         $config = ConfigFactory::createFromConfigFile();
-        $fileSystem = new FileSystem();
-        $env = new Environment();
+        $env = new Environment($config, $input, $output);
         
-        $handler = new StartServerCommandHandler(
-            $config,
-            $fileSystem,
-            $env,
-            $input,
-            $output
-        );
+        $handler = new StartServerHandler($config, $env, $input, $output);
 
         if ($handler->test()) {
             $output->writeln('<comment>Everything good ...</comment>');

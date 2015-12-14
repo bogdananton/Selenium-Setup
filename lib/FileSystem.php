@@ -9,11 +9,6 @@ namespace SeleniumSetup;
 class FileSystem implements FileSystemInterface
 {
     /**
-     * @var string|false
-     */
-    protected $certificatePath = false;
-
-    /**
      * @param $dirFullPath
      * @return bool
      */
