@@ -48,7 +48,10 @@ class StartServer extends Command
         $handler = new StartServerService($config, $env, $input, $output);
 
         if ($handler->test()) {
-            $output->writeln('<comment>Everything good ...</comment>');
+            if (!$env->isAdmin()) {
+                $output->writeln('<comment>Running without elevated rights.</comment>');
+            }
+            $output->writeln('<comment>Let\'s go ...</comment>');
             $handler->handle();
         } else {
             $output->writeln('<error>Missing required components. Please review your setup.</error>');

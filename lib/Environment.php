@@ -129,6 +129,26 @@ class Environment
     {
         return $this->getOsName() == self::OS_LINUX;
     }
+    
+    public function isAdmin()
+    {
+        if ($this->isWindows()) {
+            $cmd = 'NET SESSION';
+            $lookForNegative = '^System error';
+        } else {
+            $cmd ='sudo -v';
+            $lookForNegative = '^Sorry, user';
+        }
+
+        $output = new BufferedOutput();
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->run(function ($type, $line) use ($output) {
+            $output->write($line);
+        });
+        
+        return !(preg_match('/'. $lookForNegative .'/is', $output->fetch()));
+    }
 
     public function getJavaVersion()
     {
