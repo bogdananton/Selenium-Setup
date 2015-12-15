@@ -350,7 +350,7 @@ class Environment
         if ($this->isWindows()) {
             $cmd = 'netstat -ano|findstr :%d';
         } else {
-            $cmd = 'nc -z localhost %d';
+            $cmd = 'netstat -tulpn | grep :%d';
         }
 
         $cmd = sprintf($cmd, $port);
@@ -370,12 +370,12 @@ class Environment
     {
         $listenToPort = $this->listenToPort($port);
         if (!empty($listenToPort)) {
-            if ($this->isWindows() && preg_match('/LISTENING[\s]+([0-9]+)/is', $listenToPort, $matches)) {
-                return isset($matches[1]) ? $matches[1] : null;
+            if ($this->isWindows()) {
+                preg_match('/LISTENING[\s]+([0-9]+)/is', $listenToPort, $matches);
             } else {
-                // @todo Implement for Linux / Mac.
-                return null;
+                preg_match('/LISTEN[\s]+([0-9]+)/is', $listenToPort, $matches);
             }
+            return isset($matches[1]) ? $matches[1] : null;
         }
         return null;
     }

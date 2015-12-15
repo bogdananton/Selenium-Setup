@@ -117,8 +117,9 @@ class StartServerService extends AbstractService
             $this->locker->writeToLockFile();
         }
 
+        $this->output->writeln('<info>Done</info>');
         $this->output->writeln(
-            sprintf('Done. Test it at http://%s:%s/wd/hub/', $this->config->getHostname(), $this->config->getPort())
+            sprintf('Test it at http://%s:%s/wd/hub/', $this->config->getHostname(), $this->config->getPort())
         );
     }
 }
