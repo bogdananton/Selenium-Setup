@@ -1,0 +1,26 @@
+language: php
+php:
+  - "5.4"
+
+before_script:
+  - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+  - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+  - sudo apt-get update
+  - sudo apt-get install google-chrome-stable
+  - composer self-update
+  - composer install
+ 
+script:
+  - google-chrome --version
+  - firefox --version
+  - php selenium-setup start-server
+  
+after_script:
+  - cat build/logs/selenium.log
+
+notifications:
+  email: false
+  
+irc:
+  channels:
+  - "irc.freenode.net#mobiledetect"
