@@ -18,6 +18,7 @@ script:
   - google-chrome --version
   - firefox --version
   - php selenium-setup start-server
+  - cat selenium-servers.lock
   - export no_proxy="localhost,127.0.0.*"
   - wget -v http://localhost:4444/wd/hub/
   - mkdir tests; cd tests
