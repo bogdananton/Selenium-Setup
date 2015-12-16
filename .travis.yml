@@ -22,6 +22,7 @@ script:
   - wget https://raw.githubusercontent.com/bogdananton/Selenium-Setup-VM/master/tests/composer.json
   - wget https://raw.githubusercontent.com/bogdananton/Selenium-Setup-VM/master/tests/test.php
   - composer update
+  - export no_proxy="localhost,127.0.0.*"
   - phpunit test.php
   
 after_script:
