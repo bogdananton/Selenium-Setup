@@ -72,6 +72,9 @@ class FileSystem implements FileSystemInterface
             fclose($handler);
             return true;
         } else {
+            if (!file_exists($fileFullPath)) {
+                return true;
+            }
             return @is_writable($fileFullPath);
         }
     }
