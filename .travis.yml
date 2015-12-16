@@ -1,4 +1,9 @@
 language: php
+
+os:
+  - linux
+  - osx
+
 php:
   - "5.4"
 
@@ -23,4 +28,4 @@ notifications:
   
 irc:
   channels:
-  - "irc.freenode.net#mobiledetect"
+  - "asimov.freenode.net#mobiledetect"
