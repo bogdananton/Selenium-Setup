@@ -31,7 +31,8 @@ after_script:
 
 notifications:
   email: false
-  
-irc:
-  channels:
-  - "asimov.freenode.net#mobiledetect"
+  irc:
+    channels:
+      - "asimov.freenode.net#mobiledetect"
+    template:
+      - "%{repository} (%{commit}) : %{message} %{foo}. Build details: %{build_url}"
