@@ -21,11 +21,6 @@ script:
   - php selenium-setup start-server
   
 after_script:
-  - mkdir tests; cd tests
-  - wget https://raw.githubusercontent.com/bogdananton/Selenium-Setup-VM/master/tests/composer.json
-  - wget https://raw.githubusercontent.com/bogdananton/Selenium-Setup-VM/master/tests/test.php
-  - composer update
-  - phpunit test.php
   - cat build/logs/selenium.log
 
 notifications:
