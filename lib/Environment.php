@@ -421,6 +421,15 @@ class Environment
         // $process->getOutput();
         return $process->getPid();
     }
+    
+    public function hasXvfb()
+    {
+        $cmd = 'which Xvfb';
+        
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->start();
+        return ($process->getOutput() != '' ? true : false);
+    }
 
     public function startDisplayProcess()
     {
@@ -438,7 +447,7 @@ class Environment
         $process->run(function ($type, $line) use ($output) {
             $output->write($line);
         });
-        var_dump($process->getPid());
+        //var_dump($process->getPid());
         return $process->getPid();
     }
 }

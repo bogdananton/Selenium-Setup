@@ -85,7 +85,12 @@ class StartServerService extends AbstractService
         $this->env->addPathToGlobalPath($this->config->getBuildPath());
         
         // Start display.
-        $pid = $this->env->startDisplayProcess();
+        if ($this->env->hasXvfb()) {
+            $this->output->writeln('<info>Xvfb is installed. Good.</info>');
+        } else {
+            $this->output->writeln('<info>Xvfb is not installed.</info>');
+        }
+        // $pid = $this->env->startDisplayProcess();
 
         // Start Selenium Server instance.
         $this->output->writeln(
