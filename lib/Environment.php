@@ -135,9 +135,10 @@ class Environment
         if ($this->isWindows()) {
             $cmd = 'NET SESSION';
             $lookForNegative = '^System error';
+
         } else {
-            $cmd ='sudo -v';
-            $lookForNegative = '^Sorry, user';
+            $cmd ='sudo -n true';
+            $lookForNegative = '^sudo\: a password is required';
         }
 
         $output = new BufferedOutput();
