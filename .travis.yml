@@ -6,6 +6,17 @@ os:
 php:
   - "5.4"
 
+before_install:
+  # shutdown servies on Travis, which may have a memory impact
+  # show memory usage before and after shutdown of services
+  - sudo service --status-all
+  - sudo free -m -t
+  - sudo /etc/init.d/mysql stop
+  - sudo /etc/init.d/postgresql stop
+  - sudo /etc/init.d/couchdb stop
+  - sudo /etc/init.d/redis-server stop
+  - sudo free -m -t
+
 before_script:
   #- wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
   #- sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
