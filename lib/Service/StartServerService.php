@@ -81,9 +81,6 @@ class StartServerService extends AbstractService
         $this->createFolders();
         $this->downloadDrivers();
         
-        // Kill existing Selenium instance.
-        // $this->env->killProcess('selenium');
-        
         // Add build folder to path.
         $this->env->addPathToGlobalPath($this->config->getBuildPath());
         

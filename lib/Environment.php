@@ -427,9 +427,10 @@ class Environment
         if ($this->isWindows()) {
             $cmd = null;
         } else {
+            $this->setEnvVar('DISPLAY', ':99.0');
             $cmd = '/sbin/start-stop-daemon --start --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16';
         }
-
+        
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
         $process->start();
         // $process->getOutput();
