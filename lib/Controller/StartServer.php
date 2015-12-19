@@ -1,6 +1,7 @@
 <?php
 namespace SeleniumSetup\Controller;
 
+use SeleniumSetup\Config\Config;
 use SeleniumSetup\Config\ConfigFactory;
 use SeleniumSetup\Environment;
 use SeleniumSetup\Service\StartServerService;
@@ -21,10 +22,12 @@ class StartServer extends Command
      */
     protected function configure()
     {
+        $defaultName = basename(Config::DEFAULT_CONFIGURATION_FILENAME, '.json');
+
         $this
             ->setName(self::CLI_COMMAND)
             ->setDescription('Start Selenium Server setup with all supported drivers attached to it.')
-            ->addArgument('name', InputArgument::OPTIONAL, 'The instance name.')
+            ->addArgument('name', InputArgument::OPTIONAL, 'The instance name.', $defaultName)
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'The config path.');
     }
 
