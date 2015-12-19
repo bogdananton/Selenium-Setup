@@ -421,18 +421,33 @@ class Environment
         // $process->getOutput();
         return $process->getPid();
     }
+    
+    public function hasXvfb()
+    {
+        $cmd = 'which Xvfb';
+        
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->start();
+        return ($process->getOutput() != '' ? true : false);
+    }
 
     public function startDisplayProcess()
     {
         if ($this->isWindows()) {
             $cmd = null;
         } else {
+            if ($this->getEnvVar('DISPLAY')) {
+                return true;
+            }
+            $this->setEnvVar('DISPLAY', ':99.0');
             $cmd = '/sbin/start-stop-daemon --start --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16';
         }
-
+        $output = new BufferedOutput();
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-        $process->start();
-        // $process->getOutput();
+        $process->run(function ($type, $line) use ($output) {
+            $output->write($line);
+        });
+        //var_dump($process->getPid());
         return $process->getPid();
     }
 }

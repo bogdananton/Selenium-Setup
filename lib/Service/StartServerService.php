@@ -82,30 +82,32 @@ class StartServerService extends AbstractService
 
         $this->createFolders();
         $this->downloadDrivers();
-        
-        // Kill existing Selenium instance.
-        // $this->env->killProcess('selenium');
-        
+
         // Add build folder to path.
         $this->env->addPathToGlobalPath($this->config->getBuildPath());
         
         // Start display.
-        $pidDisplay = $this->env->startDisplayProcess();
+        if ($this->env->hasXvfb()) {
+            $this->output->writeln('<info>Xvfb is installed. Good.</info>');
+        } else {
+            $this->output->writeln('<info>Xvfb is not installed.</info>');
+        }
+        // $pid = $this->env->startDisplayProcess();
 
         // Start Selenium Server instance.
         $this->output->writeln(
             sprintf('Starting Selenium Server (%s) ... %s:%s', $this->config->getName(), $this->config->getHostname(), $this->config->getPort())
         );
 
-        $pidSelenium = $this->env->startSeleniumProcess();
-        if ($pidSelenium > 0) {
+        $pid = $this->env->startSeleniumProcess();
+        if ($pid > 0) {
             // Make sure that we capture the right PID.
             while ($this->env->listenToPort($this->config->getPort()) == '') {
                 $this->output->write('<info>.</info>');
             }
             $parentPid = $this->env->getPidFromListeningToPort($this->config->getPort());
             if ($parentPid) {
-                $pidSelenium = $parentPid;
+                $pid = $parentPid;
             }
 
             // @todo open the lock file only to update the status and ports, the instance was already added.
@@ -113,7 +115,7 @@ class StartServerService extends AbstractService
             $this->locker->addServer(
                 ServerItemFactory::createFromProperties(
                     $this->config->getName(),
-                    $pidSelenium,
+                    $pid,
                     $this->config->getPort(),
                     $this->config->getFilePath()
                 )
