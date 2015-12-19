@@ -3,7 +3,7 @@ namespace SeleniumSetup\Service;
 
 class ListServersService extends AbstractService
 {
-    const CLI_COMMAND = 'list-servers';
+    const CLI_COMMAND = 'servers';
     
     public function handle()
     {

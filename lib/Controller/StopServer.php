@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class StopServer extends Command
 {
-    const CLI_COMMAND = 'stop-server';
+    const CLI_COMMAND = 'stop';
     
     /**
      * Configure the command options.

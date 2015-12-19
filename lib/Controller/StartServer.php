@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class StartServer extends Command
 {
-    const CLI_COMMAND = 'start-server';
+    const CLI_COMMAND = 'start';
     
     /**
      * Configure the command options.

@@ -20,7 +20,7 @@ class ListServers extends Command
     protected function configure()
     {
         $this
-            ->setName('list-servers')
+            ->setName('servers')
             ->setDescription('List registered Selenium Servers.');
     }
 
