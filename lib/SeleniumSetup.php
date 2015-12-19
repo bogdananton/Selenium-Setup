@@ -45,7 +45,7 @@ BANNER;
         $dispatcher = new EventDispatcher();
         $dispatcher->addListener(ConsoleEvents::COMMAND, function (ConsoleCommandEvent $event) {
             // get the input instance
-            $input = $event->getInput();
+            // $input = $event->getInput();
 
             // get the output instance
             $output = $event->getOutput();
@@ -67,7 +67,8 @@ BANNER;
         $console->addCommands([
             new Controller\StartServer,
             new Controller\StopServer,
-            new Controller\ListServers
+            new Controller\ListServers,
+            new Controller\RegisterServer,
         ]);
 
         $console->run();
