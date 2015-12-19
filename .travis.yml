@@ -34,14 +34,13 @@ script:
   - php selenium-setup register secondInstance 4445
 
   - php selenium-setup start
-  - sleep 5 # give instance time to start
   - php selenium-setup start secondInstance
-  - sleep 5 # give instance time to start
+  - sleep 10 # give the instances time to start
 
   - cat selenium-servers.lock
   - export no_proxy="localhost,127.0.0.*"
   - wget -v http://localhost:4444/wd/hub/
-  - wget -v http://localhost:4445/wd/hub/
+  # - wget -v http://localhost:4445/wd/hub/
 
   # run check
   - mkdir tests; cd tests
