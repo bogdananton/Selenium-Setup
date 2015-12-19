@@ -31,7 +31,7 @@ before_script:
 script:
   #- google-chrome --version
   - firefox --version
-  - php selenium-setup start-server
+  - php selenium-setup start
   - sleep 6 # give Selenium time to start
   
   - cat selenium-servers.lock
