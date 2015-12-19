@@ -31,8 +31,9 @@ before_script:
 script:
   #- google-chrome --version
   - firefox --version
-  - php selenium-setup start
   - php selenium-setup register secondInstance 4445
+  - php selenium-setup start
+  - php selenium-setup start secondInstance
   - sleep 6 # give Selenium time to start
   
   - cat selenium-servers.lock

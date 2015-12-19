@@ -21,6 +21,22 @@ class ConfigFactory
         // @todo: Validate config.
         
         $config = new Config();
+
+        $buildPath = $configObj->buildPath;
+        $tmpPath = $configObj->tmpPath;
+        $logsPath = $configObj->logsPath;
+
+        if (!$fileSystem->isPathAbsolute($buildPath)) {
+            $buildPath = $rootPath . DIRECTORY_SEPARATOR . $buildPath;
+        }
+
+        if (!$fileSystem->isPathAbsolute($tmpPath)) {
+            $tmpPath = $rootPath . DIRECTORY_SEPARATOR . $tmpPath;
+        }
+
+        if (!$fileSystem->isPathAbsolute($logsPath)) {
+            $logsPath = $rootPath . DIRECTORY_SEPARATOR . $logsPath;
+        }
         
         $config
             ->setName($configObj->name)
@@ -29,9 +45,9 @@ class ConfigFactory
             ->setProxyHost($configObj->proxyHost)
             ->setProxyPort($configObj->proxyPort)
             // Set absolute paths (needed for issuing CLI commands).
-            ->setBuildPath($rootPath . DIRECTORY_SEPARATOR . $configObj->buildPath)
-            ->setTmpPath($rootPath . DIRECTORY_SEPARATOR . $configObj->tmpPath)
-            ->setLogsPath($rootPath . DIRECTORY_SEPARATOR . $configObj->logsPath)
+            ->setBuildPath($buildPath)
+            ->setTmpPath($tmpPath)
+            ->setLogsPath($logsPath)
             ->setFilePath($configFilePath);
 
         foreach ($configObj->binaries as $binaryId => $binaryInfo) {

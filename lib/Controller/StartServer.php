@@ -4,6 +4,7 @@ namespace SeleniumSetup\Controller;
 use SeleniumSetup\Config\ConfigFactory;
 use SeleniumSetup\Environment;
 use SeleniumSetup\Service\StartServerService;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +24,7 @@ class StartServer extends Command
         $this
             ->setName(self::CLI_COMMAND)
             ->setDescription('Start Selenium Server setup with all supported drivers attached to it.')
+            ->addArgument('name', InputArgument::OPTIONAL, 'The instance name.')
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'The config path.');
     }
 
@@ -36,15 +38,21 @@ class StartServer extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $configFilePath = null;
-        
+        $name = $input->getArgument('name');
+
+        if ($name !== '') {
+            $rootPath = realpath(dirname(__FILE__) .'/../..');
+            $configFilePath = $rootPath . DIRECTORY_SEPARATOR . $name . '.json';
+        }
+
         if ($input->getOption('config')) { 
             $configFilePath = realpath($input->getOption('config'));
         }
-        
+
         // Prepare.
         $config = ConfigFactory::createFromConfigFile($configFilePath);
         $env = new Environment($config, $input, $output);
-        
+
         $handler = new StartServerService($config, $env, $input, $output);
 
         if ($handler->test()) {
