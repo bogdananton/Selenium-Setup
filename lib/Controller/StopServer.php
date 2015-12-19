@@ -1,6 +1,7 @@
 <?php
 namespace SeleniumSetup\Controller;
 
+use SeleniumSetup\Config\Config;
 use SeleniumSetup\Config\ConfigFactory;
 use SeleniumSetup\Environment;
 use SeleniumSetup\Locker\Locker;
@@ -21,10 +22,12 @@ class StopServer extends Command
      */
     protected function configure()
     {
+        $defaultName = basename(Config::DEFAULT_CONFIGURATION_FILENAME, '.json');
+
         $this
             ->setName(self::CLI_COMMAND)
             ->setDescription('Stop Selenium Server.')
-            ->addArgument('name', InputArgument::REQUIRED, 'The name of the server.');
+            ->addArgument('name', InputArgument::OPTIONAL, 'The name of the server.', $defaultName);
     }
 
     /**

@@ -1,5 +1,5 @@
 {
-  "name": "MyTestServer",
+  "name": "defaultServer",
   "hostname": "localhost",
   "port": 4444,
   "proxyHost": "",

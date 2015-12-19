@@ -18,13 +18,61 @@
 1. Download [composer.phar](https://getcomposer.org/composer.phar)
 1. Run `php composer.phar install`
 
-## Running
+## Listing commands
+
+1. `php bin/selenium-setup.php list`
+
+```
+Selenium Setup version 4.0.0
+
+Usage:
+  command [options] [arguments]
+
+Available commands:
+  help      Displays help for a command
+  list      Lists commands
+  register  Register a SeleniumSetup server instance.
+  servers   List registered Selenium Servers.
+  start     Start Selenium Server setup with all supported drivers attached to it.
+  stop      Stop Selenium Server.
+```
+
+## Running (default instance)
 
 1. `php bin/selenium-setup.php start`
 
-## Running `selfTest`
+```
+Usage:
+  start [options] [--] [<name>]
 
-1. `php bin/selenium-setup.php selfTest`
+Arguments:
+  name                   The instance name. [default: "defaultServer"]
+```
+
+## Registering instances
+
+1. `php bin/selenium-setup.php register secondInstance 4445`
+
+```
+Usage:
+  register [options] [--] <name> <port>
+
+Arguments:
+  name                   Instance name.
+  port                   Instance port.
+```
+
+## Stopping an instance
+
+1. `php bin/selenium-setup.php stop secondInstance`
+
+```
+Usage:
+  stop [<name>]
+
+Arguments:
+  name                  The name of the server. [default: "defaultServer"]
+```
 
 ## System Requirements
 
