@@ -34,9 +34,9 @@ script:
   - php selenium-setup register secondInstance 4445
 
   - php selenium-setup start
-  - sleep 3 # give instance time to start
+  - sleep 5 # give instance time to start
   - php selenium-setup start secondInstance
-  - sleep 3 # give instance time to start
+  - sleep 5 # give instance time to start
 
   - cat selenium-servers.lock
   - export no_proxy="localhost,127.0.0.*"
