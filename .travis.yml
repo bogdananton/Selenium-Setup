@@ -32,10 +32,13 @@ script:
   #- google-chrome --version
   - firefox --version
   - php selenium-setup register secondInstance 4445
+
   - php selenium-setup start
+  - sleep 3 # give instance time to start
+
   - php selenium-setup start secondInstance
-  - sleep 6 # give Selenium time to start
-  
+  - sleep 3 # give instance time to start
+
   - cat selenium-servers.lock
   - export no_proxy="localhost,127.0.0.*"
   - wget -v http://localhost:4444/wd/hub/
@@ -52,9 +55,7 @@ script:
   # run tests on second instance 4445 port
   - sed -i -- 's/4444/4445/g' test.php
   - phpunit test.php
-  
-after_script:
-  - cd Selenium-Setup
+
   - cat build/logs/selenium.log
   - php selenium-setup servers
 
