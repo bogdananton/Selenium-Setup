@@ -29,6 +29,7 @@ class RegisterServerService extends AbstractService
     {
         $instanceName = $this->input->getArgument('name');
         $instancePort = $this->input->getArgument('port');
+        $instanceHost = $this->input->getArgument('host');
 
         $this->locker->openLockFile();
         $status = $this->validate($instanceName, $instancePort);
@@ -36,12 +37,12 @@ class RegisterServerService extends AbstractService
         $this->logStatus($status, $instanceName, $instancePort);
 
         if ($status === self::VALID_INSTANCE){
-            $this->register($instanceName, $instancePort);
+            $this->register($instanceName, $instancePort, $instanceHost);
             $this->log(self::SUCCESS_MESSAGE_ADDED, $instanceName);
         }
     }
 
-    protected function register($name, $port)
+    protected function register($name, $port, $hostname)
     {
         // Find filename by instance name.
         $filename = $this->getInstanceConfigFilename($name);
@@ -49,6 +50,7 @@ class RegisterServerService extends AbstractService
         // Update configuration to new instance clone.
         $this->config->setName($name);
         $this->config->setPort($port);
+        $this->config->setHostname($hostname);
         $this->config->setFilePath($filename);
 
         // Store new filename using the default instance template.

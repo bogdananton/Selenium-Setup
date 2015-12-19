@@ -26,7 +26,8 @@ class RegisterServer extends Command
             ->setDescription('Register a SeleniumSetup server instance.')
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'The config path.')
             ->addArgument('name', InputArgument::REQUIRED, 'Instance name.')
-            ->addArgument('port', InputArgument::REQUIRED, 'Instance port.');
+            ->addArgument('port', InputArgument::REQUIRED, 'Instance port.')
+            ->addArgument('host', InputArgument::OPTIONAL, 'Instance host.', 'localhost');
     }
 
     /**

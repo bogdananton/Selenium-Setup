@@ -55,11 +55,12 @@ Arguments:
 
 ```
 Usage:
-  register [options] [--] <name> <port>
+  register [options] [--] <name> <port> [<host>]
 
 Arguments:
   name                   Instance name.
   port                   Instance port.
+  host                   Instance host. [default: "localhost"]
 ```
 
 ## Stopping an instance
