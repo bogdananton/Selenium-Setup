@@ -54,6 +54,7 @@ script:
   - phpunit test.php
   
 after_script:
+  - cd Selenium-Setup
   - cat build/logs/selenium.log
   - php selenium-setup servers
 
