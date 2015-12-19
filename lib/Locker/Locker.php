@@ -22,7 +22,7 @@ class Locker
         if (!$this->fileSystem->isFile(SeleniumSetup::$APP_ROOT_PATH . DIRECTORY_SEPARATOR . SeleniumSetup::DEFAULT_LOCK_FILENAME)) {
             return false;
         }
-        
+
         $contents = $this->fileSystem->readFile(SeleniumSetup::$APP_ROOT_PATH . DIRECTORY_SEPARATOR . SeleniumSetup::DEFAULT_LOCK_FILENAME);
         $lockerRaw =  json_decode($contents);
         foreach ($lockerRaw as $serverObj) {
@@ -48,6 +48,11 @@ class Locker
         }
 
         return $this->locker[$name];
+    }
+
+    public function getServers()
+    {
+        return $this->locker;
     }
 
     public function addServer(ServerItem $server)

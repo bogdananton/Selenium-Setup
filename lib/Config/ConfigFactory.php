@@ -41,4 +41,27 @@ class ConfigFactory
 
         return $config;
     }
+
+    public static function createJSONFromConfigFile(ConfigInterface $config)
+    {
+        $response = new \stdClass();
+        $response->name = $config->getName();
+        $response->hostname = $config->getHostname();
+        $response->port = $config->getPort();
+        $response->proxyHost = $config->getProxyHost();
+        $response->proxyPort = $config->getProxyPort();
+        $response->buildPath = $config->getBuildPath();
+        $response->tmpPath = $config->getTmpPath();
+        $response->logsPath = $config->getLogsPath();
+        $response->filePath = $config->getFilePath();
+
+        $response->binaries = [];
+
+        /** @var Binary $binary */
+        foreach ($config->getBinaries() as $binaryId => $binary) {
+            $response->binaries[$binaryId] = $binary->toArray();
+        }
+
+        return $response;
+    }
 }

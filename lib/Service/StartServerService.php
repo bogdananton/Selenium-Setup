@@ -78,6 +78,8 @@ class StartServerService extends AbstractService
     
     public function handle()
     {
+        // @todo should allow only registered instances to be called
+
         $this->createFolders();
         $this->downloadDrivers();
         
@@ -88,28 +90,30 @@ class StartServerService extends AbstractService
         $this->env->addPathToGlobalPath($this->config->getBuildPath());
         
         // Start display.
-        $pid = $this->env->startDisplayProcess();
+        $pidDisplay = $this->env->startDisplayProcess();
 
         // Start Selenium Server instance.
         $this->output->writeln(
             sprintf('Starting Selenium Server (%s) ... %s:%s', $this->config->getName(), $this->config->getHostname(), $this->config->getPort())
         );
 
-        $pid = $this->env->startSeleniumProcess();
-        if ($pid > 0) {
+        $pidSelenium = $this->env->startSeleniumProcess();
+        if ($pidSelenium > 0) {
             // Make sure that we capture the right PID.
             while ($this->env->listenToPort($this->config->getPort()) == '') {
                 $this->output->write('<info>.</info>');
             }
             $parentPid = $this->env->getPidFromListeningToPort($this->config->getPort());
             if ($parentPid) {
-                $pid = $parentPid;
+                $pidSelenium = $parentPid;
             }
+
+            // @todo open the lock file only to update the status and ports, the instance was already added.
             $this->locker->openLockFile();
             $this->locker->addServer(
                 ServerItemFactory::createFromProperties(
                     $this->config->getName(),
-                    $pid,
+                    $pidSelenium,
                     $this->config->getPort(),
                     $this->config->getFilePath()
                 )

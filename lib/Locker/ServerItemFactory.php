@@ -21,12 +21,23 @@ class ServerItemFactory
             ->setConfigFilePath($server->configFilePath)
             ->setDateStarted(date(ServerItem::DATE_FORMAT));
     }
-    
+
+    /**
+     * The PID is no longer required to be greater than zero. (when PID = zero, this usually means it's stopped).
+     *
+     * @param string $name
+     * @param int $pid
+     * @param int $port
+     * @param string $configFilePath
+     *
+     * @return ServerItem
+     * @throws \Exception
+     */
     public static function createFromProperties($name, $pid, $port, $configFilePath)
     {
         if (
             empty($name) ||
-            empty($pid) ||
+            // empty($pid) ||
             empty($port) ||
             empty($configFilePath)
         ) {
