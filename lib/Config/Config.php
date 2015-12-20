@@ -23,6 +23,21 @@ class Config implements ConfigInterface
         return get_object_vars($this);
     }
 
+    public function toJson()
+    {
+        $result = $this->toArray();
+
+        /**
+         * @var integer $index
+         * @var Binary $binary
+         */
+        foreach ($this->getBinaries() as $index => $binary) {
+            $result['binaries'][$index] = $binary->toArray();
+        }
+
+        return json_encode($result, JSON_PRETTY_PRINT);
+    }
+
     /**
      * @return array
      */

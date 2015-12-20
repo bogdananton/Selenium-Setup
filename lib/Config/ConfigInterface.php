@@ -44,4 +44,7 @@ interface ConfigInterface
      * @return Binary
      */
     public function getBinary($binaryName);
+
+    public function toArray();
+    public function toJson();
 }

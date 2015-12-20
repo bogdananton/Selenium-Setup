@@ -52,8 +52,7 @@ class RegisterServerService extends AbstractService
         $this->config->setFilePath($filename);
 
         // Store new filename using the default instance template.
-        $contents = ConfigFactory::createJSONFromConfigFile($this->config);
-        $this->fileSystem->createFile($filename, json_encode($contents, JSON_PRETTY_PRINT));
+        $this->fileSystem->createFile($filename, $this->config->toJson());
 
         // Append instance entry in lock-file.
         $this->locker->addServer(
