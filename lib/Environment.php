@@ -404,6 +404,15 @@ class Environment
     {
         if ($this->isWindows()) {
             $cmd = 'start /b java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s';
+            if ($this->config->getBinary('chromedriver.win.'.$this->getOsType())) {
+                $cmd .= sprintf(' -Dwebdriver.chrome.driver=%s', $this->config->getBuildPath() . $this->config->getBinary('chromedriver.win.'.$this->getOsType())->getBinName());
+            }
+            if ($this->config->getBinary('iedriver.win.'.$this->getOsType())) {
+                $cmd .= sprintf(' -Dwebdriver.ie.driver=%s', $this->config->getBuildPath() . $this->config->getBinary('iedriver.win.'.$this->getOsType())->getBinName());
+            }
+            if ($this->config->getBinary('phantomjs.win.'.$this->getOsType())) {
+                $cmd .= sprintf(' -Dphantomjs.binary.path=%s', $this->config->getBuildPath() . $this->config->getBinary('phantomjs.win.'.$this->getOsType())->getBinName());
+            }
         } else {
             $cmd = 'java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s >/dev/null 2>&1 &';
         }
