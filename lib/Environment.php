@@ -402,19 +402,24 @@ class Environment
 
     public function startSeleniumProcess()
     {
+        // @todo Refactor this in 5.0; split binaries and drivers; Add Opera.
+        // @see https://github.com/bogdananton/Selenium-Setup/issues/12
+        $cmdExtra = '';
+        if ($binary = $this->config->getBinary('chromedriver.'. $this->getOsName() .'.'. $this->getOsType())) {
+            $cmdExtra .= sprintf(' -Dwebdriver.chrome.driver=%s', $this->config->getBuildPath() . $binary->getBinName());
+        }
+        if ($binary = $this->config->getBinary('iedriver.'. $this->getOsName() .'.'.$this->getOsType())) {
+            $cmdExtra .= sprintf(' -Dwebdriver.ie.driver=%s', $this->config->getBuildPath() . $binary->getBinName());
+        }
+        if ($binary = $this->config->getBinary('phantomjs.'. $this->getOsName() .'.'.$this->getOsType())) {
+            $cmdExtra .= sprintf(' -Dphantomjs.binary.path=%s', $this->config->getBuildPath() . $binary->getBinName());
+        }
+        
         if ($this->isWindows()) {
-            $cmd = 'start /b java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s';
-            if ($this->config->getBinary('chromedriver.win.'.$this->getOsType())) {
-                $cmd .= sprintf(' -Dwebdriver.chrome.driver=%s', $this->config->getBuildPath() . $this->config->getBinary('chromedriver.win.'.$this->getOsType())->getBinName());
-            }
-            if ($this->config->getBinary('iedriver.win.'.$this->getOsType())) {
-                $cmd .= sprintf(' -Dwebdriver.ie.driver=%s', $this->config->getBuildPath() . $this->config->getBinary('iedriver.win.'.$this->getOsType())->getBinName());
-            }
-            if ($this->config->getBinary('phantomjs.win.'.$this->getOsType())) {
-                $cmd .= sprintf(' -Dphantomjs.binary.path=%s', $this->config->getBuildPath() . $this->config->getBinary('phantomjs.win.'.$this->getOsType())->getBinName());
-            }
+            $cmd = 'start /b java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s %s';
         } else {
-            $cmd = 'java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s >/dev/null 2>&1 &';
+            $cmd = 'java -jar %s -port %s -Dhttp.proxyHost=%s -Dhttp.proxyPort=%s -log %s %s >/dev/null 2>&1 &';
+
         }
 
         $cmd = vsprintf($cmd, [
@@ -422,7 +427,8 @@ class Environment
             'port' => $this->config->getPort(),
             'proxyHost' => $this->config->getProxyHost(),
             'proxyPort' => $this->config->getProxyPort(),
-            'log' => $this->config->getLogsPath() . 'selenium.log'
+            'log' => $this->config->getLogsPath() . 'selenium.log',
+            'cmdExtra' => $cmdExtra
         ]);
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
@@ -462,7 +468,14 @@ class Environment
     
     public function getChromeVersion()
     {
-        $cmd = 'google-chrome --version';
+        if ($this->isWindows()) {
+            $cmd = 'reg query HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96} | findstr /i pv';
+            $match = '/REG_SZ[\s]+([0-9.]+)/is';
+        } else {
+            $cmd = 'google-chrome --version';
+            $match = '/Google Chrome ([0-9.]+)/is';
+        }
+        
         $output = new BufferedOutput();
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
@@ -470,14 +483,20 @@ class Environment
             $output->write($line);
         });
 
-        preg_match('/Google Chrome ([0-9.]+)/is', $output->fetch(), $matches);
+        preg_match($match, $output->fetch(), $matches);
 
         return isset($matches[1]) ? $matches[1] : null;
     }
     
     public function getFirefoxVersion()
     {
-        $cmd = 'firefox --version';
+        if ($this->isWindows()) {
+            $cmd = 'reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Mozilla\Mozilla Firefox" | findstr /i CurrentVersion';
+            $match = '/REG_SZ[\s]+([0-9.]+)/is';
+        } else {
+            $cmd = 'firefox --version';
+            $match = '/Mozilla Firefox ([0-9.]+)/is';
+        }
         $output = new BufferedOutput();
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
@@ -485,7 +504,7 @@ class Environment
             $output->write($line);
         });
 
-        preg_match('/Mozilla Firefox ([0-9.]+)/is', $output->fetch(), $matches);
+        preg_match($match, $output->fetch(), $matches);
         
         return isset($matches[1]) ? $matches[1] : null;
     }
