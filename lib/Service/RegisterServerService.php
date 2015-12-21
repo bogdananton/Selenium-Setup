@@ -103,7 +103,7 @@ class RegisterServerService extends AbstractService
         return $status;
     }
 
-    public function logStatus($status, $name, $port)
+    protected function logStatus($status, $name, $port)
     {
         if ($this->isStatusContaining($status, self::INVALID_NAME)) {
             $this->log(self::ERROR_MESSAGE_NAME, $name, self::LOG_TYPE_ERROR);
