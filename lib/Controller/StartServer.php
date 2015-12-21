@@ -41,7 +41,11 @@ class StartServer extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $configFilePath = SeleniumSetup::$APP_CONF_PATH . DIRECTORY_SEPARATOR . $input->getArgument('name') . '.json';
+        $configFilePath = null;
+
+        if ($input->getArgument('name')) {
+            $configFilePath = SeleniumSetup::$APP_CONF_PATH . DIRECTORY_SEPARATOR . $input->getArgument('name') . '.json';
+        }
 
         if ($input->getOption('config')) { 
             $configFilePath = realpath($input->getOption('config'));

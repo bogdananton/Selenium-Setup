@@ -11,9 +11,10 @@ class ConfigFactory
     {
         $fileSystem = new FileSystem();
         
-        if (empty($configFilePath)) {
+        if (!$configFilePath) {
             $configFilePath = SeleniumSetup::$APP_CONF_PATH . DIRECTORY_SEPARATOR . Config::DEFAULT_CONFIGURATION_FILENAME;
         }
+
         $configContents = $fileSystem->readFile($configFilePath);
         $configObj = json_decode($configContents);
         
@@ -22,9 +23,9 @@ class ConfigFactory
         $config = new Config();
 
         // Normalize the paths.
-        $buildPath = realpath(str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH, $configObj->buildPath));
-        $tmpPath = realpath(str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH, $configObj->tmpPath));
-        $logsPath = realpath(str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH,$configObj->logsPath));
+        $buildPath = str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH, $configObj->buildPath);
+        $tmpPath = str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH, $configObj->tmpPath);
+        $logsPath = str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH, $configObj->logsPath);
 
         $config
             ->setName($configObj->name)
