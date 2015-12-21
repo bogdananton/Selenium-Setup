@@ -86,12 +86,28 @@ class StartServerService extends AbstractService
         // Add build folder to path.
         $this->env->addPathToGlobalPath($this->config->getBuildPath());
         
-        // Start display.
-        if ($this->env->hasXvfb()) {
-            $this->output->writeln('<info>Xvfb is installed. Good.</info>');
+        // Warn if Chrome or Firefox binaries are not available.
+        if ($chromeVersion = $this->env->getChromeVersion()) {
+            $this->output->writeln('Chrome binary found, v.'. $chromeVersion);
         } else {
-            $this->output->writeln('<info>Xvfb is not installed.</info>');
+            $this->output->writeln('<info>WARNING: Chrome binary not found.</info>');
         }
+
+        if ($firefoxVersion = $this->env->getFirefoxVersion()) {
+            $this->output->writeln('Firefox binary found, v.'. $firefoxVersion);
+        } else {
+            $this->output->writeln('<info>WARNING: Firefox binary not found.</info>');
+        }
+        
+        // Warn if display is not available.
+        if ($this->env->isLinux()) {
+            if ($this->env->hasXvfb()) {
+                $this->output->writeln('<info>Xvfb is installed. Good.</info>');
+            } else {
+                $this->output->writeln('<info>WARNING: Xvfb is not installed.</info>');
+            }
+        }
+        
         // $pid = $this->env->startDisplayProcess();
 
         // Start Selenium Server instance.

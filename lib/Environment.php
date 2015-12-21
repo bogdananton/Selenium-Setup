@@ -459,4 +459,35 @@ class Environment
         //var_dump($process->getPid());
         return $process->getPid();
     }
+    
+    public function getChromeVersion()
+    {
+        $cmd = 'google-chrome --version';
+        $output = new BufferedOutput();
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->run(function ($type, $line) use ($output) {
+            $output->write($line);
+        });
+
+        preg_match('/Google Chrome ([0-9.]+)/is', $output->fetch(), $matches);
+
+        return isset($matches[1]) ? $matches[1] : null;
+    }
+    
+    public function getFirefoxVersion()
+    {
+        $cmd = 'firefox --version';
+        $output = new BufferedOutput();
+
+        $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
+        $process->run(function ($type, $line) use ($output) {
+            $output->write($line);
+        });
+
+        preg_match('/Mozilla Firefox ([0-9.]+)/is', $output->fetch(), $matches);
+        
+        return isset($matches[1]) ? $matches[1] : null;
+    }
+    
 }
