@@ -48,7 +48,7 @@
       "os": null,
       "osType": null
     },
-    "chromedriver.win.32bit": {
+    "chromedriver.windows.32bit": {
       "label": "ChromeDriver for Windows",
       "version": "2.20",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip",
@@ -56,7 +56,7 @@
       "os": "windows",
       "osType": "32bit"
     },
-    "chromedriver.win.64bit": {
+    "chromedriver.windows.64bit": {
       "label": "ChromeDriver for Windows",
       "version": "2.20",
       "downloadUrl": "http://chromedriver.storage.googleapis.com/2.20/chromedriver_win64.zip",
@@ -96,7 +96,7 @@
       "os": "mac",
       "osType": "64bit"
     },
-    "iedriver.win.32bit": {
+    "iedriver.windows.32bit": {
       "label": "Internet Explorer Driver for Windows",
       "version": "2.48",
       "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/IEDriverServer_Win32_2.48.0.zip",
@@ -104,7 +104,7 @@
       "os": "windows",
       "osType": "32bit"
     },
-    "iedriver.win.64bit": {
+    "iedriver.windows.64bit": {
       "label": "Internet Explorer Driver for Windows",
       "version": "2.48",
       "downloadUrl": "http://selenium-release.storage.googleapis.com/2.48/IEDriverServer_x64_2.48.0.zip",
