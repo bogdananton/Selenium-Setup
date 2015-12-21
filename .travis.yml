@@ -64,4 +64,5 @@ notifications:
     channels:
       - "asimov.freenode.net#mobiledetect"
     template:
-      - "%{repository} (%{commit}) : %{message} %{foo}. Build details: %{build_url}"
+      - "%{repository} (%{commit}): %{message}. Build details: %{build_url}"
+      - "%{author} said %{commit_subject}. See %{compare_url}"
