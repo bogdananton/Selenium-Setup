@@ -1,12 +1,12 @@
 {
-  "name": "defaultServer",
+  "name": "default",
   "hostname": "localhost",
   "port": 4444,
   "proxyHost": "",
   "proxyPort": "",
-  "buildPath": "build/",
-  "tmpPath": "build/tmp/",
-  "logsPath": "build/logs/",
+  "buildPath": "{$APP_ROOT_PATH}/build/",
+  "tmpPath": "{$APP_ROOT_PATH}/build/tmp/",
+  "logsPath": "{$APP_ROOT_PATH}/build/logs/",
   "binaries": {
     "certificate": {
       "label": "SSL Certificate",

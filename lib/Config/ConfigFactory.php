@@ -3,6 +3,7 @@ namespace SeleniumSetup\Config;
 
 use SeleniumSetup\Binary\Binary;
 use SeleniumSetup\FileSystem;
+use SeleniumSetup\SeleniumSetup;
 
 class ConfigFactory
 {
@@ -10,10 +11,8 @@ class ConfigFactory
     {
         $fileSystem = new FileSystem();
         
-        $rootPath = realpath(dirname(__FILE__) .'/../..');
-        
         if (empty($configFilePath)) {
-            $configFilePath = $rootPath . DIRECTORY_SEPARATOR . Config::DEFAULT_CONFIGURATION_FILENAME;
+            $configFilePath = SeleniumSetup::$APP_CONF_PATH . DIRECTORY_SEPARATOR . Config::DEFAULT_CONFIGURATION_FILENAME;
         }
         $configContents = $fileSystem->readFile($configFilePath);
         $configObj = json_decode($configContents);
@@ -22,22 +21,11 @@ class ConfigFactory
         
         $config = new Config();
 
-        $buildPath = $configObj->buildPath;
-        $tmpPath = $configObj->tmpPath;
-        $logsPath = $configObj->logsPath;
+        // Normalize the paths.
+        $buildPath = realpath(str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH, $configObj->buildPath));
+        $tmpPath = realpath(str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH, $configObj->tmpPath));
+        $logsPath = realpath(str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH,$configObj->logsPath));
 
-        if (!$fileSystem->isPathAbsolute($buildPath)) {
-            $buildPath = $rootPath . DIRECTORY_SEPARATOR . $buildPath;
-        }
-
-        if (!$fileSystem->isPathAbsolute($tmpPath)) {
-            $tmpPath = $rootPath . DIRECTORY_SEPARATOR . $tmpPath;
-        }
-
-        if (!$fileSystem->isPathAbsolute($logsPath)) {
-            $logsPath = $rootPath . DIRECTORY_SEPARATOR . $logsPath;
-        }
-        
         $config
             ->setName($configObj->name)
             ->setHostname($configObj->hostname)

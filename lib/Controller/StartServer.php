@@ -4,6 +4,7 @@ namespace SeleniumSetup\Controller;
 use SeleniumSetup\Config\Config;
 use SeleniumSetup\Config\ConfigFactory;
 use SeleniumSetup\Environment;
+use SeleniumSetup\SeleniumSetup;
 use SeleniumSetup\Service\StartServerService;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -40,13 +41,7 @@ class StartServer extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $configFilePath = null;
-        $name = $input->getArgument('name');
-
-        if ($name !== '') {
-            $rootPath = realpath(dirname(__FILE__) .'/../..');
-            $configFilePath = $rootPath . DIRECTORY_SEPARATOR . $name . '.json';
-        }
+        $configFilePath = SeleniumSetup::$APP_CONF_PATH . DIRECTORY_SEPARATOR . $input->getArgument('name') . '.json';
 
         if ($input->getOption('config')) { 
             $configFilePath = realpath($input->getOption('config'));

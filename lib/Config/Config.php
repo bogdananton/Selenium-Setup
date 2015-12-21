@@ -5,7 +5,7 @@ use SeleniumSetup\Binary\Binary;
 
 class Config implements ConfigInterface
 {
-    const DEFAULT_CONFIGURATION_FILENAME = 'defaultServer.json';
+    const DEFAULT_CONFIGURATION_FILENAME = 'default.json';
     
     protected $filePath;
     protected $name;

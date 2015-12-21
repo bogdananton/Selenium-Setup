@@ -406,13 +406,13 @@ class Environment
         // @see https://github.com/bogdananton/Selenium-Setup/issues/12
         $cmdExtra = '';
         if ($binary = $this->config->getBinary('chromedriver.'. $this->getOsName() .'.'. $this->getOsType())) {
-            $cmdExtra .= sprintf(' -Dwebdriver.chrome.driver=%s', $this->config->getBuildPath() . $binary->getBinName());
+            $cmdExtra .= sprintf(' -Dwebdriver.chrome.driver=%s', $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
         }
         if ($binary = $this->config->getBinary('iedriver.'. $this->getOsName() .'.'.$this->getOsType())) {
-            $cmdExtra .= sprintf(' -Dwebdriver.ie.driver=%s', $this->config->getBuildPath() . $binary->getBinName());
+            $cmdExtra .= sprintf(' -Dwebdriver.ie.driver=%s', $this->config->getBuildPath(). DIRECTORY_SEPARATOR . $binary->getBinName());
         }
         if ($binary = $this->config->getBinary('phantomjs.'. $this->getOsName() .'.'.$this->getOsType())) {
-            $cmdExtra .= sprintf(' -Dphantomjs.binary.path=%s', $this->config->getBuildPath() . $binary->getBinName());
+            $cmdExtra .= sprintf(' -Dphantomjs.binary.path=%s', $this->config->getBuildPath(). DIRECTORY_SEPARATOR . $binary->getBinName());
         }
         
         if ($this->isWindows()) {
@@ -423,13 +423,15 @@ class Environment
         }
 
         $cmd = vsprintf($cmd, [
-            'binary' => $this->config->getBuildPath() . $this->config->getBinary('selenium')->getBinName(),
+            'binary' => $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $this->config->getBinary('selenium')->getBinName(),
             'port' => $this->config->getPort(),
             'proxyHost' => $this->config->getProxyHost(),
             'proxyPort' => $this->config->getProxyPort(),
-            'log' => $this->config->getLogsPath() . 'selenium.log',
+            'log' => $this->config->getLogsPath() . DIRECTORY_SEPARATOR . 'selenium.log',
             'cmdExtra' => $cmdExtra
         ]);
+
+        //var_dump($cmd);
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
         $process->start();

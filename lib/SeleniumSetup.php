@@ -13,6 +13,7 @@ class SeleniumSetup
     const APP_VERSION = '4.0.0';
     const APP_DEFAULT_COMMAND = 'list';
     public static $APP_ROOT_PATH;
+    public static $APP_CONF_PATH;
     public static $APP_PROCESS_ENV;
     
     const SSL_CERT_FILENAME = 'cacert.pem';
@@ -34,6 +35,7 @@ BANNER;
     public function __construct()
     {
         self::$APP_ROOT_PATH = realpath(dirname(__FILE__) . '/../');
+        self::$APP_CONF_PATH = realpath(dirname(__FILE__) . '/../config/');
         self::$APP_PROCESS_ENV = array_merge($_SERVER, $_ENV);
     }
     
