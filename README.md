@@ -1,15 +1,18 @@
-[![Build Status](https://travis-ci.org/bogdananton/Selenium-Setup.svg)](https://travis-ci.org/bogdananton/Selenium-Setup)
-
 ```
-  ____            ___
- /\  _`\         /\_ \                  __
- \ \,\L\_\     __\//\ \      __    ___ /\_\  __  __    ___ ___
-  \/_\__ \   /'__`\\ \ \   /'__`\/' _ `\/\ \/\ \/\ \ /' __` __`\
-    /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \
-    \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
+ ____            ___
+/\  _`\         /\_ \                  __
+\ \,\L\_\     __\//\ \      __    ___ /\_\  __  __    ___ ___
+ \/_\__ \   /'__`\\ \ \   /'__`\/' _ `\/\ \/\ \/\ \ /' __` __`\
+   /\ \L\ \/\  __/ \_\ \_/\  __//\ \/\ \ \ \ \ \_\ \/\ \/\ \/\ \
+   \ `\____\ \____\/\____\ \____\ \_\ \_\ \_\ \____/\ \_\ \_\ \_\
     \/_____/\/____/\/____/\/____/\/_/\/_/\/_/\/___/  \/_/\/_/\/_/
-    Selenium Environment using Facebook's WebDriver
+    Selenium Environment on Windows, Linux and Mac
 ```
+
+[![Build Status](https://travis-ci.org/bogdananton/Selenium-Setup.svg)](https://travis-ci.org/bogdananton/Selenium-Setup)
+![Build Status](https://img.shields.io/packagist/v/bogdananton/Selenium-Setup.svg)
+![PHP 5.4](https://img.shields.io/badge/PHP-5.4-brightgreen.svg)
+![Sfantul Anton](https://img.shields.io/badge/Sfantul%20Anton-%E2%9C%93-orange.svg)
 
 ## Install
 
