@@ -1,105 +1,29 @@
 <?php
 namespace SeleniumSetup\Service;
 
-use SeleniumSetup\Command\CommandFactory;
-use SeleniumSetup\Config\ConfigInterface;
-use SeleniumSetup\Environment\Environment;
-use SeleniumSetup\System\System;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use SeleniumSetup\Locker\ServerItemFactory;
 
-class StartServerService implements StartServerServiceInterface
+class StartServerService extends AbstractService
 {
-    protected $config;
-    protected $input;
-    protected $output;
-    protected $system;
-    protected $env;
-    protected $command;
-
-    public function __construct(
-        ConfigInterface $config,
-        InputInterface $input,
-        OutputInterface $output
-    ) {
-        $this->config = $config;
-        $this->input = $input;
-        $this->output = $output;
-        $this->system = new System();
-        $this->env = new Environment();
-        $this->command = CommandFactory::create($this->config, $this->env);
-    }
-
-    // @todo Move to public methods into SeleniumSetup\Environment.
-    public function detectEnv()
-    {
-        // Pre-requisites.
-        $canInstall = true;
-        $writeln = [];
-
-        // Start checking.
-
-        $javaVersion = $this->env->getJavaVersion();
-
-        if (empty($javaVersion)) {
-            $writeln[] = '<error>[ ] Java is not installed.</error>';
-            $canInstall = false;
-        } else {
-            $writeln[] = '<info>[x] Java is installed.</info>';
-            if ($this->env->isJavaVersionDeprecated($javaVersion)) {
-                $writeln[] = '<error>[ ] Your Java version needs to be >= 1.6</error>';
-                $canInstall = false;
-            } else {
-                $writeln[] = '<info>[x] Your Java version '. $javaVersion .' seems up to date.</info>';
-            }
-        }
-
-        if ($this->env->isPHPVersionDeprecated()) {
-            $writeln[] = '<error>[ ] Your PHP version '. $this->env->getPHPVersion() .' should be >= 5.3</error>';
-            $canInstall = false;
-        } else {
-            $writeln[] = '<info>[x] Your PHP version is '. $this->env->getPHPVersion() .'</info>';
-        }
-
-        if (!$this->env->hasPHPCurlExtInstalled()) {
-            $writeln[] = '<error>[ ] cURL extension for PHP is missing.</error>';
-            $canInstall = false;
-        } else {
-            $writeln[] = '<info>[x] cURL '. $this->env->getPHPCurlExtVersion() .' extension is installed.</info>';
-        }
-
-        if (!$this->env->hasPHPOpenSSLExtInstalled()) {
-            $writeln[] = '<error>[ ] OpenSSL extension for PHP is missing.</error>';
-            $canInstall = false;
-        } else {
-            $writeln[] = '<info>[x] '. $this->env->getPHPOpenSSLExtVersion() .' extension is installed.</info>';
-        }
-
-        $this->output->writeln($writeln);
-
-        return $canInstall;
-    }
-
-    public function prepareEnv()
+    protected function createFolders()
     {
         // Create the build folder. (Where the binaries will reside).
-        if (!$this->system->isDir(($this->config->getBuildPath()))) {
-            $this->system->createDir($this->config->getBuildPath());
+        if (!$this->fileSystem->isDir(($this->config->getBuildPath()))) {
+            $this->fileSystem->createDir($this->config->getBuildPath());
         }
+        
         // Create the tmp folder.
-        if (!$this->system->isDir(($this->config->getTmpPath()))) {
-            $this->system->createDir($this->config->getTmpPath());
-            //putenv('TMP='.$this->config->getTmpPath());
-            //putenv('TEMP='.$this->config->getTmpPath());
-            //chown($this->config->getTmpPath(),666);
+        if (!$this->fileSystem->isDir(($this->config->getTmpPath()))) {
+            $this->fileSystem->createDir($this->config->getTmpPath());
         }
+        
         // Create the logs folder.
-        if (!$this->system->isDir($this->config->getLogsPath())) {
-            $this->system->createDir($this->config->getLogsPath());
+        if (!$this->fileSystem->isDir($this->config->getLogsPath())) {
+            $this->fileSystem->createDir($this->config->getLogsPath());
         }
     }
-    
-    public function downloadDrivers()
+
+    protected function downloadDrivers()
     {
         foreach ($this->config->getBinaries() as $binary) {
             // Skip binaries that don't belong to the current operating system.
@@ -112,18 +36,16 @@ class StartServerService implements StartServerServiceInterface
 
             $binaryPath = $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName();
 
-            if (!$this->system->isFile($binaryPath)) {
-                $this->output->writeln(sprintf(
-                    'Downloading %s %s ...',
-                    $binary->getLabel(),
-                    $binary->getVersion()
-                ));
+            if (!$this->fileSystem->isFile($binaryPath)) {
+                $this->output->writeln(
+                    sprintf('Downloading %s %s ...', $binary->getLabel(), $binary->getVersion())
+                );
+                
                 // Download.
                 $downloadTo = $this->config->getBuildPath() . DIRECTORY_SEPARATOR . pathinfo($binary->getDownloadUrl(), PATHINFO_BASENAME);
-                $this->system->download(
-                    $binary->getDownloadUrl(),
-                    $downloadTo
-                );
+                $download = $this->env->download($binary->getDownloadUrl(), $downloadTo);
+                $this->output->writeln($download);
+
                 // Unzip.
                 if (in_array(pathinfo($binary->getDownloadUrl(), PATHINFO_EXTENSION), ['zip', 'tar', 'tar.gz'])) {
                     $zip = new \ZipArchive;
@@ -136,103 +58,90 @@ class StartServerService implements StartServerServiceInterface
                         $zip->close();
                     }
                 } else {
-                    $this->system->rename($downloadTo, $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
+                    $this->fileSystem->rename($downloadTo, $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
                 }
+
                 // Make executable.
-                $this->command->makeFileExecutable($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
+                $this->env->makeExecutable($this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
             } else {
-                $this->output->writeln(sprintf(
-                    'Skipping %s %s. Binary already exists.',
-                    $binary->getLabel(),
-                    $binary->getVersion()
-                ));
-            }
-
-            if ($binary->getLabel() === 'SSL Certificate') {
-                $this->system->setCertificatePath($binaryPath);
+                $this->output->writeln(
+                    sprintf('Skipping %s %s. Binary already exists.', $binary->getLabel(), $binary->getVersion())
+                );
             }
         }
     }
-
-    public function startServer()
+    
+    public function test()
     {
-        if ($this->detectEnv()) {
-            $this->output->writeln('Everything good, let\'s roll ...');
-            $this->prepareEnv();
-            $this->downloadDrivers();
-            $this->runServer();
-            return true;
+        return $this->env->test();
+    }
+    
+    public function handle()
+    {
+        // @todo should allow only registered instances to be called
+
+        $this->createFolders();
+        $this->downloadDrivers();
+
+        // Add build folder to path.
+        $this->env->addPathToGlobalPath($this->config->getBuildPath());
+        
+        // Warn if Chrome or Firefox binaries are not available.
+        if ($chromeVersion = $this->env->getChromeVersion()) {
+            $this->output->writeln('Chrome binary found, v.'. $chromeVersion);
         } else {
-            $this->output->writeln('Missing required components. Please review your setup.');
-            return false;
-        }
-    }
-
-    public function exportConfigurationFile()
-    {
-        // Check if the config file is a sample or the build copy.
-        $output = $this->input->getArgument('output');
-
-        // fallback on default: {buildpath}/{selenium-setup.json}
-        if (null === $output) {
-            $output = $this->config->getBuildPath();
+            $this->output->writeln('<info>WARNING: Chrome binary not found.</info>');
         }
 
-        // make sure that the build path exists
-        $this->prepareEnv();
-
-        // deploy config sample
-        $this->system->createFile($output, json_encode($this->config, JSON_PRETTY_PRINT));
-        $this->output->writeln('Done. ' . $output);
-
-        return true;
-    }
-
-    protected function runServer()
-    {
-        $this->command->stopSeleniumServer();
-        if (!is_null($this->config->getProxyHost())) {
-            $this->command->invalidateEnvProxy();
+        if ($firefoxVersion = $this->env->getFirefoxVersion()) {
+            $this->output->writeln('Firefox binary found, v.'. $firefoxVersion);
+        } else {
+            $this->output->writeln('<info>WARNING: Firefox binary not found.</info>');
         }
-        $this->command->addBuildFolderToPath();
-        $this->command->startDisplay();
-        $this->output->writeln(sprintf(
-            'Starting Selenium Server (%s) ... %s:%s',
-            $this->config->getName(),
-            $this->config->getHostname(),
-            $this->config->getPort()
-        ));
-        $this->command->startSeleniumServer();
-        $this->output->writeln(sprintf(
-            'Done. Test it at http://%s:%s/wd/hub/',
-            $this->config->getHostname(),
-            $this->config->getPort()
-        ));
+        
+        // Warn if display is not available.
+        if ($this->env->isLinux()) {
+            if ($this->env->hasXvfb()) {
+                $this->output->writeln('<info>Xvfb is installed. Good.</info>');
+            } else {
+                $this->output->writeln('<info>WARNING: Xvfb is not installed.</info>');
+            }
+        }
+        
+        // $pid = $this->env->startDisplayProcess();
 
-        return true;
-    }
+        // Start Selenium Server instance.
+        $this->output->writeln(
+            sprintf('Starting Selenium Server (%s) ... %s:%s', $this->config->getName(), $this->config->getHostname(), $this->config->getPort())
+        );
 
-    public function stopServer()
-    {
-        $this->command->stopSeleniumServer();
-    }
+        $pid = $this->env->startSeleniumProcess();
+        if ($pid > 0) {
+            // Make sure that we capture the right PID.
+            while ($this->env->listenToPort($this->config->getPort()) == '') {
+                $this->output->write('<info>.</info>');
+            }
+            $parentPid = $this->env->getPidFromListeningToPort($this->config->getPort());
+            if ($parentPid) {
+                $pid = $parentPid;
+            }
 
-    public function runSelfTest()
-    {
-        if ($this->startServer()) {
-            $this->command->waitForSeleniumServerToStart();
-
-            $areTestsExtractedToBuildPath = $this->command->prepareTestFiles();
-
-            $phpunitConfigRootPath = $areTestsExtractedToBuildPath
-                ? $this->config->getBuildPath() . DIRECTORY_SEPARATOR . 'selfTest'
-                : $this->env->getProjectRootPath();
-
-            $this->command->startTests(
-                $phpunitConfigRootPath . DIRECTORY_SEPARATOR . 'phpunit.xml',
-                $this->env->getOsName()
+            // @todo open the lock file only to update the status and ports, the instance was already added.
+            $this->locker->openLockFile();
+            $this->locker->addServer(
+                ServerItemFactory::createFromProperties(
+                    $this->config->getName(),
+                    $pid,
+                    $this->config->getPort(),
+                    $this->config->getFilePath()
+                )
             );
-            $this->stopServer();
+            $this->locker->writeToLockFile();
         }
+
+        $this->output->writeln('<info>Done</info>');
+        $this->output->writeln(
+            sprintf('Test it at http://%s:%s/wd/hub/', $this->config->getHostname(), $this->config->getPort())
+        );
     }
 }

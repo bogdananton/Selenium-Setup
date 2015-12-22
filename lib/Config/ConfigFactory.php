@@ -2,23 +2,30 @@
 namespace SeleniumSetup\Config;
 
 use SeleniumSetup\Binary\Binary;
-use SeleniumSetup\Environment\Environment;
-use SeleniumSetup\System\System;
+use SeleniumSetup\FileSystem;
+use SeleniumSetup\SeleniumSetup;
 
 class ConfigFactory
 {
-    const DEFAULT_CONFIGURATION_FILE = 'selenium-setup.json';
-
-    public static function createFromConfigFile($configFilePath)
+    public static function createFromConfigFile($configFilePath = null)
     {
-        $system = new System();
-        $env = new Environment();
+        $fileSystem = new FileSystem();
+        
+        if (!$configFilePath) {
+            $configFilePath = SeleniumSetup::$APP_CONF_PATH . DIRECTORY_SEPARATOR . Config::DEFAULT_CONFIGURATION_FILENAME;
+        }
 
-        $rootPath = $env->getProjectRootPath();
-        $configObj = $system->loadJsonFile($configFilePath);
-
+        $configContents = $fileSystem->readFile($configFilePath);
+        $configObj = json_decode($configContents);
+        
+        // @todo: Validate config.
+        
         $config = new Config();
-        self::checkSourceIntegrity($config, $configObj);
+
+        // Normalize the paths.
+        $buildPath = str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH, $configObj->buildPath);
+        $tmpPath = str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH, $configObj->tmpPath);
+        $logsPath = str_replace('{$APP_ROOT_PATH}', SeleniumSetup::$APP_ROOT_PATH, $configObj->logsPath);
 
         $config
             ->setName($configObj->name)
@@ -27,9 +34,10 @@ class ConfigFactory
             ->setProxyHost($configObj->proxyHost)
             ->setProxyPort($configObj->proxyPort)
             // Set absolute paths (needed for issuing CLI commands).
-            ->setBuildPath($rootPath . DIRECTORY_SEPARATOR . $configObj->buildPath)
-            ->setTmpPath($rootPath . DIRECTORY_SEPARATOR . $configObj->tmpPath)
-            ->setLogsPath($rootPath . DIRECTORY_SEPARATOR . $configObj->logsPath);
+            ->setBuildPath($buildPath)
+            ->setTmpPath($tmpPath)
+            ->setLogsPath($logsPath)
+            ->setFilePath($configFilePath);
 
         foreach ($configObj->binaries as $binaryId => $binaryInfo) {
             $binary = Binary::createFromObject($binaryInfo);
@@ -37,16 +45,5 @@ class ConfigFactory
         }
 
         return $config;
-    }
-
-    protected static function checkSourceIntegrity(Config $configObj, $configSource)
-    {
-        foreach ($configObj::getAllProperties() as $propertyName) {
-            if (!isset($configSource->$propertyName)) {
-                throw new \InvalidArgumentException(
-                    sprintf('The required configuration key %s is missing.', $propertyName)
-                );
-            }
-        }
     }
 }

@@ -131,8 +131,8 @@ class Binary implements BinaryInterface
         return $this;
     }
 
-    public function jsonSerialize()
+    public function toArray()
     {
-        return (object)get_object_vars($this);
+        return (array)get_object_vars($this);
     }
 }

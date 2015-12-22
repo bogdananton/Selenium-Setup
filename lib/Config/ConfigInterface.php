@@ -7,8 +7,10 @@ use SeleniumSetup\Binary\Binary;
  * @package SeleniumSetup\Config
  * Implement specifications from http://www.seleniumhq.org/docs/05_selenium_rc.jsp#server-options
  */
-interface ConfigInterface extends \JsonSerializable
+interface ConfigInterface
 {
+    public function setFilePath($filePath);
+    public function getFilePath();
     public function setName($serverName);
     public function getName();
     public function setHostname($hostname);
@@ -36,5 +38,13 @@ interface ConfigInterface extends \JsonSerializable
      */
     public function getBinaries();
     public function setBinary($binaryName, Binary $binaryInfo);
+
+    /**
+     * @param string $binaryName
+     * @return Binary
+     */
     public function getBinary($binaryName);
+
+    public function toArray();
+    public function toJson();
 }

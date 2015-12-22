@@ -1,7 +1,7 @@
 <?php
-namespace SeleniumSetup\System;
+namespace SeleniumSetup;
 
-interface SystemInterface
+interface FileSystemInterface
 {
     public function createDir($dirFullPath);
     public function isDir($dirFullPath);
@@ -10,10 +10,5 @@ interface SystemInterface
     public function readFile($fileFullPath);
     public function openFileForReading($fileFullPath);
     public function readFileLineAsCsv($handler, $limit = 0, $separator = '|');
-    public function execCommand($cmd);
-    public function getCertificatePath();
-    public function setCertificatePath($path);
-    public function download($from, $to);
     public function rename($from, $to);
-    public function loadJsonFile($filePath, $assoc = false);
 }

@@ -1,22 +1,68 @@
 language: php
+
+os:
+  - linux
+
 php:
   - "5.4"
 
+before_install:
+  # shutdown servies on Travis, which may have a memory impact
+  # show memory usage before and after shutdown of services
+  - sudo service --status-all
+  - sudo free -m -t
+  - sudo /etc/init.d/mysql stop
+  - sudo /etc/init.d/postgresql stop
+  - sudo /etc/init.d/couchdb stop
+  - sudo /etc/init.d/redis-server stop
+  - sudo free -m -t
+
 before_script:
-  - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-  - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-  - sudo apt-get update
-  - sudo apt-get install google-chrome-stable
-  - composer self-update
+  #- wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+  #- sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+  #- sudo apt-get update
+  #- sudo apt-get install google-chrome-stable
+  #- composer self-update
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 6 # give xvfb some time to start
   - composer install
  
 script:
-  - google-chrome --version
+  #- google-chrome --version
   - firefox --version
-  - php bin/selenium-setup.php selfTest
-  
+  - php selenium-setup register secondInstance 4445
+
+  - php selenium-setup start
+  - php selenium-setup start secondInstance
+  - sleep 10 # give the instances time to start
+
+  - cat selenium-servers.lock
+  - export no_proxy="localhost,127.0.0.*"
+  - wget -v http://localhost:4444/wd/hub/
+  # - wget -v http://localhost:4445/wd/hub/
+
+  # run check
+  - mkdir tests; cd tests
+  - wget https://raw.githubusercontent.com/bogdananton/Selenium-Setup-VM/master/tests/composer.json
+  - wget https://raw.githubusercontent.com/bogdananton/Selenium-Setup-VM/master/tests/test.php
+  - composer update
+  # run tests on (default) 4444 port
+  - phpunit test.php
+  # run tests on second instance 4445 port
+  - sed -i -- 's/4444/4445/g' test.php
+  - phpunit test.php
+  - cd ..
+
 after_script:
   - cat build/logs/selenium.log
+  - php selenium-setup servers
 
 notifications:
   email: false
+  irc:
+    channels:
+      - "asimov.freenode.net#mobiledetect"
+    template:
+      - "%{repository} (%{commit}): %{message}. Build details: %{build_url}"
+      - "%{author} said %{commit_subject}. See %{compare_url}"

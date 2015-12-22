@@ -5,6 +5,9 @@ use SeleniumSetup\Binary\Binary;
 
 class Config implements ConfigInterface
 {
+    const DEFAULT_CONFIGURATION_FILENAME = 'default.json';
+    
+    protected $filePath;
     protected $name;
     protected $hostname;
     protected $port;
@@ -20,12 +23,38 @@ class Config implements ConfigInterface
         return get_object_vars($this);
     }
 
+    public function toJson()
+    {
+        $result = $this->toArray();
+
+        /**
+         * @var integer $index
+         * @var Binary $binary
+         */
+        foreach ($this->getBinaries() as $index => $binary) {
+            $result['binaries'][$index] = $binary->toArray();
+        }
+
+        return json_encode($result, JSON_PRETTY_PRINT);
+    }
+
     /**
      * @return array
      */
     public static function getAllProperties()
     {
         return array_keys(get_object_vars(new self));
+    }
+
+    public function setFilePath($filePath)
+    {
+        $this->filePath = $filePath;
+        return $this;
+    }
+
+    public function getFilePath()
+    {
+        return $this->filePath;
     }
 
     /**
@@ -190,20 +219,5 @@ class Config implements ConfigInterface
     public function getBinary($binaryName)
     {
         return isset($this->binaries[$binaryName]) ? $this->binaries[$binaryName] : null;
-    }
-
-    public function jsonSerialize() {
-        $object = (object)get_object_vars($this);
-        $object->binaries = [];
-
-        /**
-         * @var integer $index
-         * @var Binary $binary
-         */
-        foreach ($this->binaries as $index => $binary) {
-            $object->binaries[$index] = $binary->jsonSerialize();
-        }
-
-        return $object;
     }
 }
