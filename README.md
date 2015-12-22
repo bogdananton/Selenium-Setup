@@ -12,7 +12,6 @@
 [![Build Status](https://travis-ci.org/bogdananton/Selenium-Setup.svg)](https://travis-ci.org/bogdananton/Selenium-Setup)
 ![Build Status](https://img.shields.io/packagist/v/bogdananton/Selenium-Setup.svg)
 ![PHP 5.4](https://img.shields.io/badge/PHP-5.4-brightgreen.svg)
-![Sfantul Anton](https://img.shields.io/badge/Sfantul%20Anton-%E2%9C%93-orange.svg)
 
 ## Install
 
