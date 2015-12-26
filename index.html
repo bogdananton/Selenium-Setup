@@ -48,6 +48,10 @@
         color: #fff;
       }
 
+      .nav-badges {
+        padding-top: 0.4em;
+      }
+
       @media (min-width: 62em) {
         .featurette-heading {
             margin-top: 2rem;
@@ -93,13 +97,15 @@
           <a class="nav-link" href="#why">Why?</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="https://asciinema.org/a/31202">Demo</a>
+          <a class="nav-link" href="https://asciinema.org/a/32462" title="See a CLI demo">Demo</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="https://github.com/bogdananton/Selenium-Setup">Repository (GitHub)</a>
+          <a class="nav-link" href="https://github.com/bogdananton/Selenium-Setup" title="Fork the project">Download</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#authors">About</a>
+        <li class="nav-item nav-badges">
+          <a href="https://travis-ci.org/bogdananton/Selenium-Setup"><img src="https://travis-ci.org/bogdananton/Selenium-Setup.svg" alt="Build status" title="Build status"></a>
+          <img src="https://img.shields.io/packagist/v/bogdananton/Selenium-Setup.svg" alt="Current version" title="Current stable version">
+          <img src="https://img.shields.io/badge/PHP-5.4-brightgreen.svg" alt="PHP 5.4" title="PHP 5.4 compatible">
         </li>
       </ul>
       </div>
@@ -112,35 +118,31 @@
         <h1>Selenium Setup</h1>
         <p class="lead">
          Start your own Selenium test server with Chrome, Firefox and Internet Explorer drivers.<br>
-         If you are a PHP developer we have a helper included for you to easely write tests with Facebook's WebDriver.
+         If you are a PHP developer we have a helper included for you to write tests with Facebook's WebDriver.
         </p>
 
       </div>
     </div>
 
 
-    <!-- Marketing messaging and featurettes
-    ================================================== -->
-    <!-- Wrap the rest of the page in another container to center all the content. -->
-
     <div class="container marketing">
-
-
-
-
-      <!-- START THE FEATURETTES -->
-
-      <hr class="featurette-divider">
 
       <div class="row featurette">
         <div class="col-md-7">
           <h2 class="featurette-heading">Start Selenium Server <span class="text-muted">on Windows, Linux or Mac.</span></h2>
-          <p>Selenium Setup will attempt to detect your environment and automatically install
-              everything you need. A simple command line can get you up and running in no time.</p>
-            <samp>php bin/selenium-setup.php start</samp>
+          <p>Selenium Setup will attempt to:</p>
+            <ul>
+              <li>detect your environment.</li>
+              <li>check the pre-requisites.</li>
+              <li>everything you need in your server instance.</li>
+            </ul>
+
+              <p>A simple command line can get you up and running in no time:</p>
+            <samp>./selenium-setup start</samp>
         </div>
-        <div class="col-md-5">
-            <a href="https://asciinema.org/a/31202" target="_blank"><img src="/img/start-selenium-setup.gif" width="100%"></a>
+        <div class="col-md-5" style="text-align:center;">
+            <a href="https://asciinema.org/a/32462" target="_blank"><img src="/img/selenium-setup-demo.jpg" width="100%"></a>
+            <i><a href="https://asciinema.org/a/32462" target="_blank">See the CLI Demo</a></i>
         </div>
       </div>
 
@@ -152,11 +154,10 @@
           <p>
               We tried to narrow the tech stack needed to run the whole setup.
           </p>
-            <samp>git clone https://github.com/bogdananton/Selenium-Setup.git<br>
-                cd Selenium-Setup<br>
-                wget https://getcomposer.org/composer.phar<br>
-                php composer.phar install<br>
-                php bin/selenium-setup.php start
+            <samp>./selenium-setup register myFirstServer 4444<br>
+              ./selenium-setup register mySecondServer 4445<br>
+              ./selenium-setup register myThirdServer 4446<br>
+              ...
             </samp>
         </div>
       </div>
@@ -169,7 +170,7 @@
             <p>There are a couple of reasons this library was written, we needed the following:</p>
               <ul>
                 <li>a quick way to start Selenium Server without the hassle involving the web drivers</li>
-                <li>a way to configure every detail about the Selenium Server we want through <code>selenium-setup.json</code></li>
+                <li>a way to configure every detail about the Selenium Server we want through <code><a href="https://github.com/bogdananton/Selenium-Setup/blob/master/config/default.json">default.json</a></code></li>
                 <li>give the opportunity to PHP devs to focus on writing acceptance tests with Facebook's WebDriver</li>
                 <li>raise multiple Selenium Server instances on both <code>Windows</code> and <code>Linux</code> environments</li>
             </ul>
@@ -179,36 +180,12 @@
 
       <hr class="featurette-divider">
 
-      <!-- /END THE FEATURETTES -->
-
-       
-      <div id="authors" class="row featurette authors">
-        <h2 class="featurette-heading">Authors</h2>
-
-        <div class="col-lg-3 col-lg-offset-3">
-            <div class="author">
-              <img class="img-circle" src="/img/bogdan-anton.jpg" alt="Generic placeholder image" width="140" height="140">
-              <h2><a href="https://github.com/bogdananton">Bogdan Anton</a></h2>
-              <p>Creator &amp; Developer</p>
-            </div>
-        </div>
-
-        <div class="col-lg-3">
-            <div class="author">
-              <img class="img-circle" src="/img/serban-ghita.jpg" alt="Generic placeholder image" width="140" height="140">
-              <h2><a href="https://github.com/serbanghita">Serban Ghita</a></h2>
-              <p>Maintainer &amp; Developer</p>
-            </div>
-        </div>
-      </div>
-
-      <hr class="featurette-divider">
-
 
       <!-- FOOTER -->
       <footer>
         <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2015 Bogdan Anton &amp; contributors &middot; <a href="https://github.com/bogdananton/Selenium-Setup">Repo</a> &middot; <a href="https://github.com/bogdananton/Selenium-Setup/blob/master/LICENSE">MIT License</a></p>
+        <p>&copy; 2015 <img class="img-circle" src="/img/bogdan-anton.jpg" alt="Generic placeholder image" width="32" height="32"> <a href="https://github.com/bogdananton">Bogdan Anton</a>,
+          <img class="img-circle" src="/img/serban-ghita.jpg" alt="Generic placeholder image" width="32" height="32"> <a href="https://github.com/serbanghita">Serban Ghita</a> &amp; contributors &middot; <a href="https://github.com/bogdananton/Selenium-Setup">Repo</a> &middot; <a href="https://github.com/bogdananton/Selenium-Setup/blob/master/LICENSE">MIT License</a></p>
       </footer>
 
     </div><!-- /.container -->
