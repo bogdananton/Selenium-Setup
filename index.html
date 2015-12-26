@@ -14,9 +14,9 @@
       .bd-pageheader {
         padding: 2rem .9375rem;
         margin-bottom: 1.5rem;
-        color: #cdbfe3;
         text-align: center;
-        background-color: #f2704c;
+        background-color: rgba(2, 117, 216, 0.7);
+        border-top: 1em solid #004A8A;
       }
 
       @media (min-width: 34em) {
@@ -38,14 +38,9 @@
             margin-right: 380px;
         }
       }
-      .bd-pageheader h1 {
-          font-size: 3rem;
-          font-weight: 400;
-          color: #fff;
-          text-shadow: 0 1px 2px rgba(0,0,0,.3);
-      }
       .bd-pageheader .lead {
         color: #fff;
+        text-shadow: 0 1px 2px rgba(0,0,0,.3);
       }
 
       .nav-badges {
@@ -94,18 +89,13 @@
       <span class="navbar-brand">Selenium Setup</span>
       <ul class="nav nav-pills">
         <li class="nav-item">
-          <a class="nav-link" href="#why">Why?</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="https://asciinema.org/a/32462" title="See a CLI demo">Demo</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/bogdananton/Selenium-Setup" title="Fork the project">Download</a>
         </li>
-        <li class="nav-item nav-badges">
-          <a href="https://travis-ci.org/bogdananton/Selenium-Setup"><img src="https://travis-ci.org/bogdananton/Selenium-Setup.svg" alt="Build status" title="Build status"></a>
-          <img src="https://img.shields.io/packagist/v/bogdananton/Selenium-Setup.svg" alt="Current version" title="Current stable version">
-          <img src="https://img.shields.io/badge/PHP-5.4-brightgreen.svg" alt="PHP 5.4" title="PHP 5.4 compatible">
+        <li class="nav-item">
+          <a class="nav-link" href="#support" title="Get support and feedback">Support</a>
         </li>
       </ul>
       </div>
@@ -114,11 +104,16 @@
 
     <div class="bd-pageheader">
       <div class="container">
-        
-        <h1>Selenium Setup</h1>
+
         <p class="lead">
          Start your own Selenium test server with Chrome, Firefox and Internet Explorer drivers.<br>
          If you are a PHP developer we have a helper included for you to write tests with Facebook's WebDriver.
+        </p>
+
+        <p>
+          <a href="https://travis-ci.org/bogdananton/Selenium-Setup"><img src="https://travis-ci.org/bogdananton/Selenium-Setup.svg" alt="Build status" title="Build status"></a>
+          <img src="https://img.shields.io/packagist/v/bogdananton/Selenium-Setup.svg" alt="Current version" title="Current stable version">
+          <img src="https://img.shields.io/badge/PHP-5.4-brightgreen.svg" alt="PHP 5.4" title="PHP 5.4 compatible">
         </p>
 
       </div>
@@ -134,6 +129,7 @@
             <ul>
               <li>detect your environment.</li>
               <li>check the pre-requisites.</li>
+              <li>download drivers and needed binaries.</li>
               <li>everything you need in your server instance.</li>
             </ul>
 
@@ -150,15 +146,38 @@
 
       <div class="row featurette">
         <div class="col-md-12">
-          <h2 class="featurette-heading">How? <span class="text-muted">See for yourself.</span></h2>
+          <h2 class="featurette-heading">Installing, running <span class="text-muted">and testing.</span></h2>
           <p>
               We tried to narrow the tech stack needed to run the whole setup.
           </p>
-            <samp>./selenium-setup register myFirstServer 4444<br>
-              ./selenium-setup register mySecondServer 4445<br>
-              ./selenium-setup register myThirdServer 4446<br>
-              ...
-            </samp>
+          <p>Install <a href="https://github.com/bogdananton/Selenium-Setup"><samp>Selenium-Setup</samp></a></p>
+
+          <ol>
+            <li><samp>git clone <a href="https://github.com/bogdananton/Selenium-Setup.git">https://github.com/bogdananton/Selenium-Setup.git</a></samp></li>
+            <li><samp>cd Selenium-Setup</samp></li>
+            <li><samp>composer install</samp></li>
+            <li><code>./selenium-setup start</code> - will start the <a href="https://github.com/bogdananton/Selenium-Setup/blob/master/config/default.json">default</a> Selenium server
+                <ul>
+                  <li>Alternatively use <code>./selenium-setup register yourServer 4444</code> and change <samp>configs/yourServer.json</samp> to your needs.</li>
+                </ul>
+            </li>
+          </ol>
+
+          <p>Install <a href="https://github.com/serbanghita/Selenium-Setup-Webdriver"><samp>Selenium-Setup-Webdriver</samp></a></p>
+
+          <ol>
+            <li><samp>git clone <a href="https://github.com/serbanghita/Selenium-Setup-Webdriver.git">https://github.com/serbanghita/Selenium-Setup-Webdriver.git</a></samp></li>
+            <li><samp>cd Selenium-Setup-Webdriver</samp></li>
+            <li><samp>composer install</samp></li>
+            <li><code>phpunit -c phpunit.xml</code> - will perform the checks from <a href="https://github.com/serbanghita/Selenium-Setup-Webdriver/tree/master/tests">tests</a>
+              <ul>
+                <li>Tinker with <samp>phpunit.xml</samp> if you want fast changes in your setup (proxy, selenium server, specific browser).<br>
+                  Eg. connecting to a different Selenium host and port.</li>
+                <li>For extending your tests you need to override <samp>setUp</samp> method from <samp>BrowserTestCase</samp>
+                  and use your custom WebDriver settings or the predefined from <samp>SeleniumSetupWebDriver\WebDriver\WebDriverFactory</samp>.</li>
+              </ul>
+            </li>
+            </ol>
         </div>
       </div>
 
@@ -174,6 +193,21 @@
                 <li>give the opportunity to PHP devs to focus on writing acceptance tests with Facebook's WebDriver</li>
                 <li>raise multiple Selenium Server instances on both <code>Windows</code> and <code>Linux</code> environments</li>
             </ul>
+
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div id="support" class="row featurette">
+        <div class="col-md-12">
+          <h2 class="featurette-heading">Support</h2>
+          <p>We're available for chat on IRC. Join us and let's discuss about getting up Selenium servers and start writing acceptance tests.</p>
+
+          <ul>
+            <li>irc.freenode.net:6667</li>
+            <li>#selenium-setup</li>
+          </ul>
 
         </div>
       </div>
