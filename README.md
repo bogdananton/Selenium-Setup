@@ -10,7 +10,8 @@
 ```
 
 [![Build Status](https://travis-ci.org/bogdananton/Selenium-Setup.svg)](https://travis-ci.org/bogdananton/Selenium-Setup)
-![Build Status](https://img.shields.io/packagist/v/bogdananton/Selenium-Setup.svg)
+![Build Status](https://img.shields.io/packagist/v/bogdananton/selenium-setup.svg)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bogdananton/Selenium-Setup/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bogdananton/Selenium-Setup/?branch=master)
 ![PHP 5.4](https://img.shields.io/badge/PHP-5.4-brightgreen.svg)
 
 ## Install
