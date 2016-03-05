@@ -24,7 +24,7 @@ class Locker
         }
 
         $contents = $this->fileSystem->readFile(SeleniumSetup::$APP_ROOT_PATH . DIRECTORY_SEPARATOR . SeleniumSetup::DEFAULT_LOCK_FILENAME);
-        $lockerRaw =  json_decode($contents);
+        $lockerRaw = json_decode($contents);
         foreach ($lockerRaw as $serverObj) {
             $this->addServer(ServerItemFactory::createFromObj($serverObj));
         }

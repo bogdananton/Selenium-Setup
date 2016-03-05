@@ -35,7 +35,7 @@ class RegisterServerService extends AbstractService
 
         $this->logStatus($status, $instanceName, $instancePort);
 
-        if ($status === self::VALID_INSTANCE){
+        if ($status === self::VALID_INSTANCE) {
             $this->register($instanceName, $instancePort);
             $this->log(self::SUCCESS_MESSAGE_ADDED, $instanceName);
         }
