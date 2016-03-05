@@ -54,29 +54,29 @@ class Environment
                 $writeln[] = '<error>[ ] Your Java version needs to be >= 1.6</error>';
                 $canInstall = false;
             } else {
-                $writeln[] = '<info>[x] Your Java version '. $javaVersion .' seems up to date.</info>';
+                $writeln[] = '<info>[x] Your Java version ' . $javaVersion . ' seems up to date.</info>';
             }
         }
 
         if ($this->isPHPVersionDeprecated()) {
-            $writeln[] = '<error>[ ] Your PHP version '. $this->getPHPVersion() .' should be >= 5.3</error>';
+            $writeln[] = '<error>[ ] Your PHP version ' . $this->getPHPVersion() . ' should be >= 5.3</error>';
             $canInstall = false;
         } else {
-            $writeln[] = '<info>[x] Your PHP version is '. $this->getPHPVersion() .'</info>';
+            $writeln[] = '<info>[x] Your PHP version is ' . $this->getPHPVersion() . '</info>';
         }
 
         if (!$this->hasPHPCurlExtInstalled()) {
             $writeln[] = '<error>[ ] cURL extension for PHP is missing.</error>';
             $canInstall = false;
         } else {
-            $writeln[] = '<info>[x] cURL '. $this->getPHPCurlExtVersion() .' extension is installed.</info>';
+            $writeln[] = '<info>[x] cURL ' . $this->getPHPCurlExtVersion() . ' extension is installed.</info>';
         }
 
         if (!$this->hasPHPOpenSSLExtInstalled()) {
             $writeln[] = '<error>[ ] OpenSSL extension for PHP is missing.</error>';
             $canInstall = false;
         } else {
-            $writeln[] = '<info>[x] '. $this->getPHPOpenSSLExtVersion() .' extension is installed.</info>';
+            $writeln[] = '<info>[x] ' . $this->getPHPOpenSSLExtVersion() . ' extension is installed.</info>';
         }
 
         $this->output->writeln($writeln);
@@ -137,18 +137,18 @@ class Environment
             $lookForNegative = '^System error';
 
         } else {
-            $cmd ='sudo -n true';
+            $cmd = 'sudo -n true';
             $lookForNegative = '^sudo\: a password is required';
         }
 
         $output = new BufferedOutput();
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-        $process->run(function ($type, $line) use ($output) {
+        $process->run(function($type, $line) use ($output) {
             $output->write($line);
         });
         
-        return !(preg_match('/'. $lookForNegative .'/is', $output->fetch()));
+        return !(preg_match('/' . $lookForNegative . '/is', $output->fetch()));
     }
 
     public function getJavaVersion()
@@ -158,7 +158,7 @@ class Environment
         $output = new BufferedOutput();
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-        $process->run(function ($type, $line) use ($output) {
+        $process->run(function($type, $line) use ($output) {
             $output->write($line);
         });
         
@@ -237,7 +237,7 @@ class Environment
     public function setEnvVar($varName, $varValue = '')
     {
         if ($varValue != '') {
-            putenv($varName. '=' .$varValue);
+            putenv($varName . '=' . $varValue);
         } else {
             putenv($varName);
         }
@@ -277,7 +277,7 @@ class Environment
         // $progress->start();
         $output = new BufferedOutput();
 
-        $request->getEmitter()->on('progress', function (ProgressEvent $e) use ($computeRemainingSize, $output) {
+        $request->getEmitter()->on('progress', function(ProgressEvent $e) use ($computeRemainingSize, $output) {
 
             $output->write(
                 sprintf("Downloaded %s%%\r", $computeRemainingSize($e))
@@ -305,7 +305,7 @@ class Environment
         $output = $this->output;
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-        $process->run(function ($type, $line) use ($output) {
+        $process->run(function($type, $line) use ($output) {
             $output->write($line);
         });
     }
@@ -323,7 +323,7 @@ class Environment
         $output = $this->output;
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-        $process->run(function ($type, $line) use ($output) {
+        $process->run(function($type, $line) use ($output) {
             $output->write($line);
         });
     }
@@ -341,7 +341,7 @@ class Environment
         $output = $this->output;
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-        $process->run(function ($type, $line) use ($output) {
+        $process->run(function($type, $line) use ($output) {
             $output->write($line);
         });
     }
@@ -359,7 +359,7 @@ class Environment
         $output = new BufferedOutput();
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-        $process->run(function ($type, $line) use ($output) {
+        $process->run(function($type, $line) use ($output) {
             $output->write($line);
         });
         
@@ -394,7 +394,7 @@ class Environment
 
             $cmd = sprintf($cmd, $file);
             $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-            $process->run(function ($type, $line) use ($output) {
+            $process->run(function($type, $line) use ($output) {
                 $output->write($line);
             });
         }
@@ -405,14 +405,14 @@ class Environment
         // @todo Refactor this in 5.0; split binaries and drivers; Add Opera.
         // @see https://github.com/bogdananton/Selenium-Setup/issues/12
         $cmdExtra = '';
-        if ($binary = $this->config->getBinary('chromedriver.'. $this->getOsName() .'.'. $this->getOsType())) {
+        if ($binary = $this->config->getBinary('chromedriver.' . $this->getOsName() . '.' . $this->getOsType())) {
             $cmdExtra .= sprintf(' -Dwebdriver.chrome.driver=%s', $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
         }
-        if ($binary = $this->config->getBinary('iedriver.'. $this->getOsName() .'.'.$this->getOsType())) {
-            $cmdExtra .= sprintf(' -Dwebdriver.ie.driver=%s', $this->config->getBuildPath(). DIRECTORY_SEPARATOR . $binary->getBinName());
+        if ($binary = $this->config->getBinary('iedriver.' . $this->getOsName() . '.' . $this->getOsType())) {
+            $cmdExtra .= sprintf(' -Dwebdriver.ie.driver=%s', $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
         }
-        if ($binary = $this->config->getBinary('phantomjs.'. $this->getOsName() .'.'.$this->getOsType())) {
-            $cmdExtra .= sprintf(' -Dphantomjs.binary.path=%s', $this->config->getBuildPath(). DIRECTORY_SEPARATOR . $binary->getBinName());
+        if ($binary = $this->config->getBinary('phantomjs.' . $this->getOsName() . '.' . $this->getOsType())) {
+            $cmdExtra .= sprintf(' -Dphantomjs.binary.path=%s', $this->config->getBuildPath() . DIRECTORY_SEPARATOR . $binary->getBinName());
         }
         
         if ($this->isWindows()) {
@@ -461,7 +461,7 @@ class Environment
         }
         $output = new BufferedOutput();
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-        $process->run(function ($type, $line) use ($output) {
+        $process->run(function($type, $line) use ($output) {
             $output->write($line);
         });
         //var_dump($process->getPid());
@@ -481,7 +481,7 @@ class Environment
         $output = new BufferedOutput();
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-        $process->run(function ($type, $line) use ($output) {
+        $process->run(function($type, $line) use ($output) {
             $output->write($line);
         });
 
@@ -502,7 +502,7 @@ class Environment
         $output = new BufferedOutput();
 
         $process = new Process($cmd, SeleniumSetup::$APP_ROOT_PATH, SeleniumSetup::$APP_PROCESS_ENV, null, null);
-        $process->run(function ($type, $line) use ($output) {
+        $process->run(function($type, $line) use ($output) {
             $output->write($line);
         });
 

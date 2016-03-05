@@ -88,13 +88,13 @@ class StartServerService extends AbstractService
         
         // Warn if Chrome or Firefox binaries are not available.
         if ($chromeVersion = $this->env->getChromeVersion()) {
-            $this->output->writeln('Chrome binary found, v.'. $chromeVersion);
+            $this->output->writeln('Chrome binary found, v.' . $chromeVersion);
         } else {
             $this->output->writeln('<info>WARNING: Chrome binary not found.</info>');
         }
 
         if ($firefoxVersion = $this->env->getFirefoxVersion()) {
-            $this->output->writeln('Firefox binary found, v.'. $firefoxVersion);
+            $this->output->writeln('Firefox binary found, v.' . $firefoxVersion);
         } else {
             $this->output->writeln('<info>WARNING: Firefox binary not found.</info>');
         }

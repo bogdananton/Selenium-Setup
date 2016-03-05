@@ -45,7 +45,7 @@ BANNER;
         $console->setDefaultCommand(self::APP_DEFAULT_COMMAND);
 
         $dispatcher = new EventDispatcher();
-        $dispatcher->addListener(ConsoleEvents::COMMAND, function (ConsoleCommandEvent $event) {
+        $dispatcher->addListener(ConsoleEvents::COMMAND, function(ConsoleCommandEvent $event) {
             // get the input instance
             // $input = $event->getInput();
 
