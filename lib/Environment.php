@@ -91,7 +91,7 @@ class Environment
             return self::OS_WINDOWS;
         } else if (
             strpos(strtolower(PHP_OS), 'mac') !== false ||
-            strpos(strtolower(PHP_OS), 'darwin')
+            strpos(strtolower(PHP_OS), 'darwin') !== false
         ) {
             return self::OS_MAC;
         } else {

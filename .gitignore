@@ -4,3 +4,4 @@ vendor/
 /build/logs
 /build
 /composer.lock
+selenium-servers.lock
