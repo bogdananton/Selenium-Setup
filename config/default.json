@@ -50,16 +50,16 @@
     },
     "chromedriver.windows.32bit": {
       "label": "ChromeDriver for Windows",
-      "version": "2.20",
-      "downloadUrl": "http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip",
+      "version": "2.28",
+      "downloadUrl": "https://chromedriver.storage.googleapis.com/2.28/chromedriver_win32.zip",
       "binName": "chromedriver.exe",
       "os": "windows",
       "osType": "32bit"
     },
     "chromedriver.windows.64bit": {
       "label": "ChromeDriver for Windows",
-      "version": "2.20",
-      "downloadUrl": "http://chromedriver.storage.googleapis.com/2.20/chromedriver_win64.zip",
+      "version": "2.28",
+      "downloadUrl": "https://chromedriver.storage.googleapis.com/2.28/chromedriver_win32.zip",
       "binName": "chromedriver.exe",
       "os": "windows",
       "osType": "64bit"
